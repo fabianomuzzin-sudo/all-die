@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>008A - Me Profile/Data from Coach</title>
+  <style>
+    :root{
+      --bg:#0f1114;
+      --panel:#171a1f;
+      --panel-2:#20242b;
+      --line:#313742;
+      --text:#f4f7fb;
+      --muted:#8b94a3;
+      --blue:#57a6ff;
+      --blue-soft:rgba(87,166,255,.18);
+      --shadow:0 10px 24px rgba(0,0,0,.28);
+      --safe-bottom:max(12px, env(safe-area-inset-bottom));
+      --safe-top:max(10px, env(safe-area-inset-top));
+    }
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html,body{height:100%;margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;overflow:hidden}
+    body{display:flex;justify-content:center}
+    .app{width:100%;max-width:460px;height:100dvh;display:grid;grid-template-rows:auto 1fr auto;background:var(--bg);margin:0 auto;align-items:stretch}
+
+    .module-a-top{width:100%;max-width:460px;min-width:0;margin:0 auto;padding:calc(var(--safe-top) + 4px) 12px 8px;background:linear-gradient(180deg,#171a1f 0%, #111317 100%);border-bottom:1px solid var(--line)}
+    .top-grid{display:grid;grid-template-columns:66px 1fr 66px;gap:10px;align-items:stretch}
+    .top-btn,.top-card{border:1px solid var(--line);border-radius:16px;background:#1e2229;box-shadow:0 0 0 1px rgba(255,255,255,.03) inset;min-height:72px}
+    .top-btn{display:flex;align-items:center;justify-content:center;padding:8px;text-align:center;font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#dcebff;background:radial-gradient(circle at 50% 35%, rgba(87,166,255,.22), transparent 48%), #1e2229;border:1px solid var(--line);cursor:pointer}
+    .top-card{padding:10px 12px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:4px}
+    .top-value{font-size:22px;line-height:1;font-weight:900;color:#eef6ff}
+    .top-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:800}
+    .top-sub{font-size:11px;color:#bfdcff;font-weight:800}
+
+    .module-a-main{width:100%;max-width:460px;min-width:0;margin:0 auto;min-height:0;padding:14px 12px;display:flex;overflow:hidden}
+    .main-card{width:100%;max-width:100%;min-width:0;min-height:0;border:1px solid var(--line);border-radius:22px;background:var(--panel);box-shadow:0 0 0 1px rgba(255,255,255,.03) inset, var(--shadow);overflow:hidden;display:flex;flex-direction:column}
+    .page{flex:1 1 auto;min-width:0;min-height:0;display:none;flex-direction:column}
+    .page.active{display:flex}
+
+    .swipe-shell{flex:1 1 auto;min-width:0;max-width:100%;min-height:0;display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scroll-behavior:smooth;scrollbar-width:none;-ms-overflow-style:none}
+    .swipe-shell::-webkit-scrollbar{display:none}
+    .swipe-panel{flex:0 0 100%;min-width:100%;max-width:100%;min-height:0;display:flex;align-items:stretch;justify-content:center;scroll-snap-align:start}
+    .swipe-inner{width:100%;max-width:100%;min-width:0;display:flex;flex-direction:column;background:radial-gradient(circle at 50% 40%, rgba(87,166,255,.10), transparent 34%), linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0))}
+    .home-split{flex:1 1 auto;min-height:0;display:grid;grid-template-columns:1fr 1fr}
+    .home-half,.hero-panel{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:0;padding:18px}
+    .home-half + .home-half{border-left:1px solid rgba(255,255,255,.07)}
+    .hero-panel{background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01))}
+    .home-big,.hero-big{font-size:min(27vw,120px);line-height:.9;font-weight:900;color:#eef6ff;text-shadow:0 0 18px rgba(87,166,255,.30), 0 0 42px rgba(87,166,255,.12);letter-spacing:-.03em}
+    .home-title,.hero-title{margin-top:12px;font-size:13px;font-weight:900;letter-spacing:.10em;text-transform:uppercase;color:#dcebff;text-align:center}
+    .home-note,.hero-note{position:absolute;left:18px;bottom:16px;font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+    .home-half.right .home-note{left:auto;right:18px;text-align:right}
+    .hero-note.right{left:auto;right:18px;text-align:right}
+
+    .section-stack,.page-body,.generic-wrap{min-width:0;max-width:100%;padding:12px;display:grid;gap:10px;overflow:auto;scrollbar-width:none}
+    .section-stack::-webkit-scrollbar,.page-body::-webkit-scrollbar,.generic-wrap::-webkit-scrollbar{display:none}
+    .status-head{display:flex;align-items:center;justify-content:space-between;gap:12px;min-width:0}
+    .status-title{font-size:15px;font-weight:900;color:#eef6ff;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .status-mode{flex:0 0 auto;border:1px solid rgba(87,166,255,.38);background:var(--blue-soft);color:#dcebff;border-radius:999px;padding:6px 10px;font-size:10px;font-weight:900;letter-spacing:.06em;text-transform:uppercase}
+    .grid-2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;min-width:0}
+    .panel{border:1px solid rgba(255,255,255,.06);border-radius:14px;background:rgba(255,255,255,.03);padding:10px 12px;min-width:0;max-width:100%}
+    .panel.active-slot{border-color:rgba(87,166,255,.38);background:rgba(87,166,255,.10)}
+    .panel-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:800}
+    .panel-value{margin-top:6px;font-size:15px;font-weight:900;color:#eef6ff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .note{font-size:12px;color:var(--muted);line-height:1.4}
+    .view-head,.generic-box{background:#20242b;border:1px solid var(--line);border-radius:16px;padding:12px 14px}
+    .view-title,.generic-title{font-size:22px;font-weight:900;line-height:1.05}
+    .view-sub,.generic-sub{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.35}
+    .action-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .slot-btn,.replace-btn{width:100%;min-height:42px;border-radius:12px;border:1px solid rgba(255,255,255,.08);font-size:13px;font-weight:800;cursor:pointer}
+    .slot-btn{background:#1f232a;color:var(--text)}
+    .slot-btn.is-active{border-color:#87c0ff;background:rgba(87,166,255,.14);color:#dcebff}
+    .replace-btn{background:var(--blue);color:#07111b;border-color:#87c0ff}
+    .cloud-select{width:100%;min-height:42px;border-radius:12px;border:1px solid rgba(255,255,255,.08);font-size:13px;font-weight:800;background:#1f232a;color:var(--text);padding:0 12px}
+
+    .module-bottom{width:100%;max-width:460px;min-width:0;margin:0 auto;padding:10px 12px calc(12px + var(--safe-bottom));background:linear-gradient(0deg,#171a1f 0%, #111317 100%);border-top:1px solid var(--line)}
+    .bottom-shell{width:100%;max-width:100%;min-width:0;border:1px solid var(--line);border-radius:18px;background:var(--panel);box-shadow:0 0 0 1px rgba(255,255,255,.03) inset;padding:10px 12px 8px;display:grid;gap:8px}
+    .controls-row{display:grid;grid-template-columns:1fr 88px;gap:10px;align-items:center}
+    .slider-row{display:grid;grid-template-columns:24px 1fr 24px;gap:8px;align-items:center}
+    .edge{font-size:11px;font-weight:900;color:var(--muted);text-align:center;user-select:none}
+    .slider-wrap{position:relative;height:34px;display:flex;align-items:center}
+    #subSlider{-webkit-appearance:none;appearance:none;width:100%;height:8px;border-radius:999px;background:rgba(87,166,255,.22);outline:none}
+    #subSlider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:58px;height:30px;background:transparent;border:none;margin-top:-11px}
+    #subSlider::-moz-range-thumb{width:58px;height:30px;background:transparent;border:none}
+    .slider-label{position:absolute;top:50%;left:0;transform:translate(-50%,-50%);min-width:58px;max-width:128px;height:30px;padding:0 12px;border-radius:999px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:11px;font-weight:900;color:#fff;border:2px solid #d8ebff;background:var(--blue);box-shadow:0 2px 6px rgba(0,0,0,.22);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none}
+    .wheel{width:82px;height:96px;overflow-y:auto;scrollbar-width:none;-ms-overflow-style:none;scroll-snap-type:y mandatory;scroll-behavior:smooth;overscroll-behavior:contain;padding:32px 0;display:flex;flex-direction:column;align-items:center;-webkit-mask-image:linear-gradient(to bottom, transparent 0%, black 25%, black 75%, transparent 100%);mask-image:linear-gradient(to bottom, transparent 0%, black 25%, black 75%, transparent 100%)}
+    .wheel::-webkit-scrollbar{display:none}
+    .wheel-item{width:100%;height:32px;min-height:32px;display:flex;align-items:center;justify-content:center;padding:0 6px;border:none;background:transparent;color:rgba(87,166,255,.62);font-size:11px;font-weight:800;scroll-snap-align:center;opacity:.62;transition:transform .16s ease, opacity .16s ease, color .16s ease;user-select:none;cursor:pointer;text-transform:uppercase}
+    .wheel-item.active{color:#eef6ff;opacity:1;transform:scale(1.14);font-size:12px;font-weight:900}
+    .bottom-note{text-align:center;font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-top:2px}
+    .top-grid,.top-card,.top-sub,.status-head,.status-title,.panel-value,.controls-row,.slider-row,.slider-wrap{min-width:0;max-width:100%}
+
+    .avatar-btn{padding:0;overflow:hidden;background:#111} 
+    .avatar-btn img{width:100%;height:100%;object-fit:cover;display:block}
+    .top-btn.save-mode{background:linear-gradient(180deg, rgba(87,166,255,.92), rgba(87,166,255,.78));color:#07111b;border-color:#87c0ff} 
+    .me-view{display:none;min-width:0;max-width:100%;padding:12px;gap:10px;overflow:auto;scrollbar-width:none;-ms-overflow-style:none} 
+    .me-view::-webkit-scrollbar{display:none} 
+    .me-view.active{display:grid} 
+    .profile-main-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px} 
+    .profile-stat-card,.profile-metric-card,.profile-macro-card{border:1px solid rgba(255,255,255,.08);background:linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.035));border-radius:14px;padding:12px 10px;text-align:center;box-shadow:inset 0 1px 0 rgba(255,255,255,.04)} 
+    .profile-stat-value{font-size:24px;font-weight:900;color:#eef6ff;line-height:1.1} 
+    .profile-stat-label,.profile-metric-label,.profile-macro-label{margin-top:6px;font-size:11px;line-height:1.15;color:rgba(220,235,255,.74);font-weight:800;letter-spacing:.02em} 
+    .profile-section-title{margin:10px 4px 8px;font-size:16px;font-weight:900;color:#eef6ff;letter-spacing:.02em;opacity:.96} 
+    .profile-metric-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px} 
+    .profile-macro-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px} 
+    .profile-metric-value,.profile-macro-value{font-size:18px;font-weight:900;color:#eef6ff;line-height:1.05;margin-bottom:4px} 
+    .profile-photo-wrap{display:grid;gap:10px} 
+    .profile-photo-card{display:grid;grid-template-columns:96px 1fr;gap:12px;align-items:center;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:10px} 
+    .profile-photo-preview{width:96px;height:96px;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.08);background:#111;display:flex;align-items:center;justify-content:center} 
+    .profile-photo-preview img{width:100%;height:100%;object-fit:cover;display:block} 
+    .profile-photo-meta{display:grid;gap:8px} 
+    .profile-photo-title{font-size:13px;font-weight:900;color:var(--text);letter-spacing:.04em;text-transform:uppercase} 
+    .profile-photo-sub{font-size:12px;color:var(--muted);line-height:1.35} 
+    .profile-photo-actions{display:flex;gap:8px;flex-wrap:wrap} 
+    .profile-photo-btn,.im-btn{display:inline-flex;align-items:center;justify-content:center;background:#20242b;border:1px solid var(--line);color:var(--text);border-radius:12px;padding:10px 12px;font-size:13px;font-weight:800;cursor:pointer;min-height:42px} 
+    .profile-photo-btn.danger{border-color:rgba(255,255,255,.06)} 
+    .profile-photo-input{display:none} 
+    .profile-form,.im-form{display:grid;gap:10px} 
+    .profile-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:start} 
+    .profile-field{display:grid;gap:6px;align-content:start} 
+    .profile-label{min-height:14px;font-size:12px;color:var(--muted);font-weight:800;letter-spacing:.06em;text-transform:uppercase} 
+    .profile-input,.custom-select-btn{width:100%;min-height:46px;height:46px;padding:0 12px;border-radius:12px;font-size:14px;font-weight:700;line-height:1.2;box-sizing:border-box;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);color:var(--text);outline:none} 
+    .profile-input::placeholder{color:#6f7a8b} 
+    .custom-select-wrap{position:relative} 
+    .custom-select-native{display:none} 
+    .custom-select-btn{display:flex;align-items:center;justify-content:space-between;gap:10px;cursor:pointer;text-align:left} 
+    .custom-select-btn::after{content:'▾';color:var(--muted);font-size:12px;flex:0 0 auto} 
+    .im-actions{display:flex;gap:10px;flex-wrap:wrap} 
+    .im-status{font-size:12px;color:var(--muted)} 
+    .custom-dd-overlay{position:fixed;inset:0;background:rgba(0,0,0,.42);display:none;z-index:120} 
+    .custom-dd-overlay.open{display:block} 
+    .custom-dd-sheet{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(92vw,420px);max-height:72vh;overflow:auto;background:#171a1f;border:1px solid var(--line);border-radius:16px;padding:10px;display:none;z-index:121;box-shadow:0 14px 40px rgba(0,0,0,.5)} 
+    .custom-dd-sheet.open{display:block} 
+    .custom-dd-title{font-size:16px;font-weight:900;margin:4px 4px 10px} 
+    .custom-dd-list{display:grid;gap:8px} 
+    .custom-dd-option{width:100%;text-align:left;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);color:var(--text);border-radius:12px;padding:12px 12px;font-size:14px;font-weight:700;cursor:pointer} 
+    .custom-dd-option.active{outline:2px solid #57a6ff} 
+    @media (max-width:430px){ .profile-macro-grid{grid-template-columns:1fr 1fr} .profile-grid-2{grid-template-columns:1fr 1fr} .profile-section-title{font-size:15px;margin:8px 2px 7px} .profile-photo-card{grid-template-columns:88px 1fr} .profile-photo-preview{width:88px;height:88px} }
+
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="module-a-top">
+      <div class="top-grid">
+        <div class="top-btn" id="coachButton"></div>
+        <div class="top-card">
+          <div class="top-value">77,4</div>
+          <div class="top-label" id="weightLabel"></div>
+          <div class="top-sub" id="topSubLabel"></div>
+        </div>
+        <button class="top-btn avatar-btn" id="meButton" type="button" aria-label="Me"><img id="topProfileAvatar" alt="Foto profilo" /></button>
+      </div>
+    </header>
+
+    <main class="module-a-main">
+      <section class="main-card">
+        <div class="page active" id="swipePage">
+          <div class="swipe-shell" id="swipeShell">
+            <div class="swipe-panel">
+              <div class="swipe-inner">
+                <div class="hero-panel">
+                  <div class="hero-big">A</div>
+                  <div class="hero-title" id="trainingHeroTitle"></div>
+                  <div class="hero-note" id="trainingHeroNote"></div>
+                </div>
+              </div>
+            </div>
+            <div class="swipe-panel">
+              <div class="swipe-inner">
+                <div class="home-split">
+                  <div class="home-half left">
+                    <div class="home-big">A</div>
+                    <div class="home-title" id="homeLeftTitle"></div>
+                    <div class="home-note" id="homeLeftNote"></div>
+                  </div>
+                  <div class="home-half right">
+                    <div class="home-big">D</div>
+                    <div class="home-title" id="homeRightTitle"></div>
+                    <div class="home-note" id="homeRightNote"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="swipe-panel">
+              <div class="swipe-inner">
+                <div class="hero-panel">
+                  <div class="hero-big">D</div>
+                  <div class="hero-title" id="dietHeroTitle"></div>
+                  <div class="hero-note right" id="dietHeroNote"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="section-stack">
+            <div class="status-head">
+              <div class="status-title" id="homeStatusTitle"></div>
+              <div class="status-mode" id="moduleBadge"></div>
+            </div>
+            <div class="grid-2">
+              <div class="panel">
+                <div class="panel-label" id="wheelLabelTitle"></div>
+                <div class="panel-value" id="wheelValue"></div>
+              </div>
+              <div class="panel">
+                <div class="panel-label" id="sliderLabelTitle"></div>
+                <div class="panel-value" id="sliderValue"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="page" id="languagesPage">
+          <div class="page-body">
+            <div class="view-head">
+              <div class="view-title" id="langPageTitle"></div>
+              <div class="view-sub" id="langPageSub"></div>
+            </div>
+            <div class="grid-2">
+              <div class="panel active-slot"><div class="panel-label" id="slotATitle"></div><div class="panel-value" id="slotAValue"></div></div>
+              <div class="panel"><div class="panel-label" id="slotBTitle"></div><div class="panel-value" id="slotBValue"></div></div>
+            </div>
+            <div class="action-row">
+              <button class="slot-btn" id="useSlotAButton" type="button"></button>
+              <button class="slot-btn" id="useSlotBButton" type="button"></button>
+            </div>
+            <div class="panel"><div class="panel-label" id="replaceTargetLabel"></div><div class="panel-value" id="replaceTargetValue"></div></div>
+            <div class="panel"><div class="panel-label" id="cloudSelectLabel"></div><select class="cloud-select" id="cloudPackSelect"></select></div>
+            <button class="replace-btn" id="replaceBtn" type="button"></button>
+            <div class="note" id="cloudStatus"></div>
+          </div>
+        </div>
+
+        <div class="page" id="cloudPage">
+          <div class="page-body">
+            <div class="view-head"><div class="view-title" id="cloudPageTitle"></div><div class="view-sub" id="cloudPageSub"></div></div>
+            <div class="grid-2">
+              <div class="panel"><div class="panel-label" id="cloudBox1Label"></div><div class="panel-value" id="cloudBox1Value"></div></div>
+              <div class="panel"><div class="panel-label" id="cloudBox2Label"></div><div class="panel-value" id="cloudBox2Value"></div></div>
+            </div>
+            <div class="grid-2">
+              <div class="panel"><div class="panel-label" id="cloudBox3Label"></div><div class="panel-value" id="cloudBox3Value"></div></div>
+              <div class="panel"><div class="panel-label" id="cloudBox4Label"></div><div class="panel-value" id="cloudBox4Value"></div></div>
+            </div>
+            <div class="note" id="cloudPageNote"></div>
+          </div>
+        </div>
+
+        <div class="page" id="mePage">
+          <div class="me-view" id="meProfileView"></div>
+          <div class="me-view" id="meDataView"></div>
+        </div>
+
+        <div class="page" id="genericPage">
+          <div class="generic-wrap">
+            <div class="generic-box"><div class="generic-title" id="genericTitle"></div><div class="generic-sub" id="genericSub"></div></div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="module-bottom">
+      <div class="bottom-shell">
+        <div class="controls-row">
+          <div class="slider-row">
+            <div class="edge" id="sliderMin">1</div>
+            <div class="slider-wrap">
+              <input id="subSlider" type="range" min="1" max="8" step="1" value="1" />
+              <div class="slider-label" id="sliderBubble"></div>
+            </div>
+            <div class="edge" id="sliderMax">8</div>
+          </div>
+          <div class="wheel" id="mainWheel" aria-label="Menu principale"></div>
+        </div>
+        <div class="bottom-note" id="bottomNote"></div>
+      </div>
+    </footer>
+  </div>
+
+  <div class="custom-dd-overlay" id="customDdOverlay"></div>
+  <div class="custom-dd-sheet" id="customDdSheet">
+    <div class="custom-dd-title" id="customDdTitle">Scegli</div>
+    <div class="custom-dd-list" id="customDdList"></div>
+  </div>
+
+  <script>
+    const packs = {
+      it: { meta:{code:'it',name:'Italiano',version:'1.0.0'}, strings:{
+        'nav.home':'Home','nav.coach':'Coach','nav.diet':'Dieta','nav.training':'Allen','nav.dataCenter':'Data G','nav.languages':'Lingue','nav.cloud':'Cloud','nav.me':'Me','nav.info':'Info',
+        'top.currentWeight':'Peso attuale','home.leftTitle':'Allen','home.rightTitle':'Dieta','home.leftNote':'Lato sinistro','home.rightNote':'Lato destro','hero.trainingNote':'Pagina sinistra','hero.dietNote':'Pagina destra','layout.moduleA':'Modulo A',
+        'status.wheel':'Rotellina','status.slider':'Slider','status.bottomNote':'Menu principale: {wheel} · sottosezione: {sub}',
+        'page.languages.title':'Lingue','page.languages.sub':'Gestione slot locali e sostituzione del pacchetto non in uso.','page.cloud.title':'Cloud','page.cloud.sub':'Pagina cloud separata in Modulo A, con intestazione sopra e contenuto centrale.','page.placeholder':'Pagina {page} in costruzione.','page.placeholderSub':'Qui mettiamo il contenuto vero più avanti, senza sporcare la home.',
+        'lang.slotA':'Slot A','lang.slotB':'Slot B','lang.active':'Attivo','lang.replaceable':'Sostituibile','lang.useSlotA':'Usa slot A','lang.useSlotB':'Usa slot B','lang.replaceTarget':'Slot sostituibile','lang.availablePack':'Pacchetto cloud','lang.replaceButton':'Sostituisci slot non in uso','lang.warning':'Lo slot attivo non viene mai sovrascritto.','lang.done':'Pacchetto {name} caricato nello slot non attivo.','lang.same':'Quel pacchetto è già presente nello slot sostituibile.','lang.slotText':'{name} · v{version} · {state}',
+        'cloud.box1.label':'Origine','cloud.box1.value':'Mock locale','cloud.box2.label':'Stato sync','cloud.box2.value':'Manuale','cloud.box3.label':'Slot remoto','cloud.box3.value':'Non agganciato','cloud.box4.label':'Pacchetti','cloud.box4.value':'Preview','cloud.note':'Qui collegheremo il cloud vero più avanti. Per ora la pagina esiste già come modulo separato.',
+        'sub.home.1':'Allen','sub.home.2':'Dieta','sub.home.3':'Coach','sub.home.4':'Data G','sub.home.5':'Lingue','sub.home.6':'Cloud','sub.home.7':'Me','sub.home.8':'Info',
+        'sub.coach.1':'Progressi','sub.coach.2':'Audio all.','sub.coach.3':'Audio nutr.','sub.coach.4':'Nuova dieta','sub.coach.5':'Revisioni','sub.coach.6':'API',
+        'sub.diet.1':'Oggi','sub.diet.2':'Giorni','sub.diet.3':'Calendario','sub.diet.4':'Ricette','sub.diet.5':'Alimenti','sub.diet.6':'Target',
+        'sub.training.1':'Giorni','sub.training.2':'Giorno 1','sub.training.3':'Giorno 2','sub.training.4':'Giorno 3','sub.training.5':'Esercizi','sub.training.6':'Intensità',
+        'sub.dataCenter.1':'Prodotti','sub.dataCenter.2':'Ricette','sub.dataCenter.3':'Nutrienti','sub.dataCenter.4':'Cloud','sub.dataCenter.5':'AI','sub.dataCenter.6':'Log',
+        'sub.languages.1':'Attiva','sub.languages.2':'Slot A','sub.languages.3':'Slot B','sub.languages.4':'Cloud','sub.languages.5':'Sostituisci',
+        'sub.cloud.1':'Stato','sub.cloud.2':'Slot','sub.cloud.3':'Sync','sub.cloud.4':'Pacchetti','sub.cloud.5':'Log',
+        'sub.me.1':'Profilo','sub.me.2':'Dati','sub.me.3':'Bio','sub.me.4':'Lavoro','sub.me.5':'Alleno',
+        'sub.info.1':'Guida','sub.info.2':'Note','sub.info.3':'FAQ'
+      }},
+      en: { meta:{code:'en',name:'English',version:'1.0.0'}, strings:{
+        'nav.home':'Home','nav.coach':'Coach','nav.diet':'Diet','nav.training':'Training','nav.dataCenter':'Data G','nav.languages':'Languages','nav.cloud':'Cloud','nav.me':'Me','nav.info':'Info',
+        'top.currentWeight':'Current weight','home.leftTitle':'Training','home.rightTitle':'Diet','home.leftNote':'Left side','home.rightNote':'Right side','hero.trainingNote':'Left page','hero.dietNote':'Right page','layout.moduleA':'Module A',
+        'status.wheel':'Wheel','status.slider':'Slider','status.bottomNote':'Main menu: {wheel} · subsection: {sub}',
+        'page.languages.title':'Languages','page.languages.sub':'Local slot management and replacement of the pack not in use.','page.cloud.title':'Cloud','page.cloud.sub':'Separate cloud page in Module A, with top header and central content.','page.placeholder':'{page} page under construction.','page.placeholderSub':'We can place the real content here later, without dirtying the home.',
+        'lang.slotA':'Slot A','lang.slotB':'Slot B','lang.active':'Active','lang.replaceable':'Replaceable','lang.useSlotA':'Use slot A','lang.useSlotB':'Use slot B','lang.replaceTarget':'Replaceable slot','lang.availablePack':'Cloud pack','lang.replaceButton':'Replace inactive slot','lang.warning':'The active slot is never overwritten.','lang.done':'Pack {name} loaded into the inactive slot.','lang.same':'That pack is already in the replaceable slot.','lang.slotText':'{name} · v{version} · {state}',
+        'cloud.box1.label':'Source','cloud.box1.value':'Local mock','cloud.box2.label':'Sync state','cloud.box2.value':'Manual','cloud.box3.label':'Remote slot','cloud.box3.value':'Not linked','cloud.box4.label':'Packs','cloud.box4.value':'Preview','cloud.note':'We will connect the real cloud later. For now the page already exists as a separate module.',
+        'sub.home.1':'Training','sub.home.2':'Diet','sub.home.3':'Coach','sub.home.4':'Data G','sub.home.5':'Languages','sub.home.6':'Cloud','sub.home.7':'Me','sub.home.8':'Info',
+        'sub.coach.1':'Progress','sub.coach.2':'Audio train.','sub.coach.3':'Audio nutr.','sub.coach.4':'New diet','sub.coach.5':'Reviews','sub.coach.6':'API',
+        'sub.diet.1':'Today','sub.diet.2':'Days','sub.diet.3':'Calendar','sub.diet.4':'Recipes','sub.diet.5':'Foods','sub.diet.6':'Targets',
+        'sub.training.1':'Days','sub.training.2':'Day 1','sub.training.3':'Day 2','sub.training.4':'Day 3','sub.training.5':'Exercises','sub.training.6':'Intensity',
+        'sub.dataCenter.1':'Products','sub.dataCenter.2':'Recipes','sub.dataCenter.3':'Nutrients','sub.dataCenter.4':'Cloud','sub.dataCenter.5':'AI','sub.dataCenter.6':'Log',
+        'sub.languages.1':'Active','sub.languages.2':'Slot A','sub.languages.3':'Slot B','sub.languages.4':'Cloud','sub.languages.5':'Replace',
+        'sub.cloud.1':'Status','sub.cloud.2':'Slot','sub.cloud.3':'Sync','sub.cloud.4':'Packs','sub.cloud.5':'Log',
+        'sub.me.1':'Profile','sub.me.2':'Data','sub.me.3':'Bio','sub.me.4':'Work','sub.me.5':'Train',
+        'sub.info.1':'Guide','sub.info.2':'Notes','sub.info.3':'FAQ'
+      }},
+      es: { meta:{code:'es',name:'Español',version:'1.0.0'}, strings:{
+        'nav.home':'Inicio','nav.coach':'Coach','nav.diet':'Dieta','nav.training':'Entreno','nav.dataCenter':'Data G','nav.languages':'Idiomas','nav.cloud':'Cloud','nav.me':'Yo','nav.info':'Info',
+        'top.currentWeight':'Peso actual','home.leftTitle':'Entreno','home.rightTitle':'Dieta','home.leftNote':'Lado izquierdo','home.rightNote':'Lado derecho','hero.trainingNote':'Página izquierda','hero.dietNote':'Página derecha','layout.moduleA':'Módulo A',
+        'status.wheel':'Rueda','status.slider':'Slider','status.bottomNote':'Menú principal: {wheel} · subsección: {sub}',
+        'page.languages.title':'Idiomas','page.languages.sub':'Gestión de slots locales y sustitución del paquete que no está en uso.','page.cloud.title':'Cloud','page.cloud.sub':'Página cloud separada en Módulo A, con cabecera arriba y contenido central.','page.placeholder':'Página {page} en construcción.','page.placeholderSub':'Aquí pondremos el contenido real después, sin ensuciar la home.',
+        'lang.slotA':'Slot A','lang.slotB':'Slot B','lang.active':'Activo','lang.replaceable':'Reemplazable','lang.useSlotA':'Usar slot A','lang.useSlotB':'Usar slot B','lang.replaceTarget':'Slot reemplazable','lang.availablePack':'Paquete cloud','lang.replaceButton':'Reemplazar slot inactivo','lang.warning':'El slot activo nunca se sobrescribe.','lang.done':'Paquete {name} cargado en el slot inactivo.','lang.same':'Ese paquete ya está en el slot reemplazable.','lang.slotText':'{name} · v{version} · {state}',
+        'cloud.box1.label':'Origen','cloud.box1.value':'Mock local','cloud.box2.label':'Estado sync','cloud.box2.value':'Manual','cloud.box3.label':'Slot remoto','cloud.box3.value':'No enlazado','cloud.box4.label':'Paquetes','cloud.box4.value':'Preview','cloud.note':'Conectaremos el cloud real después. Por ahora la página ya existe como módulo separado.',
+        'sub.home.1':'Entreno','sub.home.2':'Dieta','sub.home.3':'Coach','sub.home.4':'Data G','sub.home.5':'Idiomas','sub.home.6':'Cloud','sub.home.7':'Yo','sub.home.8':'Info',
+        'sub.coach.1':'Progreso','sub.coach.2':'Audio entreno','sub.coach.3':'Audio nutr.','sub.coach.4':'Nueva dieta','sub.coach.5':'Revisiones','sub.coach.6':'API',
+        'sub.diet.1':'Hoy','sub.diet.2':'Días','sub.diet.3':'Calendario','sub.diet.4':'Recetas','sub.diet.5':'Alimentos','sub.diet.6':'Objetivos',
+        'sub.training.1':'Días','sub.training.2':'Día 1','sub.training.3':'Día 2','sub.training.4':'Día 3','sub.training.5':'Ejercicios','sub.training.6':'Intensidad',
+        'sub.dataCenter.1':'Productos','sub.dataCenter.2':'Recetas','sub.dataCenter.3':'Nutrientes','sub.dataCenter.4':'Cloud','sub.dataCenter.5':'AI','sub.dataCenter.6':'Log',
+        'sub.languages.1':'Activa','sub.languages.2':'Slot A','sub.languages.3':'Slot B','sub.languages.4':'Cloud','sub.languages.5':'Reemplazar',
+        'sub.cloud.1':'Estado','sub.cloud.2':'Slot','sub.cloud.3':'Sync','sub.cloud.4':'Paquetes','sub.cloud.5':'Log',
+        'sub.me.1':'Perfil','sub.me.2':'Datos','sub.me.3':'Bio','sub.me.4':'Trabajo','sub.me.5':'Entreno',
+        'sub.info.1':'Guía','sub.info.2':'Notas','sub.info.3':'FAQ'
+      }}
+    };
+
+    const languageState = { slotA:{code:'it'}, slotB:{code:'en'}, activeSlot:'slotA' };
+    const navOrder = ['home','coach','diet','training','dataCenter','languages','cloud','me','info'];
+    const subNavMap = { home:[1,2,3,4,5,6,7,8], coach:[1,2,3,4,5,6], diet:[1,2,3,4,5,6], training:[1,2,3,4,5,6], dataCenter:[1,2,3,4,5,6], languages:[1,2,3,4,5], cloud:[1,2,3,4,5], me:[1,2], info:[1,2,3] };
+    const swipeNav = ['training','home','diet'];
+
+    const wheel = document.getElementById('mainWheel');
+    const slider = document.getElementById('subSlider');
+    const sliderBubble = document.getElementById('sliderBubble');
+    const sliderMin = document.getElementById('sliderMin');
+    const sliderMax = document.getElementById('sliderMax');
+    const wheelValue = document.getElementById('wheelValue');
+    const sliderValue = document.getElementById('sliderValue');
+    const bottomNote = document.getElementById('bottomNote');
+    const coachButton = document.getElementById('coachButton');
+    const meButton = document.getElementById('meButton');
+    const weightLabel = document.getElementById('weightLabel');
+    const topSubLabel = document.getElementById('topSubLabel');
+    const homeLeftTitle = document.getElementById('homeLeftTitle');
+    const homeRightTitle = document.getElementById('homeRightTitle');
+    const homeLeftNote = document.getElementById('homeLeftNote');
+    const homeRightNote = document.getElementById('homeRightNote');
+    const trainingHeroTitle = document.getElementById('trainingHeroTitle');
+    const trainingHeroNote = document.getElementById('trainingHeroNote');
+    const dietHeroTitle = document.getElementById('dietHeroTitle');
+    const dietHeroNote = document.getElementById('dietHeroNote');
+    const homeStatusTitle = document.getElementById('homeStatusTitle');
+    const moduleBadge = document.getElementById('moduleBadge');
+    const wheelLabelTitle = document.getElementById('wheelLabelTitle');
+    const sliderLabelTitle = document.getElementById('sliderLabelTitle');
+    const langPageTitle = document.getElementById('langPageTitle');
+    const langPageSub = document.getElementById('langPageSub');
+    const slotATitle = document.getElementById('slotATitle');
+    const slotBTitle = document.getElementById('slotBTitle');
+    const slotAValue = document.getElementById('slotAValue');
+    const slotBValue = document.getElementById('slotBValue');
+    const useSlotAButton = document.getElementById('useSlotAButton');
+    const useSlotBButton = document.getElementById('useSlotBButton');
+    const replaceTargetLabel = document.getElementById('replaceTargetLabel');
+    const replaceTargetValue = document.getElementById('replaceTargetValue');
+    const cloudSelectLabel = document.getElementById('cloudSelectLabel');
+    const cloudPackSelect = document.getElementById('cloudPackSelect');
+    const replaceBtn = document.getElementById('replaceBtn');
+    const cloudStatus = document.getElementById('cloudStatus');
+    const cloudPageTitle = document.getElementById('cloudPageTitle');
+    const cloudPageSub = document.getElementById('cloudPageSub');
+    const cloudBox1Label = document.getElementById('cloudBox1Label');
+    const cloudBox1Value = document.getElementById('cloudBox1Value');
+    const cloudBox2Label = document.getElementById('cloudBox2Label');
+    const cloudBox2Value = document.getElementById('cloudBox2Value');
+    const cloudBox3Label = document.getElementById('cloudBox3Label');
+    const cloudBox3Value = document.getElementById('cloudBox3Value');
+    const cloudBox4Label = document.getElementById('cloudBox4Label');
+    const cloudBox4Value = document.getElementById('cloudBox4Value');
+    const cloudPageNote = document.getElementById('cloudPageNote');
+    const genericTitle = document.getElementById('genericTitle');
+    const genericSub = document.getElementById('genericSub');
+    const swipePage = document.getElementById('swipePage');
+    const swipeShell = document.getElementById('swipeShell');
+    const languagesPage = document.getElementById('languagesPage');
+    const cloudPage = document.getElementById('cloudPage');
+    const genericPage = document.getElementById('genericPage');
+    const mePage = document.getElementById('mePage');
+    const meProfileView = document.getElementById('meProfileView');
+    const meDataView = document.getElementById('meDataView');
+    const topProfileAvatar = document.getElementById('topProfileAvatar');
+    const customDdOverlay = document.getElementById('customDdOverlay');
+    const customDdSheet = document.getElementById('customDdSheet');
+    const customDdTitle = document.getElementById('customDdTitle');
+    const customDdList = document.getElementById('customDdList');
+
+    const itemHeight = 32;
+    const loopCopies = 3;
+    let activeWheelIndex = 0;
+    let currentVirtualIndex = navOrder.length;
+    let wheelLock = false;
+    let statusMessage = '';
+    let swipeTimer = null;
+    let swipeLock = false;
+    let currentCustomSelectId = null;
+    let profileDirty = false;
+
+    const profileI18n = {
+      it:{
+        titleProfile:'Il mio profilo', subProfile:'Pagina principale del tuo account.', statWeight:'Peso attuale', statAge:'Età', sectionBody:'Corpo e metabolismo', sectionGoal:'Obiettivo e pasti',
+        metricBMI:'BMI', metricBfPct:'Massa grassa %', metricBfKg:'Massa grassa kg', metricLean:'Massa magra', metricBMR:'BMR kJ', metricTDEE:'TDEE kJ', metricTarget:'Obiettivo kJ', metricTime:'Tempo stimato',
+        macroProtein:'Proteine', macroCarbs:'Carbo', macroFat:'Grassi', macroFibre:'Fibre min.', macroDeficit:'Deficit', macroKgWeek:'Kg/settimana', macroLose:'Peso da perdere', macroToGoal:"All'obiettivo", macroPath:'% percorso', macroLossPct:'% perdita/sett.', macroFatMin:'Grassi min/pasto', macroFatMax:'Grassi max/pasto', macroProteinMin:'Proteine min/pasto', macroProteinMax:'Proteine max/pasto', macroCarbMin:'Carbo min/pasto', macroCarbMax:'Carbo max/pasto',
+        titleData:'Immissione dati personali', subData:'Compila qui tutti i dati del profilo.', sectionPhoto:'Foto profilo', photoTitle:'Immagine utente', photoSub:'Carica qui la foto che vuoi vedere nella pagina profilo e nel pulsante profilo in alto a destra.', photoUpload:'Carica foto', photoRemove:'Rimuovi', sectionUser:'Dati utente', sectionControls:'Controlli', reset:'Reset prova', savedLocal:'I dati del profilo vengono salvati in locale su questo dispositivo.', saved:'Dati salvati.', unsaved:'Modifiche non salvate.', resetDone:'Dati resettati.', saveTop:'Salva',
+        fldSex:'Sesso', fldBirth:'Data di nascita', fldTraining:'Allenamento', fldHeight:'Altezza (cm)', fldFat:'% grasso', fldWeightStart:'Peso iniziale', fldWeightCurrent:'Peso attuale', fldWeightGoal:'Obiettivo (kg)', fldGoalType:'Obbiettivo principale', fldActivity:'Livello attivita', fldStrategy:'Strategie caloriche',
+        optMale:'Maschio', optFemale:'Femmina', optNone:'Nessuno', optLight:'Leggero', optRegular:'Regolare', optDeficit:'Deficit', optMaintain:'Mantenimento', optSurplus:'Surplus', optSedentary:'Sedentario', optLightActive:'Leggermente Attivo', optModerate:'Moderatamente Attivo', optVery:'Molto Attivo', optConservative:'Conservativa', optStandard:'Standard', optAggressive:'Aggressiva', optVeryAggressive:'Molto Aggressiva', choose:'Scegli'
+      },
+      en:{
+        titleProfile:'My profile', subProfile:'Main page of your account.', statWeight:'Current weight', statAge:'Age', sectionBody:'Body and metabolism', sectionGoal:'Goal and meals',
+        metricBMI:'BMI', metricBfPct:'Body fat %', metricBfKg:'Body fat kg', metricLean:'Lean mass', metricBMR:'BMR kJ', metricTDEE:'TDEE kJ', metricTarget:'Target kJ', metricTime:'Estimated time',
+        macroProtein:'Protein', macroCarbs:'Carbs', macroFat:'Fat', macroFibre:'Min fibre', macroDeficit:'Deficit', macroKgWeek:'Kg/week', macroLose:'Weight to lose', macroToGoal:'To goal', macroPath:'% path', macroLossPct:'% loss/week', macroFatMin:'Fat min/meal', macroFatMax:'Fat max/meal', macroProteinMin:'Protein min/meal', macroProteinMax:'Protein max/meal', macroCarbMin:'Carbs min/meal', macroCarbMax:'Carbs max/meal',
+        titleData:'Personal data input', subData:'Fill in all profile data here.', sectionPhoto:'Profile photo', photoTitle:'User image', photoSub:'Upload the photo you want to see in the profile page and in the top-right profile button.', photoUpload:'Upload photo', photoRemove:'Remove', sectionUser:'User data', sectionControls:'Controls', reset:'Reset test', savedLocal:'Profile data is saved locally on this device.', saved:'Data saved.', unsaved:'Unsaved changes.', resetDone:'Data reset.', saveTop:'Save',
+        fldSex:'Sex', fldBirth:'Birth date', fldTraining:'Training', fldHeight:'Height (cm)', fldFat:'Body fat %', fldWeightStart:'Starting weight', fldWeightCurrent:'Current weight', fldWeightGoal:'Goal (kg)', fldGoalType:'Main goal', fldActivity:'Activity level', fldStrategy:'Calorie strategy',
+        optMale:'Male', optFemale:'Female', optNone:'None', optLight:'Light', optRegular:'Regular', optDeficit:'Deficit', optMaintain:'Maintenance', optSurplus:'Surplus', optSedentary:'Sedentary', optLightActive:'Lightly active', optModerate:'Moderately active', optVery:'Very active', optConservative:'Conservative', optStandard:'Standard', optAggressive:'Aggressive', optVeryAggressive:'Very aggressive', choose:'Choose'
+      },
+      es:{
+        titleProfile:'Mi perfil', subProfile:'Página principal de tu cuenta.', statWeight:'Peso actual', statAge:'Edad', sectionBody:'Cuerpo y metabolismo', sectionGoal:'Objetivo y comidas',
+        metricBMI:'BMI', metricBfPct:'Grasa corporal %', metricBfKg:'Grasa corporal kg', metricLean:'Masa magra', metricBMR:'BMR kJ', metricTDEE:'TDEE kJ', metricTarget:'Objetivo kJ', metricTime:'Tiempo estimado',
+        macroProtein:'Proteínas', macroCarbs:'Carbo', macroFat:'Grasas', macroFibre:'Fibra mín.', macroDeficit:'Déficit', macroKgWeek:'Kg/semana', macroLose:'Peso a perder', macroToGoal:'Hasta objetivo', macroPath:'% recorrido', macroLossPct:'% pérdida/sem.', macroFatMin:'Grasas mín/comida', macroFatMax:'Grasas máx/comida', macroProteinMin:'Proteínas mín/comida', macroProteinMax:'Proteínas máx/comida', macroCarbMin:'Carbo mín/comida', macroCarbMax:'Carbo máx/comida',
+        titleData:'Entrada de datos personales', subData:'Completa aquí todos los datos del perfil.', sectionPhoto:'Foto de perfil', photoTitle:'Imagen del usuario', photoSub:'Sube aquí la foto que quieres ver en la página del perfil y en el botón superior derecho.', photoUpload:'Subir foto', photoRemove:'Quitar', sectionUser:'Datos de usuario', sectionControls:'Controles', reset:'Reset prueba', savedLocal:'Los datos del perfil se guardan localmente en este dispositivo.', saved:'Datos guardados.', unsaved:'Cambios no guardados.', resetDone:'Datos reiniciados.', saveTop:'Guardar',
+        fldSex:'Sexo', fldBirth:'Fecha de nacimiento', fldTraining:'Entrenamiento', fldHeight:'Altura (cm)', fldFat:'% grasa', fldWeightStart:'Peso inicial', fldWeightCurrent:'Peso actual', fldWeightGoal:'Objetivo (kg)', fldGoalType:'Objetivo principal', fldActivity:'Nivel de actividad', fldStrategy:'Estrategia calórica',
+        optMale:'Hombre', optFemale:'Mujer', optNone:'Ninguno', optLight:'Ligero', optRegular:'Regular', optDeficit:'Déficit', optMaintain:'Mantenimiento', optSurplus:'Superávit', optSedentary:'Sedentario', optLightActive:'Ligeramente activo', optModerate:'Moderadamente activo', optVery:'Muy activo', optConservative:'Conservadora', optStandard:'Estándar', optAggressive:'Agresiva', optVeryAggressive:'Muy agresiva', choose:'Elegir'
+      }
+    };
+
+    const PROFILE_STORAGE_KEY = 'fit_app_008A_profile_data_v1';
+    const PROFILE_PHOTO_KEY = 'fit_app_008A_profile_photo_v1';
+    const profileState = {
+      data:{ sex:'male', birth:'', training:'none', height:'', bodyFat:'', weightStart:'', weightCurrent:'', weightGoal:'', goalType:'deficit', activity:'sedentary', strategy:'conservative' },
+      photo:''
+    };
+
+    function activePack(){ return packs[languageState[languageState.activeSlot].code]; }
+    function inactiveSlotKey(){ return languageState.activeSlot === 'slotA' ? 'slotB' : 'slotA'; }
+    function currentNavKey(){ return navOrder[activeWheelIndex]; }
+    function t(key, vars = {}){ let value = activePack().strings[key] ?? key; Object.entries(vars).forEach(([k,v]) => value = value.replaceAll(`{${k}}`, String(v))); return value; }
+    function navLabel(key){ return t(`nav.${key}`); }
+    function subLabel(navKey, index){ return t(`sub.${navKey}.${index}`); }
+    function sliderItems(){ return (subNavMap[currentNavKey()] || []).map(i => ({ index:i, label:subLabel(currentNavKey(), i) })); }
+    function slotText(slotKey){ const pack = packs[languageState[slotKey].code]; const state = languageState.activeSlot === slotKey ? t('lang.active') : t('lang.replaceable'); return t('lang.slotText', { name:pack.meta.name, version:pack.meta.version, state }); }
+
+    function buildWheel(){
+      wheel.innerHTML = '';
+      const total = navOrder.length;
+      for(let copy=0; copy<loopCopies; copy+=1){
+        navOrder.forEach((navKey, index) => {
+          const button = document.createElement('button');
+          const virtualIndex = copy * total + index;
+          button.type = 'button';
+          button.className = 'wheel-item';
+          button.dataset.realIndex = String(index);
+          button.dataset.virtualIndex = String(virtualIndex);
+          button.addEventListener('click', () => setWheelIndex(index, true));
+          wheel.appendChild(button);
+        });
+      }
+      updateWheelLabels();
+      requestAnimationFrame(() => setWheelIndex(0, true));
+    }
+
+    function updateWheelLabels(){ [...wheel.children].forEach(node => node.textContent = navLabel(navOrder[Number(node.dataset.realIndex)])); }
+    function updateWheelActiveState(){ [...wheel.children].forEach(node => node.classList.toggle('active', Number(node.dataset.virtualIndex) === currentVirtualIndex)); }
+
+    function normalizeWheelPosition(rawIndex){
+      const total = navOrder.length;
+      if(rawIndex < total * 0.5){ rawIndex += total; wheel.scrollTop += total * itemHeight; }
+      if(rawIndex >= total * 2.5){ rawIndex -= total; wheel.scrollTop -= total * itemHeight; }
+      return rawIndex;
+    }
+
+    function setWheelIndex(realIndex, centerScroll = false){
+      const total = navOrder.length;
+      activeWheelIndex = Math.max(0, Math.min(realIndex, total - 1));
+      currentVirtualIndex = total + activeWheelIndex;
+      updateWheelActiveState();
+      updateSliderMeta();
+      if(centerScroll){
+        wheelLock = true;
+        wheel.scrollTo({ top: currentVirtualIndex * itemHeight, behavior: 'smooth' });
+        window.setTimeout(() => { wheelLock = false; }, 220);
+      }
+    }
+
+    function syncWheelFromScroll(){
+      if(wheelLock) return;
+      let rawIndex = Math.round(wheel.scrollTop / itemHeight);
+      rawIndex = normalizeWheelPosition(rawIndex);
+      if(rawIndex !== currentVirtualIndex){
+        currentVirtualIndex = rawIndex;
+        activeWheelIndex = ((rawIndex % navOrder.length) + navOrder.length) % navOrder.length;
+        updateWheelActiveState();
+        updateSliderMeta();
+      }
+    }
+
+    function populateCloudSelect(){
+      const inactiveCode = languageState[inactiveSlotKey()].code;
+      const activeCode = languageState[languageState.activeSlot].code;
+      cloudPackSelect.innerHTML = '';
+      Object.values(packs).forEach(pack => {
+        if(pack.meta.code === activeCode) return;
+        const option = document.createElement('option');
+        option.value = pack.meta.code;
+        option.textContent = `${pack.meta.name} · v${pack.meta.version}`;
+        if(pack.meta.code === inactiveCode) option.selected = true;
+        cloudPackSelect.appendChild(option);
+      });
+    }
+
+    function renderPage(){
+      const navKey = currentNavKey();
+      const inSwipe = swipeNav.includes(navKey);
+      const meMode = navKey === 'me';
+      swipePage.classList.toggle('active', inSwipe);
+      languagesPage.classList.toggle('active', navKey === 'languages');
+      cloudPage.classList.toggle('active', navKey === 'cloud');
+      mePage.classList.toggle('active', meMode);
+      genericPage.classList.toggle('active', !inSwipe && navKey !== 'languages' && navKey !== 'cloud' && !meMode);
+      if(meMode){
+        const subIndex = Number(slider.value || 1);
+        meProfileView.classList.toggle('active', subIndex === 1);
+        meDataView.classList.toggle('active', subIndex === 2);
+      }
+      if(genericPage.classList.contains('active')){
+        genericTitle.textContent = navLabel(navKey);
+        genericSub.textContent = t('page.placeholder', { page: navLabel(navKey) }) + ' ' + t('page.placeholderSub');
+      }
+      updateCoachButtonState();
+      syncSwipeToNav();
+    }
+
+    function syncSwipeToNav(){
+      const navKey = currentNavKey();
+      if(!swipeNav.includes(navKey)) return;
+      const targetIndex = swipeNav.indexOf(navKey);
+      const panelWidth = swipeShell.clientWidth;
+      const targetLeft = targetIndex * panelWidth;
+      if(Math.abs(swipeShell.scrollLeft - targetLeft) > 4){
+        swipeLock = true;
+        swipeShell.scrollTo({ left: targetLeft, behavior: 'smooth' });
+        window.setTimeout(() => { swipeLock = false; }, 220);
+      }
+    }
+
+    function syncNavFromSwipe(){
+      if(swipeLock) return;
+      const panelWidth = swipeShell.clientWidth || 1;
+      const index = Math.round(swipeShell.scrollLeft / panelWidth);
+      const navKey = swipeNav[Math.max(0, Math.min(index, swipeNav.length - 1))];
+      const targetRealIndex = navOrder.indexOf(navKey);
+      if(targetRealIndex !== activeWheelIndex){
+        setWheelIndex(targetRealIndex, true);
+      }
+    }
+
+    function updateStaticTexts(){
+      document.documentElement.lang = activePack().meta.code;
+      coachButton.textContent = t('nav.coach');
+      meButton.title = t('nav.me');
+      weightLabel.textContent = t('top.currentWeight');
+      homeLeftTitle.textContent = t('home.leftTitle');
+      homeRightTitle.textContent = t('home.rightTitle');
+      homeLeftNote.textContent = t('home.leftNote');
+      homeRightNote.textContent = t('home.rightNote');
+      trainingHeroTitle.textContent = t('nav.training');
+      trainingHeroNote.textContent = t('hero.trainingNote');
+      dietHeroTitle.textContent = t('nav.diet');
+      dietHeroNote.textContent = t('hero.dietNote');
+      moduleBadge.textContent = t('layout.moduleA');
+      wheelLabelTitle.textContent = t('status.wheel');
+      sliderLabelTitle.textContent = t('status.slider');
+      langPageTitle.textContent = t('page.languages.title');
+      langPageSub.textContent = t('page.languages.sub');
+      slotATitle.textContent = t('lang.slotA');
+      slotBTitle.textContent = t('lang.slotB');
+      slotAValue.textContent = slotText('slotA');
+      slotBValue.textContent = slotText('slotB');
+      useSlotAButton.textContent = t('lang.useSlotA');
+      useSlotBButton.textContent = t('lang.useSlotB');
+      useSlotAButton.classList.toggle('is-active', languageState.activeSlot === 'slotA');
+      useSlotBButton.classList.toggle('is-active', languageState.activeSlot === 'slotB');
+      replaceTargetLabel.textContent = t('lang.replaceTarget');
+      replaceTargetValue.textContent = inactiveSlotKey() === 'slotA' ? t('lang.slotA') : t('lang.slotB');
+      cloudSelectLabel.textContent = t('lang.availablePack');
+      replaceBtn.textContent = t('lang.replaceButton');
+      cloudStatus.textContent = statusMessage || t('lang.warning');
+      cloudPageTitle.textContent = t('page.cloud.title');
+      cloudPageSub.textContent = t('page.cloud.sub');
+      cloudBox1Label.textContent = t('cloud.box1.label');
+      cloudBox1Value.textContent = t('cloud.box1.value');
+      cloudBox2Label.textContent = t('cloud.box2.label');
+      cloudBox2Value.textContent = t('cloud.box2.value');
+      cloudBox3Label.textContent = t('cloud.box3.label');
+      cloudBox3Value.textContent = t('cloud.box3.value');
+      cloudBox4Label.textContent = t('cloud.box4.label');
+      cloudBox4Value.textContent = t('cloud.box4.value');
+      cloudPageNote.textContent = t('cloud.note');
+      renderMeViews();
+      updateTopAvatar();
+      updateWheelLabels();
+      populateCloudSelect();
+      renderPage();
+    }
+
+    function updateSliderMeta(){
+      const items = sliderItems();
+      slider.min = 1;
+      slider.max = Math.max(items.length, 1);
+      slider.value = 1;
+      sliderMin.textContent = '1';
+      sliderMax.textContent = String(items.length);
+      updateSliderUI();
+    }
+
+    function updateSliderUI(){
+      const items = sliderItems();
+      const max = Math.max(items.length, 1);
+      const value = Math.min(Number(slider.value), max);
+      slider.value = value;
+      const label = items[value - 1]?.label || '—';
+      const percent = max === 1 ? 0 : ((value - 1) / (max - 1)) * 100;
+      sliderBubble.style.left = `${percent}%`;
+      sliderBubble.textContent = label;
+      const wheelLabel = navLabel(currentNavKey());
+      wheelValue.textContent = wheelLabel;
+      sliderValue.textContent = label;
+      homeStatusTitle.textContent = `${wheelLabel} · ${label}`;
+      topSubLabel.textContent = `${wheelLabel} · ${label}`;
+      bottomNote.textContent = t('status.bottomNote', { wheel: wheelLabel, sub: label });
+      renderPage();
+    }
+
+    function goToNav(navKey){
+      const targetIndex = navOrder.indexOf(navKey);
+      if(targetIndex >= 0) setWheelIndex(targetIndex, true);
+    }
+
+    function setActiveSlot(slotKey){ languageState.activeSlot = slotKey; statusMessage = ''; updateStaticTexts(); updateSliderMeta(); }
+    function replaceInactiveSlot(){ const targetSlot = inactiveSlotKey(); const selectedCode = cloudPackSelect.value; if(languageState[targetSlot].code === selectedCode){ statusMessage = t('lang.same'); } else { languageState[targetSlot].code = selectedCode; statusMessage = t('lang.done', { name: packs[selectedCode].meta.name }); } updateStaticTexts(); }
+
+    function tp(key){
+      const code = activePack().meta.code;
+      return (profileI18n[code] && profileI18n[code][key]) || (profileI18n.it && profileI18n.it[key]) || key;
+    }
+    function fmt1(v,s=''){ return (v == null || !Number.isFinite(v)) ? '—' : String(v.toFixed(1)).replace('.', ',') + s; }
+    function fmt0(v,s=''){ return (v == null || !Number.isFinite(v)) ? '—' : String(Math.round(v)) + s; }
+    function fmt2(v,s=''){ return (v == null || !Number.isFinite(v)) ? '—' : String(v.toFixed(2)).replace('.', ',') + s; }
+    function pct(v,d=1){ return (v == null || !Number.isFinite(v)) ? '—' : String((v*100).toFixed(d)).replace('.', ',') + '%'; }
+    function parseDecimal(raw){
+      const s = String(raw || '').trim().replace('%','').replace('kg','').replace(',', '.');
+      if(!s) return null;
+      const n = Number(s);
+      return Number.isFinite(n) ? n : null;
+    }
+    function ageFromDate(dateStr){
+      if(!dateStr) return null;
+      const d = new Date(dateStr);
+      if(Number.isNaN(d.getTime())) return null;
+      const now = new Date();
+      let age = now.getFullYear() - d.getFullYear();
+      const m = now.getMonth() - d.getMonth();
+      if(m < 0 || (m === 0 && now.getDate() < d.getDate())) age--;
+      return age >= 0 ? age : null;
+    }
+    function activityFactor(code){ return ({sedentary:1.2, lightActive:1.35, moderate:1.55, very:1.75})[code] || 1.2; }
+    function strategyFactor(goalType, strategy){
+      const map = {
+        deficit:{conservative:-0.10, standard:-0.15, aggressive:-0.20, veryAggressive:-0.25},
+        maintain:{conservative:-0.05, standard:0, aggressive:0, veryAggressive:0},
+        surplus:{conservative:0.05, standard:0.10, aggressive:0.15, veryAggressive:0.20}
+      };
+      return (map[goalType] || {})[strategy] ?? 0;
+    }
+    function sexNumeric(code){ return code === 'male' ? 1 : 0; }
+    function optionLabelMap(){
+      return {
+        male:tp('optMale'), female:tp('optFemale'), none:tp('optNone'), light:tp('optLight'), regular:tp('optRegular'),
+        deficit:tp('optDeficit'), maintain:tp('optMaintain'), surplus:tp('optSurplus'), sedentary:tp('optSedentary'), lightActive:tp('optLightActive'), moderate:tp('optModerate'), very:tp('optVery'),
+        conservative:tp('optConservative'), standard:tp('optStandard'), aggressive:tp('optAggressive'), veryAggressive:tp('optVeryAggressive')
+      };
+    }
+    function photoFallback(){
+      return 'data:image/svg+xml;utf8,' + encodeURIComponent(`
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+          <rect width="120" height="120" rx="20" fill="#111"/>
+          <circle cx="60" cy="42" r="20" fill="#d9e2ef"/>
+          <rect x="25" y="72" width="70" height="28" rx="14" fill="#d9e2ef"/>
+        </svg>
+      `);
+    }
+    function activePhoto(){ return profileState.photo && String(profileState.photo).trim() ? profileState.photo : photoFallback(); }
+    function updateTopAvatar(){ if(topProfileAvatar) topProfileAvatar.src = activePhoto(); }
+    function updateCoachButtonState(){
+      const meMode = currentNavKey() === 'me';
+      coachButton.classList.toggle('save-mode', meMode);
+      coachButton.textContent = meMode ? tp('saveTop') : t('nav.coach');
+      coachButton.title = meMode ? tp('saveTop') : t('nav.coach');
+    }
+    function saveProfileChanges(){
+      saveProfileState();
+      profileDirty = false;
+      renderMeViews();
+      updateStatus(tp('saved'));
+      updateCoachButtonState();
+    }
+    function saveProfileState(){
+      try{ localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(profileState.data)); }catch(e){}
+      try{ localStorage.setItem(PROFILE_PHOTO_KEY, profileState.photo || ''); }catch(e){}
+    }
+    function loadProfileState(){
+      try{ const raw = localStorage.getItem(PROFILE_STORAGE_KEY); if(raw){ Object.assign(profileState.data, JSON.parse(raw) || {}); } }catch(e){}
+      try{ profileState.photo = localStorage.getItem(PROFILE_PHOTO_KEY) || ''; }catch(e){}
+      updateTopAvatar();
+    }
+    function computeProfile(){
+      const d = profileState.data;
+      const age = ageFromDate(d.birth);
+      const h = parseDecimal(d.height);
+      const hM = h ? h / 100 : null;
+      const weightCurrent = parseDecimal(d.weightCurrent);
+      const weightStart = parseDecimal(d.weightStart);
+      const weightGoal = parseDecimal(d.weightGoal);
+      const bodyFatInput = parseDecimal(d.bodyFat);
+      const bmi = (weightCurrent && hM) ? weightCurrent / (hM*hM) : null;
+      const estBodyFatPct = (bmi != null && age != null) ? (((1.2*bmi) + (0.23*age) - (10.8*sexNumeric(d.sex)) - 5.4) / 100) : null;
+      let bodyFatPct = null;
+      if(bodyFatInput != null && bodyFatInput > 0){ bodyFatPct = bodyFatInput > 1 ? bodyFatInput/100 : bodyFatInput; } else { bodyFatPct = estBodyFatPct; }
+      const bodyFatKg = (bodyFatPct != null && weightCurrent != null) ? bodyFatPct * weightCurrent : null;
+      const leanMass = (weightCurrent != null && bodyFatPct != null) ? weightCurrent * (1 - bodyFatPct) : null;
+      let bmrKj = null;
+      if(weightCurrent != null){
+        if(bodyFatInput != null && bodyFatInput > 0){ const bf = bodyFatInput > 1 ? bodyFatInput/100 : bodyFatInput; bmrKj = 4.184 * (370 + 21.6 * (weightCurrent * (1 - bf))); }
+        else if(h != null && age != null){ const sexAdj = d.sex === 'male' ? 5 : -161; bmrKj = 4.184 * (10*weightCurrent + 6.25*h - 5*age + sexAdj); }
+      }
+      const tdeeKj = bmrKj != null ? bmrKj * activityFactor(d.activity) : null;
+      const targetKj = tdeeKj != null ? tdeeKj * (1 + strategyFactor(d.goalType, d.strategy)) : null;
+      const trainingCode = d.training;
+      const fatFactor = Math.max(0.6, 0.8 + (trainingCode === 'regular' ? 0.1 : 0));
+      const energyFatBase = (weightCurrent != null) ? fatFactor * weightCurrent * 37 : null;
+      const energyFatMin20 = targetKj != null ? targetKj * 0.2 : null;
+      const fatEnergy = (energyFatBase != null && energyFatMin20 != null) ? Math.max(energyFatBase, energyFatMin20) : null;
+      const fats = fatEnergy != null ? fatEnergy / 37 : null;
+      const proteinFactor = Math.min(2.4, 1.6 + (d.goalType === 'deficit' ? 0.2 : 0) + ((age != null && age >= 50) ? 0.2 : 0) + (trainingCode === 'light' ? 0.2 : trainingCode === 'regular' ? 0.4 : 0));
+      const proteins = leanMass != null ? proteinFactor * leanMass : null;
+      const proteinEnergy = proteins != null ? proteins * 17 : null;
+      const carbEnergy = (targetKj != null && proteinEnergy != null && fatEnergy != null) ? targetKj - proteinEnergy - fatEnergy : null;
+      const carbs = carbEnergy != null ? carbEnergy / 17 : null;
+      const deficit = (tdeeKj != null && targetKj != null) ? (tdeeKj - targetKj) : null;
+      const fibre = targetKj != null ? (targetKj / 4200) * 14 : null;
+      const kgWeek = deficit != null ? (deficit * 7 / 32000) : null;
+      const timeWeeks = (weightCurrent != null && weightGoal != null && kgWeek != null && kgWeek > 0) ? ((weightCurrent - weightGoal) / kgWeek) : null;
+      const weightToLose = (weightStart != null && weightGoal != null) ? (weightStart - weightGoal) : null;
+      const toGoal = (weightCurrent != null && weightGoal != null) ? (weightCurrent - weightGoal) : null;
+      const pathPct = (weightStart != null && weightCurrent != null && weightGoal != null && (weightStart - weightGoal) !== 0) ? ((weightStart - weightCurrent) / (weightStart - weightGoal)) : null;
+      const lossPctWeek = (kgWeek != null && weightCurrent != null && weightCurrent > 0) ? (kgWeek / weightCurrent) : null;
+      let carbMaxMeal = null;
+      if(leanMass != null){
+        const ageBase = age == null ? 0.3 : (age < 40 ? 0.25 : age < 55 ? 0.3 : age < 65 ? 0.35 : 0.4);
+        const goalAdj = d.goalType === 'deficit' ? 0.05 : 0;
+        const trainAdj = trainingCode === 'light' ? 0.03 : (trainingCode === 'regular' ? 0.07 : 0);
+        const factor = Math.max(0.25, Math.min(0.45, ageBase + goalAdj + trainAdj));
+        carbMaxMeal = Math.max(20, leanMass * factor);
+      }
+      return { age, bmi, bodyFatPct, bodyFatKg, leanMass, bmrKj, tdeeKj, targetKj, fats, proteins, carbs, fibre, deficit, kgWeek, timeWeeks, weightCurrent, weightToLose, toGoal, pathPct, lossPctWeek, fatMinMeal:0, fatMaxMeal:weightCurrent != null ? 0.4*weightCurrent : null, proteinMinMeal:55, proteinMaxMeal:weightCurrent != null ? 1.5*weightCurrent : null, carbMinMeal:35, carbMaxMeal };
+    }
+    function customSelectHtml(id, labelKey, value, options){
+      const map = optionLabelMap();
+      const optionsHtml = options.map(opt => `<option value="${opt}" ${opt===value?'selected':''}>${map[opt] || opt}</option>`).join('');
+      return `<label class="profile-field"><div class="profile-label">${tp(labelKey)}</div><div class="custom-select-wrap"><select id="${id}" class="custom-select-native profile-input">${optionsHtml}</select><button class="custom-select-btn" type="button" data-custom-select="${id}" data-custom-label="${tp(labelKey)}"><span id="${id}_label">${map[value] || value}</span></button></div></label>`;
+    }
+    function renderMeViews(){
+      const r = computeProfile();
+      const d = profileState.data;
+      meProfileView.innerHTML = `
+        <div class="view-head"><div class="view-title">${tp('titleProfile')}</div><div class="view-sub">${tp('subProfile')}</div></div>
+        <div class="section"><div class="profile-main-stats">
+          <div class="profile-stat-card"><div class="profile-stat-value">${r.weightCurrent != null ? fmt1(r.weightCurrent, ' kg') : '—'}</div><div class="profile-stat-label">${tp('statWeight')}</div></div>
+          <div class="profile-stat-card"><div class="profile-stat-value">${r.age != null ? fmt0(r.age) : '—'}</div><div class="profile-stat-label">${tp('statAge')}</div></div>
+        </div></div>
+        <div class="profile-section-title">${tp('sectionBody')}</div>
+        <div class="section"><div class="profile-metric-grid">
+          <div class="profile-metric-card"><div class="profile-metric-value">${r.bmi != null ? fmt1(r.bmi) : '—'}</div><div class="profile-metric-label">${tp('metricBMI')}</div></div>
+          <div class="profile-metric-card"><div class="profile-metric-value">${r.bodyFatPct != null ? fmt1(r.bodyFatPct * 100, '%') : '—'}</div><div class="profile-metric-label">${tp('metricBfPct')}</div></div>
+          <div class="profile-metric-card"><div class="profile-metric-value">${r.bodyFatKg != null ? fmt1(r.bodyFatKg, ' kg') : '—'}</div><div class="profile-metric-label">${tp('metricBfKg')}</div></div>
+          <div class="profile-metric-card"><div class="profile-metric-value">${r.leanMass != null ? fmt1(r.leanMass, ' kg') : '—'}</div><div class="profile-metric-label">${tp('metricLean')}</div></div>
+          <div class="profile-metric-card"><div class="profile-metric-value">${r.bmrKj != null ? fmt0(r.bmrKj) : '—'}</div><div class="profile-metric-label">${tp('metricBMR')}</div></div>
+          <div class="profile-metric-card"><div class="profile-metric-value">${r.tdeeKj != null ? fmt0(r.tdeeKj) : '—'}</div><div class="profile-metric-label">${tp('metricTDEE')}</div></div>
+          <div class="profile-metric-card"><div class="profile-metric-value">${r.targetKj != null ? fmt0(r.targetKj) : '—'}</div><div class="profile-metric-label">${tp('metricTarget')}</div></div>
+          <div class="profile-metric-card"><div class="profile-metric-value">${r.timeWeeks != null ? fmt0(r.timeWeeks, ' sett.') : '—'}</div><div class="profile-metric-label">${tp('metricTime')}</div></div>
+        </div></div>
+        <div class="profile-section-title">${tp('sectionGoal')}</div>
+        <div class="section"><div class="profile-macro-grid">
+          <div class="profile-macro-card"><div class="profile-macro-value">${r.proteins != null ? fmt0(r.proteins, ' g') : '—'}</div><div class="profile-macro-label">${tp('macroProtein')}</div></div>
+          <div class="profile-macro-card"><div class="profile-macro-value">${r.carbs != null ? fmt0(r.carbs, ' g') : '—'}</div><div class="profile-macro-label">${tp('macroCarbs')}</div></div>
+          <div class="profile-macro-card"><div class="profile-macro-value">${r.fats != null ? fmt0(r.fats, ' g') : '—'}</div><div class="profile-macro-label">${tp('macroFat')}</div></div>
+          <div class="profile-macro-card"><div class="profile-macro-value">${r.fibre != null ? fmt0(r.fibre, ' g') : '—'}</div><div class="profile-macro-label">${tp('macroFibre')}</div></div>
+          <div class="profile-macro-card"><div class="profile-macro-value">${r.deficit != null ? fmt0(r.deficit, ' kJ') : '—'}</div><div class="profile-macro-label">${tp('macroDeficit')}</div></div>
+          <div class="profile-macro-card"><div class="profile-macro-value">${r.kgWeek != null ? fmt2(r.kgWeek, ' kg') : '—'}</div><div class="profile-macro-label">${tp('macroKgWeek')}</div></div>
+          <div class="profile-macro-card"><div class="profile-macro-value">${r.weightToLose != null ? fmt1(r.weightToLose, ' kg') : '—'}</div><div class="profile-macro-label">${tp('macroLose')}</div></div>
+          <div class="profile-macro-card"><div class="profile-macro-value">${r.toGoal != null ? fmt1(r.toGoal, ' kg') : '—'}</div><div class="profile-macro-label">${tp('macroToGoal')}</div></div>
+          <div class="profile-macro-card"><div class="profile-macro-value">${r.pathPct != null ? pct(r.pathPct, 1) : '—'}</div><div class="profile-macro-label">${tp('macroPath')}</div></div>
+          <div class="profile-macro-card"><div class="profile-macro-value">${r.lossPctWeek != null ? pct(r.lossPctWeek, 2) : '—'}</div><div class="profile-macro-label">${tp('macroLossPct')}</div></div>
+          <div class="profile-macro-card"><div class="profile-macro-value">${fmt1(r.fatMinMeal, ' g')}</div><div class="profile-macro-label">${tp('macroFatMin')}</div></div>
+          <div class="profile-macro-card"><div class="profile-macro-value">${r.fatMaxMeal != null ? fmt1(r.fatMaxMeal, ' g') : '—'}</div><div class="profile-macro-label">${tp('macroFatMax')}</div></div>
+          <div class="profile-macro-card"><div class="profile-macro-value">${fmt1(r.proteinMinMeal, ' g')}</div><div class="profile-macro-label">${tp('macroProteinMin')}</div></div>
+          <div class="profile-macro-card"><div class="profile-macro-value">${r.proteinMaxMeal != null ? fmt1(r.proteinMaxMeal, ' g') : '—'}</div><div class="profile-macro-label">${tp('macroProteinMax')}</div></div>
+          <div class="profile-macro-card"><div class="profile-macro-value">${fmt1(r.carbMinMeal, ' g')}</div><div class="profile-macro-label">${tp('macroCarbMin')}</div></div>
+          <div class="profile-macro-card"><div class="profile-macro-value">${r.carbMaxMeal != null ? fmt1(r.carbMaxMeal, ' g') : '—'}</div><div class="profile-macro-label">${tp('macroCarbMax')}</div></div>
+        </div></div>`;
+      meDataView.innerHTML = `
+        <div class="view-head"><div class="view-title">${tp('titleData')}</div><div class="view-sub">${tp('subData')}</div></div>
+        <div class="section"><h2>${tp('sectionPhoto')}</h2><div class="profile-photo-wrap"><div class="profile-photo-card"><div class="profile-photo-preview"><img id="profilePhotoPreview" src="${activePhoto()}" alt="Foto profilo"></div><div class="profile-photo-meta"><div class="profile-photo-title">${tp('photoTitle')}</div><div class="profile-photo-sub">${tp('photoSub')}</div><div class="profile-photo-actions"><label class="profile-photo-btn" for="profilePhotoInput">${tp('photoUpload')}</label><button class="profile-photo-btn danger" id="removeProfilePhotoBtn" type="button">${tp('photoRemove')}</button></div><input class="profile-photo-input" id="profilePhotoInput" type="file" accept="image/*"></div></div></div></div>
+        <div class="section"><h2>${tp('sectionUser')}</h2><div class="profile-form">
+          <div class="profile-grid-2">${customSelectHtml('profileSesso','fldSex',d.sex,['male','female'])}<label class="profile-field"><div class="profile-label">—</div><input class="profile-input" type="text" placeholder="" disabled></label></div>
+          <div class="profile-grid-2"><label class="profile-field"><div class="profile-label">${tp('fldBirth')}</div><input id="profileBirthDate" class="profile-input" type="date" value="${d.birth || ''}"></label>${customSelectHtml('profileAllenamento','fldTraining',d.training,['none','light','regular'])}</div>
+          <div class="profile-grid-2"><label class="profile-field"><div class="profile-label">${tp('fldHeight')}</div><input id="profileHeight" class="profile-input" type="number" step="1" min="0" placeholder="180" value="${d.height || ''}"></label><label class="profile-field"><div class="profile-label">${tp('fldFat')}</div><input id="bodyFatPercentField" class="profile-input" type="text" inputmode="decimal" placeholder="27,2%" value="${d.bodyFat || ''}"></label></div>
+          <div class="profile-grid-2"><label class="profile-field"><div class="profile-label">${tp('fldWeightStart')}</div><input id="profileWeightStart" class="profile-input" type="number" step="0.1" min="0" placeholder="92" value="${d.weightStart || ''}"></label><label class="profile-field"><div class="profile-label">${tp('fldWeightCurrent')}</div><input id="profileWeightCurrent" class="profile-input" type="text" inputmode="decimal" placeholder="82,4 kg" value="${d.weightCurrent || ''}"></label></div>
+          <div class="profile-grid-2"><label class="profile-field"><div class="profile-label">${tp('fldWeightGoal')}</div><input id="profileWeightGoal" class="profile-input" type="number" step="0.1" min="0" placeholder="80" value="${d.weightGoal || ''}"></label>${customSelectHtml('profileObiettivoPrincipale','fldGoalType',d.goalType,['deficit','maintain','surplus'])}</div>
+          <div class="profile-grid-2">${customSelectHtml('profileAttivita','fldActivity',d.activity,['sedentary','lightActive','moderate','very'])}${customSelectHtml('profileStrategie','fldStrategy',d.strategy,['conservative','standard','aggressive','veryAggressive'])}</div>
+        </div></div>
+        <div class="section" id="imControlsSection"><h2>${tp('sectionControls')}</h2><div class="im-actions"><button id="imResetBtn" class="im-btn" type="button">${tp('reset')}</button></div><div class="im-status" id="imStatus">${tp('savedLocal')}</div></div>`;
+      bindProfileUi();
+      updateTopAvatar();
+    }
+    function applySelectLabel(selectId){
+      const select = document.getElementById(selectId);
+      const label = document.getElementById(selectId + '_label');
+      if(select && label){ label.textContent = select.options[select.selectedIndex]?.textContent || ''; }
+    }
+    function openCustomDropdown(selectId, label){
+      const select = document.getElementById(selectId);
+      if(!select || !customDdOverlay || !customDdSheet || !customDdTitle || !customDdList) return;
+      currentCustomSelectId = selectId;
+      customDdTitle.textContent = label || tp('choose');
+      customDdList.innerHTML = '';
+      [...select.options].forEach(opt => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'custom-dd-option' + (opt.selected ? ' active' : '');
+        btn.textContent = opt.textContent;
+        btn.onclick = () => {
+          select.value = opt.value;
+          applySelectLabel(selectId);
+          select.dispatchEvent(new Event('change', { bubbles:true }));
+          closeCustomDropdown();
+        };
+        customDdList.appendChild(btn);
+      });
+      customDdOverlay.classList.add('open');
+      customDdSheet.classList.add('open');
+    }
+    function closeCustomDropdown(){
+      if(customDdOverlay) customDdOverlay.classList.remove('open');
+      if(customDdSheet) customDdSheet.classList.remove('open');
+      currentCustomSelectId = null;
+    }
+    function updateStatus(text){ const s = document.getElementById('imStatus'); if(s) s.textContent = text; }
+    function bindProfileUi(){
+      const map = {
+        profileSesso:'sex', profileBirthDate:'birth', profileAllenamento:'training', profileHeight:'height', bodyFatPercentField:'bodyFat', profileWeightStart:'weightStart', profileWeightCurrent:'weightCurrent', profileWeightGoal:'weightGoal', profileObiettivoPrincipale:'goalType', profileAttivita:'activity', profileStrategie:'strategy'
+      };
+      Object.entries(map).forEach(([id,key]) => {
+        const el = document.getElementById(id);
+        if(!el) return;
+        if(el.tagName === 'SELECT') applySelectLabel(id);
+        const handler = () => {
+          profileState.data[key] = el.value;
+          if(el.tagName === 'SELECT') applySelectLabel(id);
+          profileDirty = true;
+          updateStatus(tp('unsaved'));
+          updateCoachButtonState();
+        };
+        el.addEventListener('input', handler);
+        el.addEventListener('change', handler);
+      });
+      document.querySelectorAll('[data-custom-select]').forEach(btn => {
+        btn.addEventListener('click', () => openCustomDropdown(btn.getAttribute('data-custom-select'), btn.getAttribute('data-custom-label') || tp('choose')));
+      });
+      const photoInput = document.getElementById('profilePhotoInput');
+      if(photoInput){
+        photoInput.addEventListener('change', e => {
+          const file = e.target.files && e.target.files[0];
+          if(!file) return;
+          const reader = new FileReader();
+          reader.onload = () => {
+            profileState.photo = String(reader.result || '');
+            profileDirty = true;
+            const preview = document.getElementById('profilePhotoPreview'); if(preview) preview.src = activePhoto();
+            updateTopAvatar();
+            updateStatus(tp('unsaved'));
+            updateCoachButtonState();
+          };
+          reader.readAsDataURL(file);
+        });
+      }
+      const removeBtn = document.getElementById('removeProfilePhotoBtn');
+      if(removeBtn){ removeBtn.addEventListener('click', () => { profileState.photo = ''; profileDirty = true; const preview = document.getElementById('profilePhotoPreview'); if(preview) preview.src = activePhoto(); updateTopAvatar(); updateStatus(tp('unsaved')); updateCoachButtonState(); }); }
+      const resetBtn = document.getElementById('imResetBtn');
+      if(resetBtn){ resetBtn.addEventListener('click', () => { profileState.data = { sex:'male', birth:'', training:'none', height:'', bodyFat:'', weightStart:'', weightCurrent:'', weightGoal:'', goalType:'deficit', activity:'sedentary', strategy:'conservative' }; profileState.photo=''; profileDirty = true; renderMeViews(); updateStatus(tp('resetDone')); updateCoachButtonState(); }); }
+    }
+
+    slider.addEventListener('input', updateSliderUI);
+    wheel.addEventListener('scroll', () => requestAnimationFrame(syncWheelFromScroll));
+    swipeShell.addEventListener('scroll', () => {
+      if(swipeTimer) clearTimeout(swipeTimer);
+      swipeTimer = setTimeout(syncNavFromSwipe, 90);
+    });
+    useSlotAButton.addEventListener('click', () => setActiveSlot('slotA'));
+    useSlotBButton.addEventListener('click', () => setActiveSlot('slotB'));
+    replaceBtn.addEventListener('click', replaceInactiveSlot);
+    coachButton.addEventListener('click', () => { if(currentNavKey() === 'me'){ saveProfileChanges(); } else { goToNav('coach'); } });
+    meButton.addEventListener('click', () => goToNav('me'));
+    if(customDdOverlay) customDdOverlay.addEventListener('click', closeCustomDropdown);
+
+    loadProfileState();
+    profileDirty = false;
+    updateStaticTexts();
+    buildWheel();
+  </script>
+</body>
+</html>
