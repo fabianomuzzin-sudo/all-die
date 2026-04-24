@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>008A - Me Profile/Data from Coach</title>
+  <title>26C13 - Central module tuned +3px down</title>
   <style>
     :root{
       --bg:#0f1114;
@@ -253,6 +253,68 @@
   .info-mode-copy .line-top,.info-mode-copy .line-bottom{font-size:24px;}
   .info-mode-state{min-width:112px;height:56px;font-size:42px;}
   .coach-top-btn.tutor-mode span{font-size:14px;}
+}
+
+
+/* ===== 26C4 patch =====
+   Parte da 26C3.
+   Moduli centrali estesi di 48px verso il basso per coprire il gap inferiore.
+   Solo layout verticale: contenuti e logica invariati.
+*/
+.module-a-main{
+  padding-bottom:calc(14px - 24px) !important;
+  margin-bottom:-24px !important;
+}
+.main-card{
+  min-height:calc(100% + 24px) !important;
+}
+
+
+/* ===== 26C5 patch =====
+   Rimuove la fascia nera/opaca sopra il modulo inferiore.
+   Il footer resta abbassato, ma non copre più visivamente il modulo centrale.
+*/
+.module-bottom{
+  background:transparent !important;
+  border-top:none !important;
+  padding-top:0 !important;
+}
+
+
+/* ===== 26C7 patch =====
+   Correzione rispetto a 26C6:
+   NON sposta la barra inferiore.
+   Riduce l'allungamento dei moduli centrali da 48px a 32px,
+   quindi accorcia di 16px la parte centrale.
+*/
+
+
+/* ===== 26C10 patch =====
+   Base: 26C7.
+   Correzione della fascia/ombra residua:
+   non era solo il footer, ma il clipping verticale del contenitore centrale.
+   Lascia la barra inferiore nella posizione di 26C7 e permette al modulo centrale
+   di estendersi visivamente fino al nuovo bordo senza venire mascherato.
+*/
+.module-a-main{
+  overflow:visible !important;
+}
+.main-card{
+  height:calc(100% + 24px) !important;
+}
+.module-bottom{
+  background:transparent !important;
+  border-top:none !important;
+  box-shadow:none !important;
+}
+
+
+/* ===== 26C12 patch =====
+   Rialza il modulo centrale di 8px mantenendo dimensioni attuali.
+*/
+.module-a-main,
+.main-card{
+  transform: translateY(-5px) !important;
 }
 
 </style>
