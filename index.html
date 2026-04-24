@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>26C13 - Central module tuned +3px down</title>
+  <title>008A - Me Profile/Data from Coach</title>
   <style>
     :root{
       --bg:#0f1114;
@@ -75,7 +75,7 @@
     .replace-btn{background:var(--blue);color:#07111b;border-color:#87c0ff}
     .cloud-select{width:100%;min-height:42px;border-radius:12px;border:1px solid rgba(255,255,255,.08);font-size:13px;font-weight:800;background:#1f232a;color:var(--text);padding:0 12px}
 
-    .module-bottom{width:100%;max-width:460px;min-width:0;margin:0 auto;padding:10px 12px calc(12px + var(--safe-bottom));background:linear-gradient(0deg,#171a1f 0%, #111317 100%);border-top:1px solid var(--line);transform:translateY(48px)}
+    .module-bottom{width:100%;max-width:460px;min-width:0;margin:0 auto;padding:10px 12px calc(12px + var(--safe-bottom));background:linear-gradient(0deg,#171a1f 0%, #111317 100%);border-top:1px solid var(--line)}
     .bottom-shell{width:100%;max-width:100%;min-width:0;border:1px solid var(--line);border-radius:18px;background:var(--panel);box-shadow:0 0 0 1px rgba(255,255,255,.03) inset;padding:10px 12px 8px;display:grid;gap:8px}
     .controls-row{display:grid;grid-template-columns:1fr 88px;gap:10px;align-items:center}
     .slider-row{display:grid;grid-template-columns:24px 1fr 24px;gap:8px;align-items:center}
@@ -256,65 +256,32 @@
 }
 
 
-/* ===== 26C4 patch =====
-   Parte da 26C3.
-   Moduli centrali estesi di 48px verso il basso per coprire il gap inferiore.
-   Solo layout verticale: contenuti e logica invariati.
+
+/* ===== 030 merge from Centratura_moduli =====
+   Importati solo:
+   - centratura moduli centrali
+   - altezza moduli
+   - posizione verticale
+   - fix clipping / fascia nera
+   Nessuna logica JS toccata.
 */
 .module-a-main{
   padding-bottom:calc(14px - 24px) !important;
   margin-bottom:-24px !important;
+  overflow:visible !important;
+  transform: translateY(-5px) !important;
 }
 .main-card{
   min-height:calc(100% + 24px) !important;
+  height:calc(100% + 24px) !important;
+  transform: translateY(-5px) !important;
 }
-
-
-/* ===== 26C5 patch =====
-   Rimuove la fascia nera/opaca sopra il modulo inferiore.
-   Il footer resta abbassato, ma non copre più visivamente il modulo centrale.
-*/
 .module-bottom{
+  transform:translateY(48px) !important;
   background:transparent !important;
   border-top:none !important;
   padding-top:0 !important;
-}
-
-
-/* ===== 26C7 patch =====
-   Correzione rispetto a 26C6:
-   NON sposta la barra inferiore.
-   Riduce l'allungamento dei moduli centrali da 48px a 32px,
-   quindi accorcia di 16px la parte centrale.
-*/
-
-
-/* ===== 26C10 patch =====
-   Base: 26C7.
-   Correzione della fascia/ombra residua:
-   non era solo il footer, ma il clipping verticale del contenitore centrale.
-   Lascia la barra inferiore nella posizione di 26C7 e permette al modulo centrale
-   di estendersi visivamente fino al nuovo bordo senza venire mascherato.
-*/
-.module-a-main{
-  overflow:visible !important;
-}
-.main-card{
-  height:calc(100% + 24px) !important;
-}
-.module-bottom{
-  background:transparent !important;
-  border-top:none !important;
   box-shadow:none !important;
-}
-
-
-/* ===== 26C12 patch =====
-   Rialza il modulo centrale di 8px mantenendo dimensioni attuali.
-*/
-.module-a-main,
-.main-card{
-  transform: translateY(-5px) !important;
 }
 
 </style>
@@ -533,6 +500,24 @@
         <div class="page" id="genericPage">
           <div class="generic-wrap">
             <div class="generic-box"><div class="generic-title" id="genericTitle"></div><div class="generic-sub" id="genericSub"></div></div>
+            <div class="dc-dashboard hidden" id="dataCenterTrainingPanel">
+              <div class="dc-grid">
+                <div class="dc-service-card"><div class="dc-service-name" id="dcTrainAName"></div><div class="dc-service-value" id="dcTrainAValue"></div><div class="dc-service-sub" id="dcTrainASub"></div></div>
+                <div class="dc-service-card"><div class="dc-service-name" id="dcTrainBName"></div><div class="dc-service-value" id="dcTrainBValue"></div><div class="dc-service-sub" id="dcTrainBSub"></div></div>
+              </div>
+              <div class="dc-grid">
+                <div class="dc-service-card"><div class="dc-service-name" id="dcTrainCName"></div><div class="dc-service-value" id="dcTrainCValue"></div><div class="dc-service-sub" id="dcTrainCSub"></div></div>
+              </div>
+            </div>
+            <div class="dc-dashboard hidden" id="dataCenterDietPanel">
+              <div class="dc-grid">
+                <div class="dc-service-card"><div class="dc-service-name" id="dcDietAName"></div><div class="dc-service-value" id="dcDietAValue"></div><div class="dc-service-sub" id="dcDietASub"></div></div>
+                <div class="dc-service-card"><div class="dc-service-name" id="dcDietBName"></div><div class="dc-service-value" id="dcDietBValue"></div><div class="dc-service-sub" id="dcDietBSub"></div></div>
+              </div>
+              <div class="dc-grid">
+                <div class="dc-service-card"><div class="dc-service-name" id="dcDietCName"></div><div class="dc-service-value" id="dcDietCValue"></div><div class="dc-service-sub" id="dcDietCSub"></div></div>
+              </div>
+            </div>
             <div class="dc-dashboard hidden" id="dataCenterPanel">
               <div class="dc-grid">
                 <div class="dc-service-card"><div class="dc-service-name" id="dcCoachLabel"></div><div class="dc-service-value" id="dcCoachValue"></div><div class="dc-service-sub" id="dcCoachSub"></div></div>
@@ -610,7 +595,7 @@
         'sub.coach.1':'Progressi','sub.coach.2':'Audio all.','sub.coach.3':'Audio nutr.','sub.coach.4':'Nuova dieta','sub.coach.5':'Revisioni','sub.coach.6':'API',
         'sub.diet.1':'Oggi','sub.diet.2':'Giorni','sub.diet.3':'Calendario','sub.diet.4':'Ricette','sub.diet.5':'Alimenti','sub.diet.6':'Target',
         'sub.training.1':'Giorni','sub.training.2':'Giorno 1','sub.training.3':'Giorno 2','sub.training.4':'Giorno 3','sub.training.5':'Esercizi','sub.training.6':'Intensità',
-        'sub.dataCenter.1':'Prodotti','sub.dataCenter.2':'Ricette','sub.dataCenter.3':'Nutrienti','sub.dataCenter.4':'Cloud','sub.dataCenter.5':'AI','sub.dataCenter.6':'Log',
+        'sub.dataCenter.1':'Allen','sub.dataCenter.2':'Dieta','sub.dataCenter.3':'Cloud/API',
         'sub.languages.1':'Attiva','sub.languages.2':'Slot A','sub.languages.3':'Slot B','sub.languages.4':'Cloud','sub.languages.5':'Sostituisci',
         'sub.cloud.1':'Stato','sub.cloud.2':'Slot','sub.cloud.3':'Sync','sub.cloud.4':'Pacchetti','sub.cloud.5':'Log',
         'sub.me.1':'Profilo','sub.me.2':'Dati','sub.me.3':'Body','sub.me.4':'App S','sub.me.5':'Ritmi',
@@ -627,7 +612,7 @@
         'sub.coach.1':'Progress','sub.coach.2':'Audio train.','sub.coach.3':'Audio nutr.','sub.coach.4':'New diet','sub.coach.5':'Reviews','sub.coach.6':'API',
         'sub.diet.1':'Today','sub.diet.2':'Days','sub.diet.3':'Calendar','sub.diet.4':'Recipes','sub.diet.5':'Foods','sub.diet.6':'Targets',
         'sub.training.1':'Days','sub.training.2':'Day 1','sub.training.3':'Day 2','sub.training.4':'Day 3','sub.training.5':'Exercises','sub.training.6':'Intensity',
-        'sub.dataCenter.1':'Products','sub.dataCenter.2':'Recipes','sub.dataCenter.3':'Nutrients','sub.dataCenter.4':'Cloud','sub.dataCenter.5':'AI','sub.dataCenter.6':'Log',
+        'sub.dataCenter.1':'Train','sub.dataCenter.2':'Diet','sub.dataCenter.3':'Cloud/API',
         'sub.languages.1':'Active','sub.languages.2':'Slot A','sub.languages.3':'Slot B','sub.languages.4':'Cloud','sub.languages.5':'Replace',
         'sub.cloud.1':'Status','sub.cloud.2':'Slot','sub.cloud.3':'Sync','sub.cloud.4':'Packs','sub.cloud.5':'Log',
         'sub.me.1':'Profile','sub.me.2':'Data','sub.me.3':'Body','sub.me.4':'Health','sub.me.5':'Pattern',
@@ -644,7 +629,7 @@
         'sub.coach.1':'Progreso','sub.coach.2':'Audio entreno','sub.coach.3':'Audio nutr.','sub.coach.4':'Nueva dieta','sub.coach.5':'Revisiones','sub.coach.6':'API',
         'sub.diet.1':'Hoy','sub.diet.2':'Días','sub.diet.3':'Calendario','sub.diet.4':'Recetas','sub.diet.5':'Alimentos','sub.diet.6':'Objetivos',
         'sub.training.1':'Días','sub.training.2':'Día 1','sub.training.3':'Día 2','sub.training.4':'Día 3','sub.training.5':'Ejercicios','sub.training.6':'Intensidad',
-        'sub.dataCenter.1':'Productos','sub.dataCenter.2':'Recetas','sub.dataCenter.3':'Nutrientes','sub.dataCenter.4':'Cloud','sub.dataCenter.5':'AI','sub.dataCenter.6':'Log',
+        'sub.dataCenter.1':'Entreno','sub.dataCenter.2':'Dieta','sub.dataCenter.3':'Cloud/API',
         'sub.languages.1':'Activa','sub.languages.2':'Slot A','sub.languages.3':'Slot B','sub.languages.4':'Cloud','sub.languages.5':'Reemplazar',
         'sub.cloud.1':'Estado','sub.cloud.2':'Slot','sub.cloud.3':'Sync','sub.cloud.4':'Paquetes','sub.cloud.5':'Log',
         'sub.me.1':'Perfil','sub.me.2':'Datos','sub.me.3':'Body','sub.me.4':'App S','sub.me.5':'Ritmos',
@@ -654,7 +639,7 @@
 
     const languageState = { slotA:{code:'it'}, slotB:{code:'en'}, activeSlot:'slotA' };
     const navOrder = ['home','coach','diet','training','dataCenter','languages','cloud','me','info'];
-    const subNavMap = { home:[1,2,3,4,5,6,7,8], coach:[1,2,3,4,5,6], diet:[1,2,3,4,5,6], training:[1,2,3,4,5,6], dataCenter:[1,2,3,4,5,6], languages:[1,2,3,4,5], cloud:[1,2,3,4,5], me:[1,2,3,4,5], info:[1,2,3] };
+    const subNavMap = { home:[1,2,3,4,5,6,7,8], coach:[1,2,3,4,5,6], diet:[1,2,3,4,5,6], training:[1,2,3,4,5,6], dataCenter:[1,2,3], languages:[1,2,3,4,5], cloud:[1,2,3,4,5], me:[1,2,3,4,5], info:[1,2,3] };
     const swipeNav = ['training','home','diet'];
 
     const wheel = document.getElementById('mainWheel');
@@ -770,7 +755,27 @@
     const cloudResetAllBtn = document.getElementById('cloudResetAllBtn');
     const genericTitle = document.getElementById('genericTitle');
     const genericSub = document.getElementById('genericSub');
+    const dataCenterTrainingPanel = document.getElementById('dataCenterTrainingPanel');
+    const dataCenterDietPanel = document.getElementById('dataCenterDietPanel');
     const dataCenterPanel = document.getElementById('dataCenterPanel');
+    const dcTrainAName = document.getElementById('dcTrainAName');
+    const dcTrainAValue = document.getElementById('dcTrainAValue');
+    const dcTrainASub = document.getElementById('dcTrainASub');
+    const dcTrainBName = document.getElementById('dcTrainBName');
+    const dcTrainBValue = document.getElementById('dcTrainBValue');
+    const dcTrainBSub = document.getElementById('dcTrainBSub');
+    const dcTrainCName = document.getElementById('dcTrainCName');
+    const dcTrainCValue = document.getElementById('dcTrainCValue');
+    const dcTrainCSub = document.getElementById('dcTrainCSub');
+    const dcDietAName = document.getElementById('dcDietAName');
+    const dcDietAValue = document.getElementById('dcDietAValue');
+    const dcDietASub = document.getElementById('dcDietASub');
+    const dcDietBName = document.getElementById('dcDietBName');
+    const dcDietBValue = document.getElementById('dcDietBValue');
+    const dcDietBSub = document.getElementById('dcDietBSub');
+    const dcDietCName = document.getElementById('dcDietCName');
+    const dcDietCValue = document.getElementById('dcDietCValue');
+    const dcDietCSub = document.getElementById('dcDietCSub');
     const dcCoachLabel = document.getElementById('dcCoachLabel');
     const dcCoachValue = document.getElementById('dcCoachValue');
     const dcCoachSub = document.getElementById('dcCoachSub');
@@ -848,7 +853,7 @@
         macroProtein:'Proteine', macroCarbs:'Carbo', macroFat:'Grassi', macroFibre:'Fibre min.', macroDeficit:'Deficit', macroKgWeek:'Kg/settimana', macroLose:'Peso da perdere', macroToGoal:"All'obiettivo", macroPath:'% percorso', macroLossPct:'% perdita/sett.', macroFatMin:'Grassi min/pasto', macroFatMax:'Grassi max/pasto', macroProteinMin:'Proteine min/pasto', macroProteinMax:'Proteine max/pasto', macroCarbMin:'Carbo min/pasto', macroCarbMax:'Carbo max/pasto',
         titleData:'Immissione dati personali', subData:'Compila qui tutti i dati del profilo.', sectionPhoto:'Foto profilo', photoTitle:'Immagine utente', photoSub:'Carica qui la foto che vuoi vedere nella pagina profilo e nel pulsante profilo in alto a destra.', photoUpload:'Carica foto', photoRemove:'Rimuovi', sectionUser:'Dati utente', sectionControls:'Controlli', reset:'Reset prova', savedLocal:'I dati del profilo vengono salvati in locale su questo dispositivo.', saved:'Dati salvati.', unsaved:'Modifiche non salvate.', resetDone:'Dati resettati.', saveTop:'Salva',
         fldName:'Nome', fldSex:'Sesso', fldBirth:'Data di nascita', fldTraining:'Allenamento', fldHeight:'Altezza (cm)', fldFat:'% grasso', fldWeightStart:'Peso iniziale', fldWeightCurrent:'Peso attuale', fldWeightGoal:'Obiettivo (kg)', fldGoalType:'Obbiettivo principale', fldActivity:'Livello attivita', fldStrategy:'Strategie caloriche',
-        optMale:'Maschio', optFemale:'Femmina', optNone:'Nessuno', optLight:'Leggero', optRegular:'Regolare', optDeficit:'Deficit', optMaintain:'Mantenimento', optSurplus:'Surplus', optSedentary:'Sedentario', optLightActive:'Leggermente Attivo', optModerate:'Moderatamente Attivo', optVery:'Molto Attivo', optConservative:'Conservativa', optStandard:'Standard', optAggressive:'Aggressiva', optVeryAggressive:'Molto Aggressiva', choose:'Scegli', titleBio:'Somatotipo', subBio:'Stima base e advanced del somatotipo, con misure aggiornabili manualmente.', titleWork:'App Salute', subWork:'Pagina separata per collegamento e import da App Salute.', titleTrain:'Ritmi', subTrain:'Definisci i pattern dei giorni lavorativi e dei giorni di allenamento.', workPatternTitle:'Giorni lavorativi', workPatternSub:'Scegli la lunghezza del pattern e imposta ogni giorno su ON o OFF.', trainPatternTitle:'Giorni allenamento', trainPatternSub:'Scegli la lunghezza del pattern e imposta ogni giorno su ON o OFF.', patternLength:'Numero giorni pattern', patternHint:'Da 2 a 31 giorni.', dayLabel:'Giorno', onShort:'ON', offShort:'OFF', bioType:'Composizione body type', bioType1:'Tipo 1', bioPct1:'% tipo 1', bioType2:'Tipo 2', bioPct2:'% tipo 2', bioDate:'Data rilievo', bioWaist:'Vita (cm)', bioAbdomen:'Addome (cm)', bioChest:'Petto (cm)', bioArm:'Braccio (cm)', bioThigh:'Coscia (cm)', bioCalf:'Polpaccio (cm)', bioNeck:'Collo (cm)', bioShoulders:'Spalle (cm)', bioSave:'Salva somatotipo', bioSaved:'Somatotipo salvato in locale.', bioNote:'Questi dati possono essere aggiornati manualmente una volta al mese o ogni due mesi.', healthTitle:'App Salute', healthStatus:'Stato collegamento', healthOff:'Non collegata', healthOn:'Collegata (mock)', healthConnect:'Collega Salute', healthImport:'Importa demo', healthOnly:'Connessione reale disponibile più avanti nella versione iOS nativa.', healthLastSync:'Ultima sync', healthSteps:'Passi/dì', healthHeart:'FC riposo', healthSleep:'Sonno', appSFull:'App Salute', optEcto:'Ectomorfo', optMeso:'Mesomorfo', optEndo:'Endomorfo', optMixed:'Misto', bioMethod:'Metodo', bioMethodBase:'Base', bioMethodAdvanced:'Advanced', bioNeedData:'Inserisci almeno altezza e peso attuale per calcolare il body type.', bioResultTitle:'Risultato somatotipo', bioResultSub:'Il metodo advanced sostituisce il base solo quando tutti i valori richiesti sono presenti.', bioEndo:'Endo %', bioMeso:'Meso %', bioEcto:'Ecto %', bioDominant:'Prevalenza', bioDominantInline:'Prevalentemente', bioBaseTitle:'Metodo base', bioBaseSub:'Usa altezza, peso, massa grassa e circonferenze per una stima orientativa.', bioAdvTitle:'Metodo advanced', bioAdvSub:'Usa pliche e diametri per un calcolo più preciso. Se i dati sono incompleti, resta attivo il metodo base.', advTriceps:'Plica tricipite (mm)', advSubscap:'Plica sottoscapolare (mm)', advSupra:'Plica soprailiaca (mm)', advCalfSkin:'Plica polpaccio (mm)', advHumerus:'Diametro omero (cm)', advFemur:'Diametro femore (cm)', advArmFlex:'Braccio flesso (cm)', bioActiveBase:'Stima orientativa locale.', bioActiveAdvanced:'Calcolo advanced attivo.', bioAdvIncomplete:'Dati advanced incompleti: resta attivo il metodo base.'
+        optMale:'Maschio', optFemale:'Femmina', optNone:'Nessuno', optLight:'Leggero', optRegular:'Regolare', optDeficit:'Deficit', optMaintain:'Mantenimento', optSurplus:'Surplus', optSedentary:'Sedentario', optLightActive:'Leggermente Attivo', optModerate:'Moderatamente Attivo', optVery:'Molto Attivo', optConservative:'Conservativa', optStandard:'Standard', optAggressive:'Aggressiva', optVeryAggressive:'Molto Aggressiva', choose:'Scegli', titleBio:'Somatotipo', subBio:'Stima base e advanced del somatotipo, con misure aggiornabili manualmente.', titleWork:'App Salute', subWork:'Pagina separata per collegamento e import da App Salute.', titleTrain:'Ritmi', subTrain:'Definisci i pattern dei giorni lavorativi e dei giorni di allenamento.', workPatternTitle:'Giorni lavorativi', workPatternSub:'Scegli la lunghezza del pattern e imposta ogni giorno su ON o OFF.', trainPatternTitle:'Giorni allenamento', trainPatternSub:'Scegli la lunghezza del pattern e imposta ogni giorno su ON o OFF.', patternLength:'Numero giorni pattern', patternHint:'Da 2 a 31 giorni.', dayLabel:'Giorno', onShort:'ON', offShort:'OFF', bioType:'Composizione body type', bioType1:'Tipo 1', bioPct1:'% tipo 1', bioType2:'Tipo 2', bioPct2:'% tipo 2', bioDate:'Data rilievo', bioWaist:'Vita (cm)', bioAbdomen:'Addome (cm)', bioChest:'Petto (cm)', bioArm:'Braccio (cm)', bioThigh:'Coscia (cm)', bioCalf:'Polpaccio (cm)', bioNeck:'Collo (cm)', bioShoulders:'Spalle (cm)', bioSave:'Salva somatotipo', bioSaved:'Somatotipo salvato in locale.', bioNote:'Questi dati possono essere aggiornati manualmente una volta al mese o ogni due mesi.', healthTitle:'App Salute', healthStatus:'Stato collegamento', healthOff:'Non collegata', healthOn:'Collegata (mock)', healthConnect:'Collega Salute', healthImport:'Importa demo', healthOnly:'Connessione reale disponibile più avanti nella versione iOS nativa.', healthLastSync:'Ultima sync', healthSteps:'Passi/dì', healthHeart:'FC riposo', healthSleep:'Sonno', healthWeight:'Peso', healthFat:'Massa grassa', healthOxygen:'SpO₂', healthBridgeTitle:'Bridge iOS', healthBridgeState:'Stato bridge', healthBridgePending:'Non pronto', healthBridgeReady:'Ready per iOS', healthBridgeNote:'Questa schermata prepara il collegamento reale a HealthKit. La connessione vera partirà solo nella versione iOS nativa.', healthPrepare:'Prepara bridge iOS', healthReset:'Reset demo', healthPermissions:'Permessi previsti', healthDataTitle:'Dati previsti da App Salute', appSFull:'App Salute', optEcto:'Ectomorfo', optMeso:'Mesomorfo', optEndo:'Endomorfo', optMixed:'Misto', bioMethod:'Metodo', bioMethodBase:'Base', bioMethodAdvanced:'Advanced', bioNeedData:'Inserisci almeno altezza e peso attuale per calcolare il body type.', bioResultTitle:'Risultato somatotipo', bioResultSub:'Il metodo advanced sostituisce il base solo quando tutti i valori richiesti sono presenti.', bioEndo:'Endo %', bioMeso:'Meso %', bioEcto:'Ecto %', bioDominant:'Prevalenza', bioDominantInline:'Prevalentemente', bioBaseTitle:'Metodo base', bioBaseSub:'Usa altezza, peso, massa grassa e circonferenze per una stima orientativa.', bioAdvTitle:'Metodo advanced', bioAdvSub:'Usa pliche e diametri per un calcolo più preciso. Se i dati sono incompleti, resta attivo il metodo base.', advTriceps:'Plica tricipite (mm)', advSubscap:'Plica sottoscapolare (mm)', advSupra:'Plica soprailiaca (mm)', advCalfSkin:'Plica polpaccio (mm)', advHumerus:'Diametro omero (cm)', advFemur:'Diametro femore (cm)', advArmFlex:'Braccio flesso (cm)', bioActiveBase:'Stima orientativa locale.', bioActiveAdvanced:'Calcolo advanced attivo.', bioAdvIncomplete:'Dati advanced incompleti: resta attivo il metodo base.'
       },
       en:{
         titleProfile:'My profile', subProfile:'Main page of your account.', statWeight:'Current weight', statAge:'Age', sectionBody:'Body and metabolism', sectionGoal:'Goal and meals',
@@ -882,9 +887,9 @@
     };
 
     const dataCenterI18n = {
-      it:{ sub:'Cruscotto tecnico dei servizi mock e dei bucket attivi.', coach:'Coach', diet:'Dieta', data:'Data', datacenter:'Datacenter', state:'Stato', used:'Uso', openCloud:'Apri Cloud', resetAll:'Reset totale', logEmpty:'Nessun evento recente.' },
-      en:{ sub:'Technical dashboard for mock services and active buckets.', coach:'Coach', diet:'Diet', data:'Data', datacenter:'Datacenter', state:'Status', used:'Usage', openCloud:'Open Cloud', resetAll:'Reset all', logEmpty:'No recent event.' },
-      es:{ sub:'Panel técnico de servicios mock y buckets activos.', coach:'Coach', diet:'Dieta', data:'Data', datacenter:'Datacenter', state:'Estado', used:'Uso', openCloud:'Abrir Cloud', resetAll:'Reset total', logEmpty:'Sin eventos recientes.' }
+      it:{ sub:'Area tecnica del Data Center.', subTraining:'Catalogo e progressi dell’allenamento.', subDiet:'Archivio dieta e nutrizione.', subCloud:'Pannello Cloud/API del Data Center.', coach:'Coach', diet:'Dieta', data:'Data', datacenter:'Datacenter', state:'Stato', used:'Uso', openCloud:'Apri Cloud', resetAll:'Reset totale', logEmpty:'Nessun evento recente.', trainAName:'Attrezzi e pesi', trainAValue:'Catalogo base', trainASub:'Macchine, manubri, bilancieri e riferimenti di carico.', trainBName:'Esercizi e muscoli', trainBValue:'Libreria allenamento', trainBSub:'Lista esercizi, gruppi muscolari e collegamenti tecnici.', trainCName:'Progressi allenamento', trainCValue:'Ultimi 30 giorni', trainCSub:'Volume, carichi e andamento locale con storico completo nel cloud.', dietAName:'Tabelle nutrizionali', dietAValue:'Archivio nutrienti', dietASub:'Valori nutrizionali e riferimenti alimentari.', dietBName:'Ricette', dietBValue:'Archivio ricette', dietBSub:'Ricette salvate, porzioni e collegamenti ai pasti.', dietCName:'Scansione alimenti', dietCValue:'AI / import', dietCSub:'Scansione alimenti e dati importati nella parte dieta.' },
+      en:{ sub:'Technical area of the Data Center.', subTraining:'Training catalog and progress.', subDiet:'Diet and nutrition archive.', subCloud:'Cloud/API panel of the Data Center.', coach:'Coach', diet:'Diet', data:'Data', datacenter:'Datacenter', state:'Status', used:'Usage', openCloud:'Open Cloud', resetAll:'Reset all', logEmpty:'No recent event.', trainAName:'Equipment and weights', trainAValue:'Core catalog', trainASub:'Machines, dumbbells, barbells and load references.', trainBName:'Exercises and muscles', trainBValue:'Training library', trainBSub:'Exercise list, muscle groups and technical links.', trainCName:'Training progress', trainCValue:'Last 30 days', trainCSub:'Volume, loads and local trend with full history in cloud.', dietAName:'Nutrition tables', dietAValue:'Nutrient archive', dietASub:'Nutrition values and food references.', dietBName:'Recipes', dietBValue:'Recipe archive', dietBSub:'Saved recipes, portions and meal links.', dietCName:'Food scan', dietCValue:'AI / import', dietCSub:'Food scanning and imported data in the diet area.' },
+      es:{ sub:'Área técnica del Data Center.', subTraining:'Catálogo y progreso del entrenamiento.', subDiet:'Archivo de dieta y nutrición.', subCloud:'Panel Cloud/API del Data Center.', coach:'Coach', diet:'Dieta', data:'Data', datacenter:'Datacenter', state:'Estado', used:'Uso', openCloud:'Abrir Cloud', resetAll:'Reset total', logEmpty:'Sin eventos recientes.', trainAName:'Equipo y pesos', trainAValue:'Catálogo base', trainASub:'Máquinas, mancuernas, barras y referencias de carga.', trainBName:'Ejercicios y músculos', trainBValue:'Biblioteca de entrenamiento', trainBSub:'Lista de ejercicios, grupos musculares y enlaces técnicos.', trainCName:'Progreso entrenamiento', trainCValue:'Últimos 30 días', trainCSub:'Volumen, cargas y tendencia local con historial completo en la nube.', dietAName:'Tablas nutricionales', dietAValue:'Archivo de nutrientes', dietASub:'Valores nutricionales y referencias de alimentos.', dietBName:'Recetas', dietBValue:'Archivo de recetas', dietBSub:'Recetas guardadas, porciones y enlaces a comidas.', dietCName:'Escaneo alimentos', dietCValue:'AI / import', dietCSub:'Escaneo de alimentos y datos importados en la parte dieta.' }
     };
 
     function coachSvg(primary, accent, shirt){
@@ -1046,6 +1051,13 @@
       const code = activePack().meta.code;
       return (dataCenterI18n[code] && dataCenterI18n[code][key]) || (dataCenterI18n.it && dataCenterI18n.it[key]) || key;
     }
+    function dataCenterMode(){
+      if(currentNavKey() !== 'dataCenter') return 'training';
+      const idx = Number(slider.value || 1);
+      if(idx === 2) return 'diet';
+      if(idx === 3) return 'cloud';
+      return 'training';
+    }
     function renderDataCenterPanel(){
       if(!dataCenterPanel) return;
       const statusMap = { idle: tcApi('svcIdle'), busy: tcApi('svcBusy'), ok: tcApi('svcOk'), warning: tcApi('svcWarn'), blocked: tcApi('svcBlocked') };
@@ -1072,6 +1084,24 @@
       if(dcOpenCloudBtn) dcOpenCloudBtn.textContent = tdc('openCloud');
       if(dcResetAllBtn) dcResetAllBtn.textContent = tdc('resetAll');
       if(dcLog) dcLog.textContent = cloudApiState.serviceLog || tdc('logEmpty');
+      if(dcTrainAName) dcTrainAName.textContent = tdc('trainAName');
+      if(dcTrainAValue) dcTrainAValue.textContent = tdc('trainAValue');
+      if(dcTrainASub) dcTrainASub.textContent = tdc('trainASub');
+      if(dcTrainBName) dcTrainBName.textContent = tdc('trainBName');
+      if(dcTrainBValue) dcTrainBValue.textContent = tdc('trainBValue');
+      if(dcTrainBSub) dcTrainBSub.textContent = tdc('trainBSub');
+      if(dcTrainCName) dcTrainCName.textContent = tdc('trainCName');
+      if(dcTrainCValue) dcTrainCValue.textContent = tdc('trainCValue');
+      if(dcTrainCSub) dcTrainCSub.textContent = tdc('trainCSub');
+      if(dcDietAName) dcDietAName.textContent = tdc('dietAName');
+      if(dcDietAValue) dcDietAValue.textContent = tdc('dietAValue');
+      if(dcDietASub) dcDietASub.textContent = tdc('dietASub');
+      if(dcDietBName) dcDietBName.textContent = tdc('dietBName');
+      if(dcDietBValue) dcDietBValue.textContent = tdc('dietBValue');
+      if(dcDietBSub) dcDietBSub.textContent = tdc('dietBSub');
+      if(dcDietCName) dcDietCName.textContent = tdc('dietCName');
+      if(dcDietCValue) dcDietCValue.textContent = tdc('dietCValue');
+      if(dcDietCSub) dcDietCSub.textContent = tdc('dietCSub');
     }
     function renderCoachPresetGrid(){
       if(!coachPresetGrid) return;
@@ -1112,7 +1142,7 @@
     const PROFILE_STORAGE_KEY = 'fit_app_008A_profile_data_v1';
     const PROFILE_PHOTO_KEY = 'fit_app_008A_profile_photo_v1';
     const profileState = {
-      data:{ name:'', sex:'male', birth:'', training:'none', height:'', bodyFat:'', weightStart:'', weightCurrent:'', weightGoal:'', goalType:'deficit', activity:'sedentary', strategy:'conservative', bodyType:'', bodyTypePrimary:'', bodyTypePrimaryPct:'', bodyTypeSecondary:'', bodyTypeSecondaryPct:'', checkDate:'', waist:'', abdomen:'', chest:'', arm:'', thigh:'', calf:'', neck:'', shoulders:'', skinTriceps:'', skinSubscap:'', skinSuprailiac:'', skinCalf:'', humerusBreadth:'', femurBreadth:'', armFlexed:'', healthConnected:'0', healthLastSync:'', healthSteps:'', healthHeart:'', healthSleep:'', workPatternLength:'7', workPatternDays:['1','1','1','1','1','0','0'], trainPatternLength:'7', trainPatternDays:['0','1','0','1','0','1','0'] },
+      data:{ name:'', sex:'male', birth:'', training:'none', height:'', bodyFat:'', weightStart:'', weightCurrent:'', weightGoal:'', goalType:'deficit', activity:'sedentary', strategy:'conservative', bodyType:'', bodyTypePrimary:'', bodyTypePrimaryPct:'', bodyTypeSecondary:'', bodyTypeSecondaryPct:'', checkDate:'', waist:'', abdomen:'', chest:'', arm:'', thigh:'', calf:'', neck:'', shoulders:'', skinTriceps:'', skinSubscap:'', skinSuprailiac:'', skinCalf:'', humerusBreadth:'', femurBreadth:'', armFlexed:'', healthConnected:'0', healthBridgeReady:'0', healthLastSync:'', healthWeight:'', healthFat:'', healthSteps:'', healthHeart:'', healthSleep:'', healthOxygen:'', workPatternLength:'7', workPatternDays:['1','1','1','1','1','0','0'], trainPatternLength:'7', trainPatternDays:['0','1','0','1','0','1','0'] },
       photo:''
     };
 
@@ -1418,10 +1448,17 @@
       }
       if(genericPage.classList.contains('active')){
         genericTitle.textContent = navLabel(navKey);
-        genericSub.textContent = navKey === 'dataCenter' ? tdc('sub') : (t('page.placeholder', { page: navLabel(navKey) }) + ' ' + t('page.placeholderSub'));
+        if(navKey === 'dataCenter'){
+          const mode = dataCenterMode();
+          genericSub.textContent = mode === 'cloud' ? tdc('subCloud') : (mode === 'diet' ? tdc('subDiet') : tdc('subTraining'));
+        } else {
+          genericSub.textContent = t('page.placeholder', { page: navLabel(navKey) }) + ' ' + t('page.placeholderSub');
+        }
       }
       if(dietMockCard) dietMockCard.classList.toggle('hidden', navKey !== 'diet');
-      if(dataCenterPanel) dataCenterPanel.classList.toggle('hidden', navKey !== 'dataCenter');
+      if(dataCenterTrainingPanel) dataCenterTrainingPanel.classList.toggle('hidden', !(navKey === 'dataCenter' && dataCenterMode() === 'training'));
+      if(dataCenterDietPanel) dataCenterDietPanel.classList.toggle('hidden', !(navKey === 'dataCenter' && dataCenterMode() === 'diet'));
+      if(dataCenterPanel) dataCenterPanel.classList.toggle('hidden', !(navKey === 'dataCenter' && dataCenterMode() === 'cloud'));
       updateCoachButtonState();
       updateTopRightButtonState();
       syncSwipeToNav();
@@ -1853,9 +1890,9 @@
       meBioView.innerHTML = `
         <div class="view-head"><div class="view-title">${tp('titleBio')}</div><div class="view-sub">${tp('subBio')}</div></div>
         <div class="section"><div class="health-card">
-          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:nowrap">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:nowrap">
             <div class="profile-section-title" style="margin:0">${tp('bioResultTitle')}</div>
-            <div style="font-size:14px;font-weight:900;text-align:right;line-height:1.15;color:#eef6ff;white-space:normal">${dominantInline}</div>
+            <div style="font-size:14px;font-weight:900;text-align:right;line-height:1;color:#e05a5a;white-space:normal;display:flex;align-items:center;min-height:20px">${dominantInline}</div>
           </div>
           <div class="body-note">${tp('bioResultSub')}</div>
           <div class="health-row">
@@ -1902,22 +1939,53 @@
       meWorkView.innerHTML = `
         <div class="view-head"><div class="view-title">${tp('appSFull')}</div><div class="view-sub">${tp('subWork')}</div></div>
         <div class="section"><div class="health-card">
-          <div class="profile-section-title" style="margin:0">${tp('healthTitle')}</div>
+          <div class="profile-section-title" style="margin:0">${tp('healthBridgeTitle')}</div>
           <div class="health-row">
-            <div class="health-pill ${d.healthConnected === '1' ? 'ok' : ''}" id="healthStatusPill">${tp('healthStatus')}: ${d.healthConnected === '1' ? tp('healthOn') : tp('healthOff')}</div>
+            <div class="health-pill ${d.healthBridgeReady === '1' ? 'ok' : ''}">${tp('healthBridgeState')}: ${d.healthBridgeReady === '1' ? tp('healthBridgeReady') : tp('healthBridgePending')}</div>
+            <div class="health-pill ${d.healthConnected === '1' ? 'ok' : ''}">${tp('healthStatus')}: ${d.healthConnected === '1' ? tp('healthOn') : tp('healthOff')}</div>
+          </div>
+          <div class="body-note">${tp('healthBridgeNote')}</div>
+          <div class="health-actions">
+            <button class="im-btn" id="healthPrepareBtn" type="button">${tp('healthPrepare')}</button>
+            <button class="im-btn" id="healthConnectBtn" type="button">${tp('healthConnect')}</button>
+          </div>
+        </div></div>
+        <div class="section"><div class="health-card">
+          <div class="profile-section-title" style="margin:0">${tp('healthPermissions')}</div>
+          <div class="health-row">
+            <div class="health-pill">${tp('healthWeight')}</div>
+            <div class="health-pill">${tp('healthFat')}</div>
+          </div>
+          <div class="health-row">
+            <div class="health-pill">${tp('healthSteps')}</div>
+            <div class="health-pill">${tp('healthHeart')}</div>
+          </div>
+          <div class="health-row">
+            <div class="health-pill">${tp('healthSleep')}</div>
+            <div class="health-pill">${tp('healthOxygen')}</div>
+          </div>
+        </div></div>
+        <div class="section"><div class="health-card">
+          <div class="profile-section-title" style="margin:0">${tp('healthDataTitle')}</div>
+          <div class="health-row">
+            <div class="health-pill">${tp('healthWeight')}: ${d.healthWeight || '—'}</div>
+            <div class="health-pill">${tp('healthFat')}: ${d.healthFat || '—'}</div>
+          </div>
+          <div class="health-row">
             <div class="health-pill" id="healthLastSyncPill">${tp('healthLastSync')}: ${d.healthLastSync || '—'}</div>
-          </div>
-          <div class="health-row">
             <div class="health-pill">${tp('healthSteps')}: ${d.healthSteps || '—'}</div>
-            <div class="health-pill">${tp('healthHeart')}: ${d.healthHeart || '—'}</div>
           </div>
           <div class="health-row">
+            <div class="health-pill">${tp('healthHeart')}: ${d.healthHeart || '—'}</div>
             <div class="health-pill">${tp('healthSleep')}: ${d.healthSleep || '—'}</div>
+          </div>
+          <div class="health-row">
+            <div class="health-pill">${tp('healthOxygen')}: ${d.healthOxygen || '—'}</div>
             <div class="body-note">${tp('healthOnly')}</div>
           </div>
           <div class="health-actions">
-            <button class="im-btn" id="healthConnectBtn" type="button">${tp('healthConnect')}</button>
             <button class="im-btn" id="healthImportBtn" type="button">${tp('healthImport')}</button>
+            <button class="im-btn" id="healthResetBtn" type="button">${tp('healthReset')}</button>
           </div>
         </div></div>`;
       meTrainView.innerHTML = `
@@ -2089,33 +2157,61 @@
       const removeBtn = document.getElementById('removeProfilePhotoBtn');
       if(removeBtn){ removeBtn.addEventListener('click', () => { profileState.photo = ''; profileDirty = true; const preview = document.getElementById('profilePhotoPreview'); if(preview) preview.src = activePhoto(); updateTopAvatar();
       updateTopRightButtonState(); updateStatus(tp('unsaved')); updateCoachButtonState(); }); }
+      const prepareHealthBtn = document.getElementById('healthPrepareBtn');
+      if(prepareHealthBtn){ prepareHealthBtn.addEventListener('click', () => {
+        profileState.data.healthBridgeReady = '1';
+        profileDirty = true;
+        renderMeViews();
+        updateStatus(tp('saved'));
+        updateCoachButtonState();
+      }); }
       const connectHealthBtn = document.getElementById('healthConnectBtn');
       if(connectHealthBtn){ connectHealthBtn.addEventListener('click', () => {
         profileState.data.healthConnected = '1';
         profileState.data.healthLastSync = new Date().toLocaleDateString();
         profileDirty = true;
         renderMeViews();
-        updateStatus(tp('bioSaved'));
+        updateStatus(tp('saved'));
         updateCoachButtonState();
       }); }
       const importHealthBtn = document.getElementById('healthImportBtn');
       if(importHealthBtn){ importHealthBtn.addEventListener('click', () => {
+        profileState.data.healthBridgeReady = '1';
         profileState.data.healthConnected = '1';
         profileState.data.healthLastSync = new Date().toLocaleDateString();
+        profileState.data.healthWeight = profileState.data.healthWeight || '81,8 kg';
+        profileState.data.healthFat = profileState.data.healthFat || '24,6%';
         profileState.data.weightCurrent = profileState.data.weightCurrent || '81,8';
         profileState.data.bodyFat = profileState.data.bodyFat || '24,6';
         profileState.data.healthSteps = '8432';
         profileState.data.healthHeart = '58 bpm';
         profileState.data.healthSleep = '7h 18m';
+        profileState.data.healthOxygen = '98%';
         profileDirty = true;
         renderMeViews();
-        updateStatus(tp('bioSaved'));
+        updateStatus(tp('saved'));
+        updateCoachButtonState();
+      }); }
+      const resetHealthBtn = document.getElementById('healthResetBtn');
+      if(resetHealthBtn){ resetHealthBtn.addEventListener('click', () => {
+        profileState.data.healthBridgeReady = '0';
+        profileState.data.healthConnected = '0';
+        profileState.data.healthLastSync = '';
+        profileState.data.healthWeight = '';
+        profileState.data.healthFat = '';
+        profileState.data.healthSteps = '';
+        profileState.data.healthHeart = '';
+        profileState.data.healthSleep = '';
+        profileState.data.healthOxygen = '';
+        profileDirty = true;
+        renderMeViews();
+        updateStatus(tp('saved'));
         updateCoachButtonState();
       }); }
       const saveBodyCheckBtn = document.getElementById('saveBodyCheckBtn');
       if(saveBodyCheckBtn){ saveBodyCheckBtn.addEventListener('click', () => { profileState.data.checkDate = todayInputValue(); const dateEl = document.getElementById('profileCheckDate'); if(dateEl) dateEl.value = profileState.data.checkDate; saveProfileState(); profileDirty = false; renderMeViews(); updateStatus(tp('bioSaved')); updateCoachButtonState(); }); }
       const resetBtn = document.getElementById('topResetOverlayBtn');
-      if(resetBtn){ resetBtn.addEventListener('click', () => { profileState.data = { name:'', sex:'male', birth:'', training:'none', height:'', bodyFat:'', weightStart:'', weightCurrent:'', weightGoal:'', goalType:'deficit', activity:'sedentary', strategy:'conservative', bodyType:'', bodyTypePrimary:'', bodyTypePrimaryPct:'', bodyTypeSecondary:'', bodyTypeSecondaryPct:'', checkDate:'', waist:'', abdomen:'', chest:'', arm:'', thigh:'', calf:'', neck:'', shoulders:'', skinTriceps:'', skinSubscap:'', skinSuprailiac:'', skinCalf:'', humerusBreadth:'', femurBreadth:'', armFlexed:'', healthConnected:'0', healthLastSync:'', healthSteps:'', healthHeart:'', healthSleep:'', workPatternLength:'7', workPatternDays:['1','1','1','1','1','0','0'], trainPatternLength:'7', trainPatternDays:['0','1','0','1','0','1','0'] }; profileState.photo=''; profileDirty = true; renderMeViews(); updateStatus(tp('resetDone')); updateCoachButtonState(); }); }
+      if(resetBtn){ resetBtn.addEventListener('click', () => { profileState.data = { name:'', sex:'male', birth:'', training:'none', height:'', bodyFat:'', weightStart:'', weightCurrent:'', weightGoal:'', goalType:'deficit', activity:'sedentary', strategy:'conservative', bodyType:'', bodyTypePrimary:'', bodyTypePrimaryPct:'', bodyTypeSecondary:'', bodyTypeSecondaryPct:'', checkDate:'', waist:'', abdomen:'', chest:'', arm:'', thigh:'', calf:'', neck:'', shoulders:'', skinTriceps:'', skinSubscap:'', skinSuprailiac:'', skinCalf:'', humerusBreadth:'', femurBreadth:'', armFlexed:'', healthConnected:'0', healthBridgeReady:'0', healthLastSync:'', healthWeight:'', healthFat:'', healthSteps:'', healthHeart:'', healthSleep:'', healthOxygen:'', workPatternLength:'7', workPatternDays:['1','1','1','1','1','0','0'], trainPatternLength:'7', trainPatternDays:['0','1','0','1','0','1','0'] }; profileState.photo=''; profileDirty = true; renderMeViews(); updateStatus(tp('resetDone')); updateCoachButtonState(); }); }
     }
 
     slider.addEventListener('input', updateSliderUI);
