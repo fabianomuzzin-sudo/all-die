@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Master031A - Maestro AI Proxy</title>
+  <title>Master035A - Maestro Public Security Layer</title>
   <style>
     :root{
       --bg:#0f1114;
@@ -591,7 +591,7 @@ body.light-mode .bottom-shell{
               </div>
               <div class="settings-section" id="settingsAppSection">
                 <div class="settings-section-title" id="settingsAppTitle">Sistema</div>
-                <div class="settings-small-note" id="settingsAppNote">Versione: Master034A · Base: Master034 · Backend: Cloudflare Worker</div>
+                <div class="settings-small-note" id="settingsAppNote">Versione: Master035A · Base: Master035 · Security layer pubblico</div>
               </div>
               <div class="settings-section" id="settingsSecuritySection">
                 <div class="settings-section-title" id="settingsSecurityTitle">Sicurezza</div>
@@ -1583,25 +1583,51 @@ body.light-mode .bottom-shell{
     }
 
     function activePack(){ return packs[languageState[languageState.activeSlot].code]; }
-    // ===== Master034A: security upgrade proxy client =====
-    // Base: Master034. Nessun segreto reale è hardcoded nel file HTML.
-    // L'endpoint arriva da Cloud/API; il token proxy, se necessario per test, resta solo nel browser locale.
+    // ===== Master035A: public security layer proxy client =====
+    // Base: Master035. Nessun segreto reale è hardcoded nel file HTML.
+    // L'app invia un client ID anonimo; rate limit, quote, origin e cost cap sono gestiti nel Worker.
     const DEFAULT_AI_PROXY_URL = 'https://maestro-api-proxy.fabiano-muzzin.workers.dev';
-    const APP_VERSION = 'Master034A';
+    const APP_VERSION = 'Master035A';
+    const MAESTRO_CLIENT_ID_KEY = 'maestro_public_client_id_v1';
 
     function getAiProxyUrl(){
       const configured = String((cloudApiState && cloudApiState.endpoint) || '').trim();
       return (configured || DEFAULT_AI_PROXY_URL).replace(/\/+$/, '');
     }
 
-    function getProxyHeaders(){
-      const headers = { 'Content-Type':'application/json' };
-      const localToken = String((cloudApiState && cloudApiState.token) || '').trim();
-      if(localToken) headers['x-app-key'] = localToken;
-      return headers;
+function getOrCreateMaestroClientId(){
+  try{
+    let id = localStorage.getItem(MAESTRO_CLIENT_ID_KEY);
+    if(!id){
+      const randomPart = (crypto && crypto.randomUUID) ? crypto.randomUUID() : String(Date.now()) + '-' + Math.random().toString(16).slice(2);
+      id = 'maestro-' + randomPart;
+      localStorage.setItem(MAESTRO_CLIENT_ID_KEY, id);
     }
+    return id;
+  }catch(e){
+    return 'maestro-session-' + String(Date.now());
+  }
+}
 
-    async function callAiProxy(service, payload = {}){
+function getTurnstileToken(){
+  return String(window.maestroTurnstileToken || '').trim();
+}
+
+function getProxyHeaders(){
+  const headers = {
+    'Content-Type':'application/json',
+    'x-maestro-client-id': getOrCreateMaestroClientId(),
+    'x-maestro-app-version': APP_VERSION,
+    'x-maestro-timezone': Intl.DateTimeFormat().resolvedOptions().timeZone || 'unknown'
+  };
+  const localToken = String((cloudApiState && cloudApiState.token) || '').trim();
+  if(localToken) headers['x-app-key'] = localToken; // compatibilità test privati; non è la chiave OpenAI
+  const turnstileToken = getTurnstileToken();
+  if(turnstileToken) headers['cf-turnstile-response'] = turnstileToken;
+  return headers;
+}
+
+async function callAiProxy(service, payload = {}){
       const cleanService = String(service || 'coach');
       const response = await fetch(`${getAiProxyUrl()}/api/ai`, {
         method:'POST',
@@ -1612,7 +1638,9 @@ body.light-mode .bottom-shell{
           text: payload.text || '',
           profile: payload.profile || {},
           appVersion: APP_VERSION,
-          language: (languageState && languageState[languageState.activeSlot] && languageState[languageState.activeSlot].code) || 'it'
+          language: (languageState && languageState[languageState.activeSlot] && languageState[languageState.activeSlot].code) || 'it',
+          clientId: getOrCreateMaestroClientId(),
+          clientMode: 'public-security-layer'
         })
       });
       let data = null;
@@ -1863,9 +1891,9 @@ body.light-mode .bottom-shell{
       if(settingsThemeTitle) settingsThemeTitle.textContent = code === 'en' ? 'Theme' : (code === 'es' ? 'Tema' : 'Tema');
       if(settingsThemeNote) settingsThemeNote.textContent = code === 'en' ? 'Quick switch between dark mode and light mode demo.' : (code === 'es' ? 'Cambio rápido entre dark mode y light mode demo.' : 'Cambio rapido tra dark mode e light mode demo.');
       if(settingsAppTitle) settingsAppTitle.textContent = code === 'en' ? 'System' : (code === 'es' ? 'Sistema' : 'Sistema');
-      if(settingsAppNote) settingsAppNote.textContent = code === 'en' ? 'Version: Master034A · Base: Master034 · Backend: Cloudflare Worker' : (code === 'es' ? 'Versión: Master034A · Base: Master034 · Backend: Cloudflare Worker' : 'Versione: Master034A · Base: Master034 · Backend: Cloudflare Worker');
+      if(settingsAppNote) settingsAppNote.textContent = code === 'en' ? 'Version: Master035A · Base: Master035 · Public security layer' : (code === 'es' ? 'Versión: Master035A · Base: Master035 · Capa de seguridad pública' : 'Versione: Master035A · Base: Master035 · Security layer pubblico');
       if(settingsSecurityTitle) settingsSecurityTitle.textContent = code === 'en' ? 'Security' : (code === 'es' ? 'Seguridad' : 'Sicurezza');
-      if(settingsSecurityNote) settingsSecurityNote.textContent = code === 'en' ? 'No real AI key is stored in the HTML file. The proxy token, if used, remains only in the local browser; the next backend step is domain control and rate limiting.' : (code === 'es' ? 'Ninguna clave AI real está guardada en el archivo HTML. El token proxy, si se usa, queda solo en el navegador local; el siguiente paso backend es control de dominio y rate limit.' : 'Nessuna chiave AI reale è salvata nel file HTML. Il token proxy, se usato, resta solo nel browser locale; il prossimo passo backend è controllo dominio e rate limit.');
+      if(settingsSecurityNote) settingsSecurityNote.textContent = code === 'en' ? 'No real AI key is stored in the HTML file. This build is prepared for public use: domain control, anonymous client ID, optional Turnstile, rate limits and quotas in the Worker.' : (code === 'es' ? 'Ninguna clave AI real está guardada en el archivo HTML. Esta build está preparada para uso público: control de dominio, client ID anónimo, Turnstile opcional, rate limit y cuotas en el Worker.' : 'Nessuna chiave AI reale è salvata nel file HTML. Questa build è preparata per uso pubblico: controllo dominio, client ID anonimo, Turnstile opzionale, rate limit e quote lato Worker.');
       const isLight = document.body.classList.contains('light-mode');
       if(settingsDarkBtn){ settingsDarkBtn.textContent = 'Dark mode'; settingsDarkBtn.classList.toggle('primary', !isLight); }
       if(settingsLightBtn){ settingsLightBtn.textContent = 'Light mode'; settingsLightBtn.classList.toggle('primary', isLight); }
