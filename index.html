@@ -591,7 +591,11 @@ body.light-mode .bottom-shell{
               </div>
               <div class="settings-section" id="settingsAppSection">
                 <div class="settings-section-title" id="settingsAppTitle">Sistema</div>
-                <div class="settings-small-note" id="settingsAppNote">Versione: Master033 · Base: Master032A · Backend: Cloudflare Worker</div>
+                <div class="settings-small-note" id="settingsAppNote">Versione: Master034A · Base: Master034 · Backend: Cloudflare Worker</div>
+              </div>
+              <div class="settings-section" id="settingsSecuritySection">
+                <div class="settings-section-title" id="settingsSecurityTitle">Sicurezza</div>
+                <div class="settings-small-note" id="settingsSecurityNote">Nessuna chiave AI reale è salvata nel file HTML. Il token proxy, se usato, resta solo nel browser locale e va sostituito più avanti con controllo dominio + rate limit lato backend.</div>
               </div>
             </div>
           </div>
@@ -949,6 +953,8 @@ body.light-mode .bottom-shell{
     const settingsThemeNote = document.getElementById('settingsThemeNote');
     const settingsAppTitle = document.getElementById('settingsAppTitle');
     const settingsAppNote = document.getElementById('settingsAppNote');
+    const settingsSecurityTitle = document.getElementById('settingsSecurityTitle');
+    const settingsSecurityNote = document.getElementById('settingsSecurityNote');
     const cloudPageTitle = document.getElementById('cloudPageTitle');
     const cloudPageSub = document.getElementById('cloudPageSub');
     const cloudBannerLabel = document.getElementById('cloudBannerLabel');
@@ -1577,25 +1583,35 @@ body.light-mode .bottom-shell{
     }
 
     function activePack(){ return packs[languageState[languageState.activeSlot].code]; }
-    // ===== Master031A: real backend proxy client =====
-    // Base di partenza: Master030. Questo blocco sostituisce il mock locale con chiamate reali al Cloudflare Worker.
-    const AI_PROXY_URL = 'https://maestro-api-proxy.fabiano-muzzin.workers.dev';
-    const APP_PROXY_KEY = 'maestro2026secure';
+    // ===== Master034A: security upgrade proxy client =====
+    // Base: Master034. Nessun segreto reale è hardcoded nel file HTML.
+    // L'endpoint arriva da Cloud/API; il token proxy, se necessario per test, resta solo nel browser locale.
+    const DEFAULT_AI_PROXY_URL = 'https://maestro-api-proxy.fabiano-muzzin.workers.dev';
+    const APP_VERSION = 'Master034A';
+
+    function getAiProxyUrl(){
+      const configured = String((cloudApiState && cloudApiState.endpoint) || '').trim();
+      return (configured || DEFAULT_AI_PROXY_URL).replace(/\/+$/, '');
+    }
+
+    function getProxyHeaders(){
+      const headers = { 'Content-Type':'application/json' };
+      const localToken = String((cloudApiState && cloudApiState.token) || '').trim();
+      if(localToken) headers['x-app-key'] = localToken;
+      return headers;
+    }
 
     async function callAiProxy(service, payload = {}){
       const cleanService = String(service || 'coach');
-      const response = await fetch(`${AI_PROXY_URL}/api/ai`, {
+      const response = await fetch(`${getAiProxyUrl()}/api/ai`, {
         method:'POST',
-        headers:{
-          'Content-Type':'application/json',
-          'x-app-key': APP_PROXY_KEY
-        },
+        headers:getProxyHeaders(),
         body: JSON.stringify({
           service: cleanService,
           intent: payload.intent || 'free',
           text: payload.text || '',
           profile: payload.profile || {},
-          appVersion: 'Master031A',
+          appVersion: APP_VERSION,
           language: (languageState && languageState[languageState.activeSlot] && languageState[languageState.activeSlot].code) || 'it'
         })
       });
@@ -1609,13 +1625,10 @@ body.light-mode .bottom-shell{
     }
 
     async function pingAiProxy(service){
-      const response = await fetch(`${AI_PROXY_URL}/api/ping`, {
+      const response = await fetch(`${getAiProxyUrl()}/api/ping`, {
         method:'POST',
-        headers:{
-          'Content-Type':'application/json',
-          'x-app-key': APP_PROXY_KEY
-        },
-        body: JSON.stringify({ service:String(service || 'ping'), appVersion:'Master031A' })
+        headers:getProxyHeaders(),
+        body: JSON.stringify({ service:String(service || 'ping'), appVersion:APP_VERSION })
       });
       let data = null;
       try{ data = await response.json(); }catch(e){ data = null; }
@@ -1623,7 +1636,7 @@ body.light-mode .bottom-shell{
         const message = (data && (data.error || data.message)) || `Ping backend fallito ${response.status}`;
         throw new Error(message);
       }
-      return { ok:true, service, reply:data.reply || data.pong || 'OK' };
+      return data;
     }
 
     const apiClient = {
@@ -1850,7 +1863,9 @@ body.light-mode .bottom-shell{
       if(settingsThemeTitle) settingsThemeTitle.textContent = code === 'en' ? 'Theme' : (code === 'es' ? 'Tema' : 'Tema');
       if(settingsThemeNote) settingsThemeNote.textContent = code === 'en' ? 'Quick switch between dark mode and light mode demo.' : (code === 'es' ? 'Cambio rápido entre dark mode y light mode demo.' : 'Cambio rapido tra dark mode e light mode demo.');
       if(settingsAppTitle) settingsAppTitle.textContent = code === 'en' ? 'System' : (code === 'es' ? 'Sistema' : 'Sistema');
-      if(settingsAppNote) settingsAppNote.textContent = code === 'en' ? 'Version: Master033 · Base: Master032A · Backend: Cloudflare Worker' : (code === 'es' ? 'Versión: Master033 · Base: Master032A · Backend: Cloudflare Worker' : 'Versione: Master033 · Base: Master032A · Backend: Cloudflare Worker');
+      if(settingsAppNote) settingsAppNote.textContent = code === 'en' ? 'Version: Master034A · Base: Master034 · Backend: Cloudflare Worker' : (code === 'es' ? 'Versión: Master034A · Base: Master034 · Backend: Cloudflare Worker' : 'Versione: Master034A · Base: Master034 · Backend: Cloudflare Worker');
+      if(settingsSecurityTitle) settingsSecurityTitle.textContent = code === 'en' ? 'Security' : (code === 'es' ? 'Seguridad' : 'Sicurezza');
+      if(settingsSecurityNote) settingsSecurityNote.textContent = code === 'en' ? 'No real AI key is stored in the HTML file. The proxy token, if used, remains only in the local browser; the next backend step is domain control and rate limiting.' : (code === 'es' ? 'Ninguna clave AI real está guardada en el archivo HTML. El token proxy, si se usa, queda solo en el navegador local; el siguiente paso backend es control de dominio y rate limit.' : 'Nessuna chiave AI reale è salvata nel file HTML. Il token proxy, se usato, resta solo nel browser locale; il prossimo passo backend è controllo dominio e rate limit.');
       const isLight = document.body.classList.contains('light-mode');
       if(settingsDarkBtn){ settingsDarkBtn.textContent = 'Dark mode'; settingsDarkBtn.classList.toggle('primary', !isLight); }
       if(settingsLightBtn){ settingsLightBtn.textContent = 'Light mode'; settingsLightBtn.classList.toggle('primary', isLight); }
