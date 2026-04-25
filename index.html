@@ -1423,7 +1423,7 @@ body.light-mode .bottom-shell{
       en:{ title:'Cloud/API', sub:'Backend reale panel. Real security will come later with backend and secure storage.', locked:'UI closed', unlocked:'UI open', provider:'Provider', status:'Panel status', budget:'Simulated budget', usage:'Simulated usage', pinLabel:'Demo UI PIN', unlock:'Open panel', lock:'Close', reset:'Reset UI', endpoint:'Endpoint Worker', model:'Model placeholder', token:'Token proxy opzionale', warning:'Warning threshold', hardStop:'Hard-stop threshold', save:'Save mock', test:'Backend test', lockedNote:'This unlock only tests the visual flow. It does not protect real secrets. Demo PIN: 123456.', saved:'Mock configuration saved only for the UI prototype.', tested:'Backend test succeeded. No real API was contacted.', badPin:'Wrong PIN. For now the demo PIN is 123456.', attempts:'Attempts left: {n}.', cooldown:'Too many errors. Try again in {s}s.', resetBlocked:'UI reset disabled during temporary lock.', bannerLabel:'Backend reale', bannerText:'This page tests the real link between the app and Cloudflare Worker. No AI key is stored in the frontend.', clientLabel:'Backend API client', clientNote:'Here we test the single client that separates coach, diet, data and datacenter through the real Worker.', svcCoach:'Coach service', svcData:'Data service', svcDc:'Datacenter service', svcIdle:'Idle', svcBusy:'Testing', svcOk:'Backend OK', testCoach:'Test coach', testData:'Test data', testDc:'Test datacenter', logPrefix:'Last test:', usageWarning:'Warning: you are approaching the mock hard-stop threshold.', usageBlocked:'Mock hard stop active: maximum threshold reached.', svcCount:'Usage: {n}' },
       es:{ title:'Cloud/API', sub:'Panel Cloud/API conectado al backend Worker real.', locked:'UI cerrada', unlocked:'UI abierta', provider:'Proveedor mock', status:'Estado panel', budget:'Presupuesto simulado', usage:'Uso simulado', pinLabel:'PIN demo UI', unlock:'Abrir panel', lock:'Cerrar', reset:'Reset UI', endpoint:'Endpoint Worker', model:'Modelo placeholder', token:'Token proxy opzionale', warning:'Umbral aviso', hardStop:'Umbral bloqueo', save:'Guardar mock', test:'Prueba backend', lockedNote:'Este desbloqueo solo prueba el flujo visual. No protege secretos reales. PIN demo: 123456.', saved:'Configuración mock guardada solo para el prototipo UI.', tested:'Prueba backend correcta. No se ha contactado ninguna API real.', badPin:'PIN incorrecto. Por ahora el PIN demo es 123456.', attempts:'Intentos restantes: {n}.', cooldown:'Demasiados errores. Intenta de nuevo en {s}s.', resetBlocked:'Reset UI deshabilitado durante el bloqueo temporal.', bannerLabel:'Backend reale', bannerText:'Esta página sirve solo para probar flujo, campos y estados. La seguridad fuerte saldrá del frontend.', clientLabel:'Cliente API backend', clientNote:'Aquí probamos el cliente único que separa coach, data y datacenter sin credenciales reales.', svcCoach:'Servicio coach', svcData:'Servicio data', svcDc:'Servicio datacenter', svcIdle:'Idle', svcBusy:'Probando', svcOk:'OK backend', testCoach:'Test coach', testData:'Test data', testDc:'Test datacenter', logPrefix:'Última prueba:' }
     };
-    const CLOUD_API_STORAGE_KEY = 'maestro_cloud_api_state_v037b';
+    const CLOUD_API_STORAGE_KEY = 'maestro_cloud_api_state_v039_simple_get';
     const cloudApiState = { pin:'123456', provider:'OpenAI', endpoint:'https://maestro-api-proxy.fabiano-muzzin.workers.dev', model:'gpt-4.1-mini', token:'', warning:'80', hardStop:'100', used:0, budget:100, status:'Locked', unlocked:false, message:'', attemptsLeft:5, cooldownUntil:0, services:{ coach:'idle', diet:'idle', data:'idle', datacenter:'idle' }, serviceUsage:{ coach:0, diet:0, data:0, datacenter:0 }, serviceLog:'' };
     let cloudCooldownTimer = null;
     function tcApi(key){ const code = activePack().meta.code; return (cloudApiI18n[code] && cloudApiI18n[code][key]) || (cloudApiI18n.it && cloudApiI18n.it[key]) || key; }
@@ -1606,7 +1606,7 @@ body.light-mode .bottom-shell{
     // Base: Master035. Nessun segreto reale è hardcoded nel file HTML.
     // L'app invia un client ID anonimo; rate limit, quote, origin e cost cap sono gestiti nel Worker.
     const DEFAULT_AI_PROXY_URL = 'https://maestro-api-proxy.fabiano-muzzin.workers.dev';
-    const APP_VERSION = 'Master037_debug_live_connection';
+    const APP_VERSION = 'Master039_simple_get_backend_test';
     const MAESTRO_CLIENT_ID_KEY = 'maestro_public_client_id_v1';
 
     function getAiProxyUrl(){
@@ -1646,7 +1646,7 @@ function getProxyHeaders(){
     'x-maestro-app-version': APP_VERSION,
     'x-maestro-timezone': Intl.DateTimeFormat().resolvedOptions().timeZone || 'unknown'
   };
-  // Master037B: modalità pubblica. Non inviamo x-app-key dal frontend.
+  // Master038: modalità pubblica. Non inviamo x-app-key dal frontend.
   // La protezione vera deve stare lato Worker con origin, quote, Turnstile/login e cost cap.
   // Questo evita blocchi bad_proxy_key causati da token locali vecchi o sbagliati.
   const turnstileToken = getTurnstileToken();
@@ -1659,7 +1659,7 @@ async function callAiProxy(service, payload = {}){
       const targetUrl = `${getAiProxyUrl()}/api/ai`;
       const headers = getProxyHeaders();
       const debug = [
-        'MASTER037 DEBUG AI',
+        'MASTER038 REAL BACKEND AI',
         maestroDebugLine('configured endpoint', (cloudApiState && cloudApiState.endpoint) || ''),
         maestroDebugLine('normalized base', getAiProxyUrl()),
         maestroDebugLine('target URL', targetUrl),
@@ -1682,7 +1682,7 @@ async function callAiProxy(service, payload = {}){
             appVersion: APP_VERSION,
             language: (languageState && languageState[languageState.activeSlot] && languageState[languageState.activeSlot].code) || 'it',
             clientId: getOrCreateMaestroClientId(),
-            clientMode: 'master037-debug'
+            clientMode: 'master038-real-backend'
           })
         });
       }catch(fetchErr){
@@ -1709,35 +1709,21 @@ async function callAiProxy(service, payload = {}){
 
     async function pingAiProxy(service){
       const cleanService = String(service || 'ping');
-      const targetUrl = `${getAiProxyUrl()}/api/ping`;
-      const headers = getProxyHeaders();
+      // Master039: test connessione ultra-stabile. Usa GET semplice al Worker, senza header custom, senza body e senza preflight CORS.
+      // Serve solo a verificare app -> Worker e aggiornare i contatori; le chiamate AI vere restano su POST /api/ai.
+      const targetUrl = `${DEFAULT_AI_PROXY_URL}/api/ping?service=${encodeURIComponent(cleanService)}&v=${encodeURIComponent(APP_VERSION)}&t=${Date.now()}`;
       const debug = [
-        'MASTER037 DEBUG PING',
-        maestroDebugLine('configured endpoint', (cloudApiState && cloudApiState.endpoint) || ''),
-        maestroDebugLine('normalized base', getAiProxyUrl()),
+        'MASTER039 SIMPLE GET BACKEND PING',
         maestroDebugLine('target URL', targetUrl),
         maestroDebugLine('origin', location.origin),
-        maestroDebugLine('protocol', location.protocol),
-        maestroDebugLine('headers', Object.keys(headers))
+        maestroDebugLine('protocol', location.protocol)
       ];
       let response;
       try{
-        response = await fetch(targetUrl, {
-          method:'POST',
-          mode:'cors',
-          cache:'no-store',
-          headers,
-          body: JSON.stringify({
-            service: cleanService,
-            intent:'ping',
-            text:`ping ${cleanService}`,
-            appVersion:APP_VERSION,
-            clientId:getOrCreateMaestroClientId()
-          })
-        });
+        response = await fetch(targetUrl, { method:'GET', mode:'cors', cache:'no-store' });
       }catch(fetchErr){
         debug.push(maestroDebugLine('fetch error', fetchErr && fetchErr.message ? fetchErr.message : fetchErr));
-        const e = new Error(debug.join('\\n'));
+        const e = new Error(debug.join('\n'));
         e.maestroDebug = debug;
         throw e;
       }
@@ -1749,10 +1735,14 @@ async function callAiProxy(service, payload = {}){
       if(!response.ok || !data || data.ok === false){
         const message = (data && (data.error || data.message)) || `Ping backend fallito ${response.status}`;
         debug.push(maestroDebugLine('final error', message));
-        const e = new Error(debug.join('\\n'));
+        const e = new Error(debug.join('\n'));
         e.maestroDebug = debug;
         throw e;
       }
+      data.service = cleanService;
+      data.message = data.message || 'backend_get_ok';
+      data.reply = data.reply || `OK backend reale per ${cleanService}`;
+      data.mode = data.mode || 'simple_get_worker';
       data.__debug = debug;
       return data;
     }
@@ -1786,27 +1776,27 @@ async function callAiProxy(service, payload = {}){
         }
       }
     };
-    async function testRealWorkerService(service){
+    async function testRealBackendService(service){
       if(!cloudApiState.unlocked || serviceUsageStage(service) === 'blocked') return;
-      cloudApiState.services[service] = 'busy';
-      cloudApiState.serviceLog = `${tcApi('logPrefix')} ${service} → chiamata backend...`;
+      const cleanService = String(service || 'coach');
+      cloudApiState.services[cleanService] = 'busy';
+      cloudApiState.serviceLog = `${tcApi('logPrefix')} ${cleanService} → chiamata backend reale...`;
+      saveCloudApiState();
       renderCloudApiPage();
       try{
-        const result = await apiClient[service].ping();
-        const isOk = !!(result && (result.ok === true || result.message === 'backend_ping_ok' || result.mode === 'real_worker'));
-        if(isOk){
-          incrementServiceUsage(service, 1);
-          cloudApiState.services[service] = 'ok';
-          const mode = (result.mode || result.reply || result.message || 'real_worker');
-          const dbg = result.__debug ? '\n' + result.__debug.join('\n') : '';
-          cloudApiState.serviceLog = `${tcApi('logPrefix')} ${service} → OK backend · ${mode}${dbg}`;
-        }else{
-          cloudApiState.services[service] = 'idle';
-          cloudApiState.serviceLog = `${tcApi('logPrefix')} ${service} → Risposta backend non valida\n${JSON.stringify(result || {})}`;
-        }
+        const result = await pingAiProxy(cleanService);
+        const isOk = !!(result && result.ok === true);
+        if(!isOk){ throw new Error(`Risposta backend non valida: ${JSON.stringify(result || {})}`); }
+        incrementServiceUsage(cleanService, 1);
+        cloudApiState.services[cleanService] = 'ok';
+        const version = result.version ? ` · ${result.version}` : '';
+        const mode = result.mode ? ` · ${result.mode}` : '';
+        const message = result.reply || result.message || 'backend_ping_ok';
+        const dbg = result.__debug ? '\n' + result.__debug.join('\n') : '';
+        cloudApiState.serviceLog = `${tcApi('logPrefix')} ${cleanService} → OK backend reale · ${message}${mode}${version}${dbg}`;
       }catch(err){
-        cloudApiState.services[service] = 'idle';
-        cloudApiState.serviceLog = `${tcApi('logPrefix')} ${service} → ERRORE DEBUG:\n${err && err.message ? err.message : err}`;
+        cloudApiState.services[cleanService] = 'idle';
+        cloudApiState.serviceLog = `${tcApi('logPrefix')} ${cleanService} → ERRORE BACKEND:\n${err && err.message ? err.message : err}`;
       }
       saveCloudApiState();
       renderCloudApiPage();
@@ -2808,10 +2798,10 @@ async function callAiProxy(service, payload = {}){
     if(cloudResetMockBtn) cloudResetMockBtn.addEventListener('click', resetCloudApiMock);
     if(cloudSaveBtn) cloudSaveBtn.addEventListener('click', saveCloudApiMock);
     if(cloudTestBtn) cloudTestBtn.addEventListener('click', testCloudApiMock);
-    if(cloudTestCoachBtn) cloudTestCoachBtn.addEventListener('click', () => testRealWorkerService('coach'));
-    if(cloudTestDietBtn) cloudTestDietBtn.addEventListener('click', () => testRealWorkerService('diet'));
-    if(cloudTestDataBtn) cloudTestDataBtn.addEventListener('click', () => testRealWorkerService('data'));
-    if(cloudTestDcBtn) cloudTestDcBtn.addEventListener('click', () => testRealWorkerService('datacenter'));
+    if(cloudTestCoachBtn) cloudTestCoachBtn.addEventListener('click', () => testRealBackendService('coach'));
+    if(cloudTestDietBtn) cloudTestDietBtn.addEventListener('click', () => testRealBackendService('diet'));
+    if(cloudTestDataBtn) cloudTestDataBtn.addEventListener('click', () => testRealBackendService('data'));
+    if(cloudTestDcBtn) cloudTestDcBtn.addEventListener('click', () => testRealBackendService('datacenter'));
     if(cloudResetCoachBtn) cloudResetCoachBtn.addEventListener('click', () => resetServiceUsage('coach'));
     if(cloudResetDietBtn) cloudResetDietBtn.addEventListener('click', () => resetServiceUsage('diet'));
     if(cloudResetDataBtn) cloudResetDataBtn.addEventListener('click', () => resetServiceUsage('data'));
