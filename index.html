@@ -1419,11 +1419,11 @@ body.light-mode .bottom-shell{
     };
 
     const cloudApiI18n = {
-      it:{ title:'Cloud/API', sub:'Pannello UI mock. La sicurezza vera arriverà con backend e storage sicuro.', locked:'UI chiusa', unlocked:'UI aperta', provider:'Provider mock', status:'Stato pannello', budget:'Budget simulato', usage:'Uso simulato', pinLabel:'PIN demo UI', unlock:'Apri pannello', lock:'Chiudi', reset:'Reset UI', endpoint:'Endpoint placeholder', model:'Modello placeholder', token:'Token placeholder', warning:'Soglia avviso', hardStop:'Soglia blocco', save:'Salva mock', test:'Test mock', lockedNote:'Questo sblocco serve solo a testare il flusso visivo. Non protegge segreti reali. PIN demo: 123456.', saved:'Configurazione mock salvata solo per il prototipo UI.', tested:'Test mock riuscito. Nessuna API reale è stata contattata.', badPin:'PIN errato. Per ora il PIN demo è 123456.', attempts:'Tentativi rimasti: {n}.', cooldown:'Troppi errori. Riprova tra {s}s.', resetBlocked:'Reset UI disabilitato durante il blocco temporaneo.', bannerLabel:'Mock UI', bannerText:'Questa pagina serve a provare flusso, campi e stati. La sicurezza forte verrà spostata fuori dal frontend.', clientLabel:'Client API mock', clientNote:'Qui testiamo il client unico che separa coach, data e datacenter senza usare credenziali vere.', svcCoach:'Servizio coach', svcDiet:'Servizio dieta', svcData:'Servizio data', svcDc:'Servizio datacenter', svcIdle:'Idle', svcBusy:'In prova', svcOk:'OK mock', svcWarn:'Warning mock', svcBlocked:'Blocco mock', testCoach:'Test coach', testDiet:'Test dieta', testData:'Test data', testDc:'Test datacenter', logPrefix:'Ultimo test:', usageWarning:'Attenzione: stai arrivando alla soglia di blocco mock.', usageBlocked:'Blocco mock attivo: hai raggiunto la soglia massima.', svcCount:'Uso: {n}/{max}', splitNote:'Ripartizione mock: coach 65%, dieta 20%, data 10%, datacenter 5%.', resetCoach:'Reset coach', resetDiet:'Reset dieta', resetData:'Reset data', resetDc:'Reset datacenter', resetAll:'Reset totale', resetDone:'Contatore resettato:', resetAllDone:'Tutti i contatori sono stati azzerati.' },
-      en:{ title:'Cloud/API', sub:'Mock UI panel. Real security will come later with backend and secure storage.', locked:'UI closed', unlocked:'UI open', provider:'Mock provider', status:'Panel status', budget:'Simulated budget', usage:'Simulated usage', pinLabel:'Demo UI PIN', unlock:'Open panel', lock:'Close', reset:'Reset UI', endpoint:'Endpoint placeholder', model:'Model placeholder', token:'Token placeholder', warning:'Warning threshold', hardStop:'Hard-stop threshold', save:'Save mock', test:'Mock test', lockedNote:'This unlock only tests the visual flow. It does not protect real secrets. Demo PIN: 123456.', saved:'Mock configuration saved only for the UI prototype.', tested:'Mock test succeeded. No real API was contacted.', badPin:'Wrong PIN. For now the demo PIN is 123456.', attempts:'Attempts left: {n}.', cooldown:'Too many errors. Try again in {s}s.', resetBlocked:'UI reset disabled during temporary lock.', bannerLabel:'Mock UI', bannerText:'This page is only for flow, fields and state testing. Strong security will be moved out of the frontend.', clientLabel:'Mock API client', clientNote:'Here we test the single client that separates coach, data and datacenter without real credentials.', svcCoach:'Coach service', svcData:'Data service', svcDc:'Datacenter service', svcIdle:'Idle', svcBusy:'Testing', svcOk:'Mock OK', testCoach:'Test coach', testData:'Test data', testDc:'Test datacenter', logPrefix:'Last test:', usageWarning:'Warning: you are approaching the mock hard-stop threshold.', usageBlocked:'Mock hard stop active: maximum threshold reached.', svcCount:'Usage: {n}' },
-      es:{ title:'Cloud/API', sub:'Panel UI mock. La seguridad real llegará después con backend y almacenamiento seguro.', locked:'UI cerrada', unlocked:'UI abierta', provider:'Proveedor mock', status:'Estado panel', budget:'Presupuesto simulado', usage:'Uso simulado', pinLabel:'PIN demo UI', unlock:'Abrir panel', lock:'Cerrar', reset:'Reset UI', endpoint:'Endpoint placeholder', model:'Modelo placeholder', token:'Token placeholder', warning:'Umbral aviso', hardStop:'Umbral bloqueo', save:'Guardar mock', test:'Prueba mock', lockedNote:'Este desbloqueo solo prueba el flujo visual. No protege secretos reales. PIN demo: 123456.', saved:'Configuración mock guardada solo para el prototipo UI.', tested:'Prueba mock correcta. No se ha contactado ninguna API real.', badPin:'PIN incorrecto. Por ahora el PIN demo es 123456.', attempts:'Intentos restantes: {n}.', cooldown:'Demasiados errores. Intenta de nuevo en {s}s.', resetBlocked:'Reset UI deshabilitado durante el bloqueo temporal.', bannerLabel:'Mock UI', bannerText:'Esta página sirve solo para probar flujo, campos y estados. La seguridad fuerte saldrá del frontend.', clientLabel:'Cliente API mock', clientNote:'Aquí probamos el cliente único que separa coach, data y datacenter sin credenciales reales.', svcCoach:'Servicio coach', svcData:'Servicio data', svcDc:'Servicio datacenter', svcIdle:'Idle', svcBusy:'Probando', svcOk:'OK mock', testCoach:'Test coach', testData:'Test data', testDc:'Test datacenter', logPrefix:'Última prueba:' }
+      it:{ title:'Cloud/API', sub:'Pannello Cloud/API collegato al backend Worker reale.', locked:'UI chiusa', unlocked:'UI aperta', provider:'Provider', status:'Stato pannello', budget:'Budget locale', usage:'Uso locale', pinLabel:'PIN demo UI', unlock:'Apri pannello', lock:'Chiudi', reset:'Reset UI', endpoint:'Endpoint Worker', model:'Modello', token:'Token proxy opzionale', warning:'Soglia avviso', hardStop:'Soglia blocco', save:'Salva config', test:'Test backend', lockedNote:'Questo sblocco serve solo a testare il flusso visivo. Non protegge segreti reali. PIN demo: 123456.', saved:'Configurazione salvata localmente per collegare il backend.', tested:'Test backend riuscito. Nessuna API reale è stata contattata.', badPin:'PIN errato. Per ora il PIN demo è 123456.', attempts:'Tentativi rimasti: {n}.', cooldown:'Troppi errori. Riprova tra {s}s.', resetBlocked:'Reset UI disabilitato durante il blocco temporaneo.', bannerLabel:'Backend reale', bannerText:'Questa pagina testa il collegamento reale tra app e Cloudflare Worker. Nessuna chiave AI è salvata nel frontend.', clientLabel:'Client API backend', clientNote:'Qui testiamo il client unico che separa coach, dieta, data e datacenter tramite Worker reale.', svcCoach:'Servizio coach', svcDiet:'Servizio dieta', svcData:'Servizio data', svcDc:'Servizio datacenter', svcIdle:'Idle', svcBusy:'In prova', svcOk:'OK backend', svcWarn:'Warning backend', svcBlocked:'Blocco backend', testCoach:'Test coach', testDiet:'Test dieta', testData:'Test data', testDc:'Test datacenter', logPrefix:'Ultimo test:', usageWarning:'Attenzione: stai arrivando alla soglia di blocco mock.', usageBlocked:'Blocco backend attivo: hai raggiunto la soglia massima.', svcCount:'Uso: {n}/{max}', splitNote:'Quote locali: coach 65%, dieta 20%, data 10%, datacenter 5%.', resetCoach:'Reset coach', resetDiet:'Reset dieta', resetData:'Reset data', resetDc:'Reset datacenter', resetAll:'Reset totale', resetDone:'Contatore resettato:', resetAllDone:'Tutti i contatori sono stati azzerati.' },
+      en:{ title:'Cloud/API', sub:'Backend reale panel. Real security will come later with backend and secure storage.', locked:'UI closed', unlocked:'UI open', provider:'Provider', status:'Panel status', budget:'Simulated budget', usage:'Simulated usage', pinLabel:'Demo UI PIN', unlock:'Open panel', lock:'Close', reset:'Reset UI', endpoint:'Endpoint Worker', model:'Model placeholder', token:'Token proxy opzionale', warning:'Warning threshold', hardStop:'Hard-stop threshold', save:'Save mock', test:'Backend test', lockedNote:'This unlock only tests the visual flow. It does not protect real secrets. Demo PIN: 123456.', saved:'Mock configuration saved only for the UI prototype.', tested:'Backend test succeeded. No real API was contacted.', badPin:'Wrong PIN. For now the demo PIN is 123456.', attempts:'Attempts left: {n}.', cooldown:'Too many errors. Try again in {s}s.', resetBlocked:'UI reset disabled during temporary lock.', bannerLabel:'Backend reale', bannerText:'This page tests the real link between the app and Cloudflare Worker. No AI key is stored in the frontend.', clientLabel:'Backend API client', clientNote:'Here we test the single client that separates coach, diet, data and datacenter through the real Worker.', svcCoach:'Coach service', svcData:'Data service', svcDc:'Datacenter service', svcIdle:'Idle', svcBusy:'Testing', svcOk:'Backend OK', testCoach:'Test coach', testData:'Test data', testDc:'Test datacenter', logPrefix:'Last test:', usageWarning:'Warning: you are approaching the mock hard-stop threshold.', usageBlocked:'Mock hard stop active: maximum threshold reached.', svcCount:'Usage: {n}' },
+      es:{ title:'Cloud/API', sub:'Panel Cloud/API conectado al backend Worker real.', locked:'UI cerrada', unlocked:'UI abierta', provider:'Proveedor mock', status:'Estado panel', budget:'Presupuesto simulado', usage:'Uso simulado', pinLabel:'PIN demo UI', unlock:'Abrir panel', lock:'Cerrar', reset:'Reset UI', endpoint:'Endpoint Worker', model:'Modelo placeholder', token:'Token proxy opzionale', warning:'Umbral aviso', hardStop:'Umbral bloqueo', save:'Guardar mock', test:'Prueba backend', lockedNote:'Este desbloqueo solo prueba el flujo visual. No protege secretos reales. PIN demo: 123456.', saved:'Configuración mock guardada solo para el prototipo UI.', tested:'Prueba backend correcta. No se ha contactado ninguna API real.', badPin:'PIN incorrecto. Por ahora el PIN demo es 123456.', attempts:'Intentos restantes: {n}.', cooldown:'Demasiados errores. Intenta de nuevo en {s}s.', resetBlocked:'Reset UI deshabilitado durante el bloqueo temporal.', bannerLabel:'Backend reale', bannerText:'Esta página sirve solo para probar flujo, campos y estados. La seguridad fuerte saldrá del frontend.', clientLabel:'Cliente API backend', clientNote:'Aquí probamos el cliente único que separa coach, data y datacenter sin credenciales reales.', svcCoach:'Servicio coach', svcData:'Servicio data', svcDc:'Servicio datacenter', svcIdle:'Idle', svcBusy:'Probando', svcOk:'OK backend', testCoach:'Test coach', testData:'Test data', testDc:'Test datacenter', logPrefix:'Última prueba:' }
     };
-    const CLOUD_API_STORAGE_KEY = 'fit_app_015B_cloud_api_mock_v1';
+    const CLOUD_API_STORAGE_KEY = 'maestro_cloud_api_state_v037b';
     const cloudApiState = { pin:'123456', provider:'OpenAI', endpoint:'https://maestro-api-proxy.fabiano-muzzin.workers.dev', model:'gpt-4.1-mini', token:'', warning:'80', hardStop:'100', used:0, budget:100, status:'Locked', unlocked:false, message:'', attemptsLeft:5, cooldownUntil:0, services:{ coach:'idle', diet:'idle', data:'idle', datacenter:'idle' }, serviceUsage:{ coach:0, diet:0, data:0, datacenter:0 }, serviceLog:'' };
     let cloudCooldownTimer = null;
     function tcApi(key){ const code = activePack().meta.code; return (cloudApiI18n[code] && cloudApiI18n[code][key]) || (cloudApiI18n.it && cloudApiI18n.it[key]) || key; }
@@ -1503,7 +1503,26 @@ body.light-mode .bottom-shell{
     function unlockCloudApi(){ const remaining = cloudRemainingCooldown(); if(remaining > 0){ cloudApiState.message = tcApi('cooldown').replace('{s}', String(remaining)); renderCloudApiPage(); return; } if((cloudPinInput?.value || '').trim() === cloudApiState.pin){ cloudApiState.unlocked = true; cloudApiState.status = 'Unlocked'; cloudApiState.message = ''; cloudApiState.attemptsLeft = 5; cloudApiState.cooldownUntil = 0; saveCloudApiState(); } else { cloudApiState.attemptsLeft = Math.max(0, Number(cloudApiState.attemptsLeft || 5) - 1); if(cloudApiState.attemptsLeft <= 0){ cloudApiState.cooldownUntil = Date.now() + 60000; cloudApiState.attemptsLeft = 5; cloudApiState.message = ''; saveCloudApiState(); } else { cloudApiState.message = tcApi('badPin') + ' ' + tcApi('attempts').replace('{n}', String(cloudApiState.attemptsLeft)); } saveCloudApiState(); } renderCloudApiPage(); }
     function lockCloudApi(){ cloudApiState.unlocked = false; cloudApiState.status = 'Locked'; if(cloudPinInput) cloudPinInput.value = ''; renderCloudApiPage(); }
     function saveCloudApiMock(){ cloudApiState.provider = cloudProviderInput?.value || 'OpenAI'; cloudApiState.endpoint = cloudEndpointInput?.value || ''; cloudApiState.model = cloudModelInput?.value || ''; cloudApiState.token = cloudTokenInput?.value || ''; cloudApiState.warning = cloudWarningInput?.value || '80'; cloudApiState.hardStop = cloudHardStopInput?.value || '100'; normalizeCloudUsage(); cloudApiState.message = tcApi('saved'); saveCloudApiState(); renderCloudApiPage(); }
-    function testCloudApiMock(){ cloudApiState.provider = cloudProviderInput?.value || 'OpenAI'; cloudApiState.endpoint = cloudEndpointInput?.value || ''; cloudApiState.model = cloudModelInput?.value || ''; cloudApiState.token = cloudTokenInput?.value || ''; cloudApiState.status = 'Connected (mock)'; cloudApiState.message = tcApi('tested'); renderCloudApiPage(); }
+    async function testCloudApiMock(){
+      cloudApiState.provider = cloudProviderInput?.value || 'OpenAI';
+      cloudApiState.endpoint = cloudEndpointInput?.value || '';
+      cloudApiState.model = cloudModelInput?.value || '';
+      cloudApiState.token = cloudTokenInput?.value || '';
+      cloudApiState.status = 'Testing backend';
+      cloudApiState.message = 'Chiamata backend in corso...';
+      saveCloudApiState();
+      renderCloudApiPage();
+      try{
+        const result = await pingAiProxy('panel');
+        cloudApiState.status = 'Connected (backend)';
+        cloudApiState.message = `Backend OK: ${result.message || result.mode || 'online'}`;
+      }catch(err){
+        cloudApiState.status = 'Backend error';
+        cloudApiState.message = `Errore backend: ${err && err.message ? err.message : err}`;
+      }
+      saveCloudApiState();
+      renderCloudApiPage();
+    }
     function renderCloudApiPage(){
       normalizeCloudUsage();
       cloudPageTitle.textContent = tcApi('title');
@@ -1583,16 +1602,23 @@ body.light-mode .bottom-shell{
     }
 
     function activePack(){ return packs[languageState[languageState.activeSlot].code]; }
-    // ===== Master035A: public security layer proxy client =====
+    // ===== Master036B: real worker link =====
     // Base: Master035. Nessun segreto reale è hardcoded nel file HTML.
     // L'app invia un client ID anonimo; rate limit, quote, origin e cost cap sono gestiti nel Worker.
     const DEFAULT_AI_PROXY_URL = 'https://maestro-api-proxy.fabiano-muzzin.workers.dev';
-    const APP_VERSION = 'Master035A';
+    const APP_VERSION = 'Master037_debug_live_connection';
     const MAESTRO_CLIENT_ID_KEY = 'maestro_public_client_id_v1';
 
     function getAiProxyUrl(){
       const configured = String((cloudApiState && cloudApiState.endpoint) || '').trim();
-      return (configured || DEFAULT_AI_PROXY_URL).replace(/\/+$/, '');
+      let base = (configured || DEFAULT_AI_PROXY_URL).replace(/\/+$/, '');
+      base = base.replace(/\/api\/ai$/i, '').replace(/\/api\/ping$/i, '');
+      return base;
+    }
+
+    function maestroDebugLine(label, value){
+      try{ return `${label}: ${typeof value === 'string' ? value : JSON.stringify(value)}`; }
+      catch(e){ return `${label}: ${String(value)}`; }
     }
 
 function getOrCreateMaestroClientId(){
@@ -1620,8 +1646,9 @@ function getProxyHeaders(){
     'x-maestro-app-version': APP_VERSION,
     'x-maestro-timezone': Intl.DateTimeFormat().resolvedOptions().timeZone || 'unknown'
   };
-  const localToken = String((cloudApiState && cloudApiState.token) || '').trim();
-  if(localToken) headers['x-app-key'] = localToken; // compatibilità test privati; non è la chiave OpenAI
+  // Master037B: modalità pubblica. Non inviamo x-app-key dal frontend.
+  // La protezione vera deve stare lato Worker con origin, quote, Turnstile/login e cost cap.
+  // Questo evita blocchi bad_proxy_key causati da token locali vecchi o sbagliati.
   const turnstileToken = getTurnstileToken();
   if(turnstileToken) headers['cf-turnstile-response'] = turnstileToken;
   return headers;
@@ -1629,57 +1656,121 @@ function getProxyHeaders(){
 
 async function callAiProxy(service, payload = {}){
       const cleanService = String(service || 'coach');
-      const response = await fetch(`${getAiProxyUrl()}/api/ai`, {
-        method:'POST',
-        headers:getProxyHeaders(),
-        body: JSON.stringify({
-          service: cleanService,
-          intent: payload.intent || 'free',
-          text: payload.text || '',
-          profile: payload.profile || {},
-          appVersion: APP_VERSION,
-          language: (languageState && languageState[languageState.activeSlot] && languageState[languageState.activeSlot].code) || 'it',
-          clientId: getOrCreateMaestroClientId(),
-          clientMode: 'public-security-layer'
-        })
-      });
+      const targetUrl = `${getAiProxyUrl()}/api/ai`;
+      const headers = getProxyHeaders();
+      const debug = [
+        'MASTER037 DEBUG AI',
+        maestroDebugLine('configured endpoint', (cloudApiState && cloudApiState.endpoint) || ''),
+        maestroDebugLine('normalized base', getAiProxyUrl()),
+        maestroDebugLine('target URL', targetUrl),
+        maestroDebugLine('origin', location.origin),
+        maestroDebugLine('protocol', location.protocol),
+        maestroDebugLine('headers', Object.keys(headers))
+      ];
+      let response;
+      try{
+        response = await fetch(targetUrl, {
+          method:'POST',
+          mode:'cors',
+          cache:'no-store',
+          headers,
+          body: JSON.stringify({
+            service: cleanService,
+            intent: payload.intent || 'free',
+            text: payload.text || '',
+            profile: payload.profile || {},
+            appVersion: APP_VERSION,
+            language: (languageState && languageState[languageState.activeSlot] && languageState[languageState.activeSlot].code) || 'it',
+            clientId: getOrCreateMaestroClientId(),
+            clientMode: 'master037-debug'
+          })
+        });
+      }catch(fetchErr){
+        debug.push(maestroDebugLine('fetch error', fetchErr && fetchErr.message ? fetchErr.message : fetchErr));
+        const e = new Error(debug.join('\\n'));
+        e.maestroDebug = debug;
+        throw e;
+      }
+      const raw = await response.text();
+      debug.push(maestroDebugLine('HTTP status', response.status));
+      debug.push(maestroDebugLine('raw response', raw.slice(0, 1200)));
       let data = null;
-      try{ data = await response.json(); }catch(e){ data = null; }
+      try{ data = raw ? JSON.parse(raw) : null; }catch(e){ data = null; debug.push(maestroDebugLine('JSON parse error', e.message)); }
       if(!response.ok || !data || data.ok === false){
         const message = (data && (data.error || data.message)) || `Errore backend ${response.status}`;
-        throw new Error(message);
+        debug.push(maestroDebugLine('final error', message));
+        const e = new Error(debug.join('\\n'));
+        e.maestroDebug = debug;
+        throw e;
       }
+      data.__debug = debug;
       return data;
     }
 
     async function pingAiProxy(service){
-      const response = await fetch(`${getAiProxyUrl()}/api/ping`, {
-        method:'POST',
-        headers:getProxyHeaders(),
-        body: JSON.stringify({ service:String(service || 'ping'), appVersion:APP_VERSION })
-      });
+      const cleanService = String(service || 'ping');
+      const targetUrl = `${getAiProxyUrl()}/api/ping`;
+      const headers = getProxyHeaders();
+      const debug = [
+        'MASTER037 DEBUG PING',
+        maestroDebugLine('configured endpoint', (cloudApiState && cloudApiState.endpoint) || ''),
+        maestroDebugLine('normalized base', getAiProxyUrl()),
+        maestroDebugLine('target URL', targetUrl),
+        maestroDebugLine('origin', location.origin),
+        maestroDebugLine('protocol', location.protocol),
+        maestroDebugLine('headers', Object.keys(headers))
+      ];
+      let response;
+      try{
+        response = await fetch(targetUrl, {
+          method:'POST',
+          mode:'cors',
+          cache:'no-store',
+          headers,
+          body: JSON.stringify({
+            service: cleanService,
+            intent:'ping',
+            text:`ping ${cleanService}`,
+            appVersion:APP_VERSION,
+            clientId:getOrCreateMaestroClientId()
+          })
+        });
+      }catch(fetchErr){
+        debug.push(maestroDebugLine('fetch error', fetchErr && fetchErr.message ? fetchErr.message : fetchErr));
+        const e = new Error(debug.join('\\n'));
+        e.maestroDebug = debug;
+        throw e;
+      }
+      const raw = await response.text();
+      debug.push(maestroDebugLine('HTTP status', response.status));
+      debug.push(maestroDebugLine('raw response', raw.slice(0, 1200)));
       let data = null;
-      try{ data = await response.json(); }catch(e){ data = null; }
+      try{ data = raw ? JSON.parse(raw) : null; }catch(e){ data = null; debug.push(maestroDebugLine('JSON parse error', e.message)); }
       if(!response.ok || !data || data.ok === false){
         const message = (data && (data.error || data.message)) || `Ping backend fallito ${response.status}`;
-        throw new Error(message);
+        debug.push(maestroDebugLine('final error', message));
+        const e = new Error(debug.join('\\n'));
+        e.maestroDebug = debug;
+        throw e;
       }
+      data.__debug = debug;
       return data;
     }
 
     const apiClient = {
+
       coach:{
         async ping(){ return pingAiProxy('coach'); },
         async ask(payload = {}){
           const data = await callAiProxy('coach', payload);
-          return { ok:true, reply:data.reply || '' };
+          return { ok:true, reply:data.reply || data.answer || data.message || '' };
         }
       },
       diet:{
         async ping(){ return pingAiProxy('diet'); },
         async ask(payload = {}){
           const data = await callAiProxy('diet', payload);
-          return { ok:true, reply:data.reply || '' };
+          return { ok:true, reply:data.reply || data.answer || data.message || '' };
         }
       },
       data:{
@@ -1695,15 +1786,29 @@ async function callAiProxy(service, payload = {}){
         }
       }
     };
-    async function testMockService(service){
+    async function testRealWorkerService(service){
       if(!cloudApiState.unlocked || serviceUsageStage(service) === 'blocked') return;
       cloudApiState.services[service] = 'busy';
-      cloudApiState.serviceLog = `${tcApi('logPrefix')} ${service}...`;
+      cloudApiState.serviceLog = `${tcApi('logPrefix')} ${service} → chiamata backend...`;
       renderCloudApiPage();
-      const result = await apiClient[service].ping();
-      if(result.ok) incrementServiceUsage(service, 1);
-      cloudApiState.services[service] = result.ok ? 'ok' : 'idle';
-      cloudApiState.serviceLog = `${tcApi('logPrefix')} ${service} → ${tcApi('svcOk')}`;
+      try{
+        const result = await apiClient[service].ping();
+        const isOk = !!(result && (result.ok === true || result.message === 'backend_ping_ok' || result.mode === 'real_worker'));
+        if(isOk){
+          incrementServiceUsage(service, 1);
+          cloudApiState.services[service] = 'ok';
+          const mode = (result.mode || result.reply || result.message || 'real_worker');
+          const dbg = result.__debug ? '\n' + result.__debug.join('\n') : '';
+          cloudApiState.serviceLog = `${tcApi('logPrefix')} ${service} → OK backend · ${mode}${dbg}`;
+        }else{
+          cloudApiState.services[service] = 'idle';
+          cloudApiState.serviceLog = `${tcApi('logPrefix')} ${service} → Risposta backend non valida\n${JSON.stringify(result || {})}`;
+        }
+      }catch(err){
+        cloudApiState.services[service] = 'idle';
+        cloudApiState.serviceLog = `${tcApi('logPrefix')} ${service} → ERRORE DEBUG:\n${err && err.message ? err.message : err}`;
+      }
+      saveCloudApiState();
       renderCloudApiPage();
       renderDietMock();
     }
@@ -2703,10 +2808,10 @@ async function callAiProxy(service, payload = {}){
     if(cloudResetMockBtn) cloudResetMockBtn.addEventListener('click', resetCloudApiMock);
     if(cloudSaveBtn) cloudSaveBtn.addEventListener('click', saveCloudApiMock);
     if(cloudTestBtn) cloudTestBtn.addEventListener('click', testCloudApiMock);
-    if(cloudTestCoachBtn) cloudTestCoachBtn.addEventListener('click', () => testMockService('coach'));
-    if(cloudTestDietBtn) cloudTestDietBtn.addEventListener('click', () => testMockService('diet'));
-    if(cloudTestDataBtn) cloudTestDataBtn.addEventListener('click', () => testMockService('data'));
-    if(cloudTestDcBtn) cloudTestDcBtn.addEventListener('click', () => testMockService('datacenter'));
+    if(cloudTestCoachBtn) cloudTestCoachBtn.addEventListener('click', () => testRealWorkerService('coach'));
+    if(cloudTestDietBtn) cloudTestDietBtn.addEventListener('click', () => testRealWorkerService('diet'));
+    if(cloudTestDataBtn) cloudTestDataBtn.addEventListener('click', () => testRealWorkerService('data'));
+    if(cloudTestDcBtn) cloudTestDcBtn.addEventListener('click', () => testRealWorkerService('datacenter'));
     if(cloudResetCoachBtn) cloudResetCoachBtn.addEventListener('click', () => resetServiceUsage('coach'));
     if(cloudResetDietBtn) cloudResetDietBtn.addEventListener('click', () => resetServiceUsage('diet'));
     if(cloudResetDataBtn) cloudResetDataBtn.addEventListener('click', () => resetServiceUsage('data'));
