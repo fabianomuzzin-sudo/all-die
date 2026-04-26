@@ -3,21 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-
-  <!-- ===== Master037_PWA_clean: PWA install layer only ===== -->
+  <title>Master035A - Maestro Public Security Layer</title>
+  <!-- Master037A_PWA_cachefix: PWA only, no layout CSS touched -->
   <meta name="application-name" content="Maestro" />
-  <meta name="apple-mobile-web-app-title" content="Maestro" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="Maestro" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="mobile-web-app-capable" content="yes" />
   <meta name="theme-color" content="#0f1114" />
-  <link rel="manifest" href="manifest.webmanifest" />
-  <link rel="icon" id="pwaFavicon" type="image/png" sizes="192x192" href="icons/maestro-international-192.png" />
-  <link rel="apple-touch-icon" href="icons/maestro-international-180.png" />
-  <link rel="apple-touch-icon" sizes="180x180" href="icons/maestro-international-180.png" />
-  <link rel="apple-touch-icon" sizes="192x192" href="icons/maestro-international-192.png" />
-  <link rel="apple-touch-icon" sizes="512x512" href="icons/maestro-international-512.png" />
-  <title>Master037_PWA_clean - Maestro</title>
+  <link rel="manifest" href="manifest.webmanifest?v=master037a-cachefix-1" />
+  <link rel="icon" id="pwaFavicon" type="image/png" sizes="192x192" href="icons/maestro-international-v037a-192.png?v=master037a-cachefix-1" />
+  <link rel="apple-touch-icon" href="icons/maestro-international-v037a-180.png?v=master037a-cachefix-1" />
+  <link rel="apple-touch-icon" sizes="180x180" href="icons/maestro-international-v037a-180.png?v=master037a-cachefix-1" />
+  <link rel="apple-touch-icon" sizes="192x192" href="icons/maestro-international-v037a-192.png?v=master037a-cachefix-1" />
+  <link rel="apple-touch-icon" sizes="512x512" href="icons/maestro-international-v037a-512.png?v=master037a-cachefix-1" />
+
   <style>
     :root{
       --bg:#0f1114;
@@ -2012,7 +2011,7 @@ async function callAiProxy(service, payload = {}){
       rebuildWheelForCurrentPage(true);
     }
 
-    function setActiveSlot(slotKey){ languageState.activeSlot = slotKey; statusMessage = ''; updateStaticTexts(); updateSliderMeta(); updatePwaIconForLanguage(); }
+    function setActiveSlot(slotKey){ languageState.activeSlot = slotKey; statusMessage = ''; updateStaticTexts(); updateSliderMeta(); }
     function replaceInactiveSlot(){ const targetSlot = inactiveSlotKey(); const selectedCode = cloudPackSelect.value; if(languageState[targetSlot].code === selectedCode){ statusMessage = t('lang.same'); } else { languageState[targetSlot].code = selectedCode; statusMessage = t('lang.done', { name: packs[selectedCode].meta.name }); } updateStaticTexts(); }
 
     function tp(key){
@@ -2729,41 +2728,46 @@ async function callAiProxy(service, payload = {}){
     if(dcOpenCloudBtn) dcOpenCloudBtn.addEventListener('click', () => goToNav('cloud'));
     if(dcResetAllBtn) dcResetAllBtn.addEventListener('click', resetAllServiceUsage);
 
-
-
-    /* ===== Master037_PWA_clean: PWA registration + language-aware internal icon state =====
-       Nota tecnica: iOS/Android non garantiscono il cambio dinamico dell'icona già installata in Home.
-       Manifest e home icon restano sul default internazionale; dentro browser/app si aggiorna favicon/stato interno.
-    */
-    function activeLanguageCode(){
-      return (languageState && languageState[languageState.activeSlot] && languageState[languageState.activeSlot].code) || 'en';
-    }
-    function updatePwaIconForLanguage(){
-      const code = activeLanguageCode();
-      const isItalian = code === 'it';
-      const iconBase = isItalian ? 'maestro-italian' : 'maestro-international';
-      document.documentElement.dataset.maestroIcon = isItalian ? 'italian' : 'international';
-      const favicon = document.getElementById('pwaFavicon');
-      if(favicon) favicon.setAttribute('href', `icons/${iconBase}-192.png`);
-      const themeMeta = document.querySelector('meta[name="theme-color"]');
-      if(themeMeta) themeMeta.setAttribute('content', document.body.classList.contains('light-mode') ? '#f3f6fb' : '#0f1114');
-    }
-    function registerMaestroServiceWorker(){
-      if(!('serviceWorker' in navigator)) return;
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./service-worker.js').catch(() => {});
-      });
-    }
-    registerMaestroServiceWorker();
-
     loadProfileState();
     loadCoachState();
     loadCloudApiState();
     profileDirty = false;
     updateStaticTexts();
-    updatePwaIconForLanguage();
     buildWheel();
     requestAnimationFrame(() => rebuildWheelForCurrentPage(true));
   </script>
+
+  <script>
+    /* Master037A_PWA_cachefix: PWA registration + icon preference only. No layout/navigation logic touched. */
+    (function(){
+      var PWA_VERSION = 'master037a-cachefix-1';
+      function getActiveLangCode(){
+        try{
+          if(window.languageState && window.languageState.activeSlot && window.languageState[window.languageState.activeSlot]){
+            return String(window.languageState[window.languageState.activeSlot].code || '').toLowerCase();
+          }
+        }catch(e){}
+        try{ return String(document.documentElement.lang || '').toLowerCase(); }catch(e){ return ''; }
+      }
+      function refreshPwaFavicon(){
+        var isItalian = getActiveLangCode().indexOf('it') === 0;
+        var iconBase = isItalian ? 'maestro-italian-v037a' : 'maestro-international-v037a';
+        try{ document.documentElement.dataset.maestroIcon = isItalian ? 'italian' : 'international'; }catch(e){}
+        var fav = document.getElementById('pwaFavicon');
+        if(fav){ fav.href = 'icons/' + iconBase + '-192.png?v=' + PWA_VERSION; }
+      }
+      refreshPwaFavicon();
+      window.addEventListener('load', function(){
+        refreshPwaFavicon();
+        if('serviceWorker' in navigator){
+          navigator.serviceWorker.register('./service-worker.js?v=' + PWA_VERSION, { scope:'./' })
+            .then(function(reg){ try{ reg.update(); }catch(e){} })
+            .catch(function(){});
+        }
+      });
+      document.addEventListener('click', function(){ setTimeout(refreshPwaFavicon, 0); }, true);
+    })();
+  </script>
+
 </body>
 </html>
