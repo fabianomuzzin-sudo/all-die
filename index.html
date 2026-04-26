@@ -653,7 +653,7 @@ body.light-mode .bottom-shell{
               </div>
               <div class="settings-section" id="settingsAppSection">
                 <div class="settings-section-title" id="settingsAppTitle">Sistema</div>
-                <div class="settings-small-note" id="settingsAppNote">Versione: Master040A · Base: Master039 · Cloud tools working</div>
+                <div class="settings-small-note" id="settingsAppNote">Versione: Master040B · Base: Master039 · Cloud import feedback</div>
               </div>
               <div class="settings-section" id="settingsSecuritySection">
                 <div class="settings-section-title" id="settingsSecurityTitle">Sicurezza</div>
@@ -2734,20 +2734,20 @@ async function callAiProxy(service, payload = {}){
     }
 
 
-    /* ===== Master040A Cloud tools working =====
+    /* ===== Master040B Cloud import feedback =====
        Base: Master039
        Modifica unica: export/import backup locale e AppCloud chiari.
        Nessun CSS layout principale modificato.
     */
-    const MAESTRO_CLOUD_BACKUP_VERSION = 'Master040A_cloud_tools_working';
+    const MAESTRO_CLOUD_BACKUP_VERSION = 'Master040B_cloud_import_feedback';
     const CLOUD_USER_STORAGE_KEY = 'maestro_cloud_user_tools_v1';
     const cloudUserState = { lastExportAt:'', lastImportAt:'', mode:'local-backup', auth:'future-email-google' };
     function cloudUserText(key){
       const code = (activePack().meta && activePack().meta.code) || 'it';
       const dict = {
-        it:{ label:'Cloud utente', note:'Backup locale di preparazione: profilo, ricette, progressi e impostazioni. Il cloud reale arriverà con login email/Google + backend.', profile:'Profilo', recipes:'Ricette', progress:'Progressi', settings:'Impostazioni', local:'Locale', ready:'Pronto', export:'Esporta backup', import:'Importa backup', exported:'Backup creato. Se il download non compare, usa il riquadro backup manuale sotto.', imported:'Backup importato correttamente in locale.', badImport:'Import non valido: seleziona un backup Maestro .json.', status:'Modo attuale: backup locale/export · login email/Google previsto nel backend reale.', manualLabel:'Backup manuale', manualNote:'Se il download non parte, copia questo JSON e salvalo come file .json.', appCloud:'AppCloud' },
-        en:{ label:'User cloud', note:'Preparation local backup: profile, recipes, progress and settings. Real cloud will come with email/Google login + backend.', profile:'Profile', recipes:'Recipes', progress:'Progress', settings:'Settings', local:'Local', ready:'Ready', export:'Export backup', import:'Import backup', exported:'Backup created. If the download does not appear, use the manual backup box below.', imported:'Backup imported locally.', badImport:'Invalid import: select a Maestro .json backup.', status:'Current mode: local backup/export · email/Google login planned in the real backend.', manualLabel:'Manual backup', manualNote:'If the download does not start, copy this JSON and save it as a .json file.', appCloud:'AppCloud' },
-        es:{ label:'Cloud usuario', note:'Backup local de preparación: perfil, recetas, progreso y ajustes. El cloud real llegará con login email/Google + backend.', profile:'Perfil', recipes:'Recetas', progress:'Progreso', settings:'Ajustes', local:'Local', ready:'Listo', export:'Exportar backup', import:'Importar backup', exported:'Backup creado. Si la descarga no aparece, usa el cuadro manual de abajo.', imported:'Backup importado localmente.', badImport:'Import no válido: selecciona un backup Maestro .json.', status:'Modo actual: backup local/export · login email/Google previsto en el backend real.', manualLabel:'Backup manual', manualNote:'Si la descarga no empieza, copia este JSON y guárdalo como archivo .json.', appCloud:'AppCloud' }
+        it:{ label:'Cloud utente', note:'Backup locale di preparazione: profilo, ricette, progressi e impostazioni. Il cloud reale arriverà con login email/Google + backend.', profile:'Profilo', recipes:'Ricette', progress:'Progressi', settings:'Impostazioni', local:'Locale', ready:'Pronto', export:'Esporta backup', import:'Importa backup', exported:'Backup creato. Se il download non compare, usa il riquadro backup manuale sotto.', imported:'Import riuscito: backup caricato correttamente in locale.', badImport:'Import fallito: seleziona un backup Maestro .json valido.', status:'Stato backup: backup locale/export · ultimo import visibile qui. Modo attuale: backup locale/export · login email/Google previsto nel backend reale.', manualLabel:'Backup manuale', manualNote:'Se il download non parte, copia questo JSON e salvalo come file .json.', appCloud:'AppCloud' },
+        en:{ label:'User cloud', note:'Preparation local backup: profile, recipes, progress and settings. Real cloud will come with email/Google login + backend.', profile:'Profile', recipes:'Recipes', progress:'Progress', settings:'Settings', local:'Local', ready:'Ready', export:'Export backup', import:'Import backup', exported:'Backup created. If the download does not appear, use the manual backup box below.', imported:'Import successful: backup loaded locally.', badImport:'Import failed: select a valid Maestro .json backup.', status:'Current mode: local backup/export · email/Google login planned in the real backend.', manualLabel:'Manual backup', manualNote:'If the download does not start, copy this JSON and save it as a .json file.', appCloud:'AppCloud' },
+        es:{ label:'Cloud usuario', note:'Backup local de preparación: perfil, recetas, progreso y ajustes. El cloud real llegará con login email/Google + backend.', profile:'Perfil', recipes:'Recetas', progress:'Progreso', settings:'Ajustes', local:'Local', ready:'Listo', export:'Exportar backup', import:'Importar backup', exported:'Backup creado. Si la descarga no aparece, usa el cuadro manual de abajo.', imported:'Import correcto: backup cargado localmente.', badImport:'Import fallido: selecciona un backup Maestro .json válido.', status:'Modo actual: backup local/export · login email/Google previsto en el backend real.', manualLabel:'Backup manual', manualNote:'Si la descarga no empieza, copia este JSON y guárdalo como archivo .json.', appCloud:'AppCloud' }
       };
       return (dict[code] && dict[code][key]) || (dict.it && dict.it[key]) || key;
     }
@@ -2769,13 +2769,13 @@ async function callAiProxy(service, payload = {}){
     }
     async function exportCloudUserBackup(){
       const payload = cloudUserBackupPayload(); const jsonText = JSON.stringify(payload, null, 2); showCloudUserManualBackup(jsonText);
-      try{ const blob = new Blob([jsonText], {type:'application/json;charset=utf-8'}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'maestro-user-backup-master040a.json'; a.rel = 'noopener'; a.style.display = 'none'; document.body.appendChild(a); a.click(); setTimeout(() => { try{ URL.revokeObjectURL(url); }catch(e){} try{ a.remove(); }catch(e){} }, 1200); }
+      try{ const blob = new Blob([jsonText], {type:'application/json;charset=utf-8'}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'maestro-user-backup-master040b.json'; a.rel = 'noopener'; a.style.display = 'none'; document.body.appendChild(a); a.click(); setTimeout(() => { try{ URL.revokeObjectURL(url); }catch(e){} try{ a.remove(); }catch(e){} }, 1200); }
       catch(e){ if(navigator.clipboard && navigator.clipboard.writeText){ try{ await navigator.clipboard.writeText(jsonText); }catch(err){} } }
       cloudUserState.lastExportAt = payload.exportedAt; saveCloudUserState(); renderCloudUserArchitecture(cloudUserText('exported'));
     }
     function importCloudUserBackupFile(file){
       if(!file){ renderCloudUserArchitecture(cloudUserText('status')); return; }
-      const reader = new FileReader(); reader.onload = () => { try{ const payload = JSON.parse(String(reader.result || '{}')); if(!payload || payload.app !== 'Maestro' || !payload.buckets) throw new Error('bad backup'); if(payload.buckets.profile && profileState && profileState.data){ Object.assign(profileState.data, payload.buckets.profile || {}); } if(typeof payload.buckets.profilePhoto === 'string' && profileState){ profileState.photo = payload.buckets.profilePhoto; } if(typeof saveProfileState === 'function') saveProfileState(); if(payload.buckets.coach && typeof coachState !== 'undefined'){ Object.assign(coachState, payload.buckets.coach || {}); if(typeof saveCoachState === 'function') saveCoachState(); } cloudUserState.lastImportAt = new Date().toISOString(); saveCloudUserState(); profileDirty = false; if(typeof renderMeViews === 'function') renderMeViews(); if(typeof updateTopAvatar === 'function') updateTopAvatar(); if(typeof updateCoachButtonState === 'function') updateCoachButtonState(); renderCloudUserArchitecture(cloudUserText('imported')); }catch(e){ renderCloudUserArchitecture(cloudUserText('badImport')); } };
+      const reader = new FileReader(); reader.onload = () => { try{ const payload = JSON.parse(String(reader.result || '{}')); if(!payload || payload.app !== 'Maestro' || !payload.buckets) throw new Error('bad backup'); if(payload.buckets.profile && profileState && profileState.data){ Object.assign(profileState.data, payload.buckets.profile || {}); } if(typeof payload.buckets.profilePhoto === 'string' && profileState){ profileState.photo = payload.buckets.profilePhoto; } if(typeof saveProfileState === 'function') saveProfileState(); if(payload.buckets.coach && typeof coachState !== 'undefined'){ Object.assign(coachState, payload.buckets.coach || {}); if(typeof saveCoachState === 'function') saveCoachState(); } cloudUserState.lastImportAt = new Date().toISOString(); cloudUserState.lastImportFile = file.name || 'backup.json'; saveCloudUserState(); profileDirty = false; if(typeof renderMeViews === 'function') renderMeViews(); if(typeof updateTopAvatar === 'function') updateTopAvatar(); if(typeof updateCoachButtonState === 'function') updateCoachButtonState(); renderCloudUserArchitecture(cloudUserText('imported') + ' · file: ' + (file.name || 'backup.json')); }catch(e){ renderCloudUserArchitecture(cloudUserText('badImport')); } };
       reader.onerror = () => renderCloudUserArchitecture(cloudUserText('badImport')); reader.readAsText(file);
     }
     function renderCloudUserArchitecture(message){
@@ -2853,7 +2853,7 @@ async function callAiProxy(service, payload = {}){
     const cloudUserImportBtn = document.getElementById('cloudUserImportBtn');
     const cloudUserImportInput = document.getElementById('cloudUserImportInput');
     if(cloudUserExportBtn) cloudUserExportBtn.addEventListener('click', exportCloudUserBackup);
-    if(cloudUserImportBtn) cloudUserImportBtn.addEventListener('click', () => { renderCloudUserArchitecture('Seleziona un file backup Maestro .json dal dispositivo.'); if(cloudUserImportInput) cloudUserImportInput.click(); });
+    if(cloudUserImportBtn) cloudUserImportBtn.addEventListener('click', () => { renderCloudUserArchitecture('Seleziona un file backup Maestro .json dal dispositivo. Dopo la scelta, qui apparirà il messaggio Import riuscito oppure Import fallito.'); if(cloudUserImportInput) cloudUserImportInput.click(); });
     if(cloudUserImportInput) cloudUserImportInput.addEventListener('change', e => importCloudUserBackupFile(e.target.files && e.target.files[0]));
 
     loadProfileState();
