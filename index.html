@@ -3,33 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Master037B - Maestro PWA Reset Singlefile</title>
-
-  <!-- Master037B_PWA_reset_singlefile | Base: Master036 | Modifica unica: reset cache/PWA senza toccare layout -->
-  <meta name="application-name" content="Maestro" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-title" content="Maestro" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="theme-color" content="#0f1114" />
-  <script>
-    window.MAESTRO_BUILD = 'Master037B_PWA_reset_singlefile';
-    (function maestroPwaReset(){
-      try {
-        if ('serviceWorker' in navigator) {
-          navigator.serviceWorker.getRegistrations().then(function(registrations){
-            registrations.forEach(function(registration){ registration.unregister(); });
-          }).catch(function(){});
-        }
-        if ('caches' in window) {
-          caches.keys().then(function(keys){
-            keys.forEach(function(key){ caches.delete(key); });
-          }).catch(function(){});
-        }
-        localStorage.setItem('maestroBuild', 'Master037B_PWA_reset_singlefile');
-        localStorage.setItem('maestroPwaResetDone', String(Date.now()));
-      } catch(e) {}
-    })();
-  </script>
+  <title>Master037C - Maestro SW Kill</title>
   <style>
     :root{
       --bg:#0f1114;
@@ -480,6 +454,62 @@ body.light-mode .bottom-shell{
 }
 
 </style>
+
+  <!-- ===== Master037C_SW_kill =====
+       BASE: Master036
+       Modifica unica: kill/reset service worker e cache PWA.
+       Layout non toccato: .module-a-main, .main-card, .module-bottom, .bottom-shell, .wheel invariati.
+  -->
+  <meta name="maestro-build" content="Master037C_SW_kill" />
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <script>
+    (function maestroSWKill(){
+      var BUILD = 'Master037C_SW_kill';
+      var RESET_KEY = 'maestro_sw_kill_' + BUILD;
+      function reloadOnce(){
+        try{
+          if(!sessionStorage.getItem(RESET_KEY)){
+            sessionStorage.setItem(RESET_KEY, '1');
+            window.location.replace(window.location.href.split('#')[0] + (window.location.search ? '&' : '?') + 'maestro_cache_reset=' + Date.now());
+          }
+        }catch(e){}
+      }
+      function killCaches(){
+        var jobs = [];
+        if('serviceWorker' in navigator){
+          jobs.push(
+            navigator.serviceWorker.getRegistrations()
+              .then(function(registrations){
+                return Promise.all(registrations.map(function(reg){ return reg.unregister(); }));
+              })
+              .catch(function(){})
+          );
+        }
+        if('caches' in window){
+          jobs.push(
+            caches.keys()
+              .then(function(keys){
+                return Promise.all(keys.map(function(key){ return caches.delete(key); }));
+              })
+              .catch(function(){})
+          );
+        }
+        Promise.all(jobs).then(function(){
+          if(navigator.serviceWorker && navigator.serviceWorker.controller){
+            reloadOnce();
+          }
+        }).catch(function(){});
+      }
+      if(document.readyState === 'loading'){
+        document.addEventListener('DOMContentLoaded', killCaches, {once:true});
+      }else{
+        killCaches();
+      }
+    })();
+  </script>
+
 </head>
 <body>
   <div class="app">
@@ -617,7 +647,7 @@ body.light-mode .bottom-shell{
               </div>
               <div class="settings-section" id="settingsAppSection">
                 <div class="settings-section-title" id="settingsAppTitle">Sistema</div>
-                <div class="settings-small-note" id="settingsAppNote">Versione: Master037B · Base: Master036 · PWA reset singlefile</div>
+                <div class="settings-small-note" id="settingsAppNote">Versione: Master035A · Base: Master035 · Security layer pubblico</div>
               </div>
               <div class="settings-section" id="settingsSecuritySection">
                 <div class="settings-section-title" id="settingsSecurityTitle">Sicurezza</div>
@@ -1917,7 +1947,7 @@ async function callAiProxy(service, payload = {}){
       if(settingsThemeTitle) settingsThemeTitle.textContent = code === 'en' ? 'Theme' : (code === 'es' ? 'Tema' : 'Tema');
       if(settingsThemeNote) settingsThemeNote.textContent = code === 'en' ? 'Quick switch between dark mode and light mode demo.' : (code === 'es' ? 'Cambio rápido entre dark mode y light mode demo.' : 'Cambio rapido tra dark mode e light mode demo.');
       if(settingsAppTitle) settingsAppTitle.textContent = code === 'en' ? 'System' : (code === 'es' ? 'Sistema' : 'Sistema');
-      if(settingsAppNote) settingsAppNote.textContent = code === 'en' ? 'Version: Master035A · Base: Master035 · Public security layer' : (code === 'es' ? 'Versión: Master035A · Base: Master035 · Capa de seguridad pública' : 'Versione: Master037B · Base: Master036 · PWA reset singlefile');
+      if(settingsAppNote) settingsAppNote.textContent = code === 'en' ? 'Version: Master035A · Base: Master035 · Public security layer' : (code === 'es' ? 'Versión: Master035A · Base: Master035 · Capa de seguridad pública' : 'Versione: Master035A · Base: Master035 · Security layer pubblico');
       if(settingsSecurityTitle) settingsSecurityTitle.textContent = code === 'en' ? 'Security' : (code === 'es' ? 'Seguridad' : 'Sicurezza');
       if(settingsSecurityNote) settingsSecurityNote.textContent = code === 'en' ? 'No real AI key is stored in the HTML file. This build is prepared for public use: domain control, anonymous client ID, optional Turnstile, rate limits and quotas in the Worker.' : (code === 'es' ? 'Ninguna clave AI real está guardada en el archivo HTML. Esta build está preparada para uso público: control de dominio, client ID anónimo, Turnstile opcional, rate limit y cuotas en el Worker.' : 'Nessuna chiave AI reale è salvata nel file HTML. Questa build è preparata per uso pubblico: controllo dominio, client ID anonimo, Turnstile opzionale, rate limit e quote lato Worker.');
       const isLight = document.body.classList.contains('light-mode');
