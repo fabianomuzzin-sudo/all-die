@@ -695,7 +695,7 @@ body.light-mode .maestro-backup-safe-btn.primary{background:#2563eb!important;bo
               </div>
               <div class="settings-section" id="settingsAppSection">
                 <div class="settings-section-title" id="settingsAppTitle">Sistema</div>
-                <div class="settings-small-note" id="settingsAppNote">Versione: Master042 · Base: Master041 · Cloud auth UI</div>
+                <div class="settings-small-note" id="settingsAppNote">Versione: Master043 · Base: Master042 · Real auth engine</div>
               </div>
               <div class="settings-section" id="settingsSecuritySection">
                 <div class="settings-section-title" id="settingsSecurityTitle">Sicurezza</div>
@@ -2019,7 +2019,7 @@ async function callAiProxy(service, payload = {}){
       if(settingsThemeTitle) settingsThemeTitle.textContent = code === 'en' ? 'Theme' : (code === 'es' ? 'Tema' : 'Tema');
       if(settingsThemeNote) settingsThemeNote.textContent = code === 'en' ? 'Quick switch between dark mode and light mode demo.' : (code === 'es' ? 'Cambio rápido entre dark mode y light mode demo.' : 'Cambio rapido tra dark mode e light mode demo.');
       if(settingsAppTitle) settingsAppTitle.textContent = code === 'en' ? 'System' : (code === 'es' ? 'Sistema' : 'Sistema');
-      if(settingsAppNote) settingsAppNote.textContent = code === 'en' ? 'Version: Master042 · Base: Master041 · Cloud auth UI' : (code === 'es' ? 'Versión: Master042 · Base: Master041 · Cloud auth UI' : 'Versione: Master042 · Base: Master041 · Cloud auth UI');
+      if(settingsAppNote) settingsAppNote.textContent = code === 'en' ? 'Version: Master043 · Base: Master042 · Real auth engine' : (code === 'es' ? 'Versión: Master043 · Base: Master042 · Real auth engine' : 'Versione: Master043 · Base: Master042 · Real auth engine');
       if(settingsSecurityTitle) settingsSecurityTitle.textContent = code === 'en' ? 'Security' : (code === 'es' ? 'Seguridad' : 'Sicurezza');
       if(settingsSecurityNote) settingsSecurityNote.textContent = code === 'en' ? 'No real AI key is stored in the HTML file. This build is prepared for public use: domain control, anonymous client ID, optional Turnstile, rate limits and quotas in the Worker.' : (code === 'es' ? 'Ninguna clave AI real está guardada en el archivo HTML. Esta build está preparada para uso público: control de dominio, client ID anónimo, Turnstile opcional, rate limit y cuotas en el Worker.' : 'Nessuna chiave AI reale è salvata nel file HTML. Questa build è preparata per uso pubblico: controllo dominio, client ID anonimo, Turnstile opzionale, rate limit e quote lato Worker.');
       const isLight = document.body.classList.contains('light-mode');
@@ -2857,63 +2857,97 @@ async function callAiProxy(service, payload = {}){
 
 
 
-    /* ===== Master042 cloud auth UI =====
-       Account cloud mock/pre-auth isolato: prepara login reale senza toccare render principale.
+    /* ===== Master043 real auth engine =====
+       Sessione utente persistente isolata: ricorda login locale e prepara backend reale.
+       Non tocca render principale, rotellina, slider, home o layout.
     */
-    (function maestroCloudAuthSafe(){
-      const VERSION = 'master042';
+    (function maestroCloudAuthEngine(){
+      const VERSION = 'master043';
       const PANEL_ID = 'maestroCloudAuthSafePanel';
       const STATE_KEY = 'maestro.cloudAuthSafe.state';
       const STATUS_KEY = 'maestro.cloudAuthSafe.status';
+      const SESSION_KEY = 'maestro.cloudAuthSafe.session';
+      const USERS_KEY = 'maestro.cloudAuthSafe.users';
+      const SESSION_DAYS = 30;
       function activeLang(){ try { return activePack().meta.code || 'it'; } catch(e) { return 'it'; } }
       function copy(){
         const code = activeLang();
         const dict = {
-          it:{ title:'Account cloud', note:'Primo blocco del cloud reale: identità utente, login e stato account. Per ora è una UI sicura locale; il prossimo step collegherà il backend.', email:'Email', pass:'Password', login:'Accedi', create:'Crea account', google:'Continua con Google', logout:'Logout', stateOff:'Non connesso', stateOn:'Connesso locale', ready:'Pronto per collegamento backend.', logged:'Login locale registrato. Prossimo step: backend reale.', created:'Account locale preparato. Prossimo step: database cloud.', googleWait:'Google login preparato. Richiede provider auth reale.', out:'Logout eseguito.', needEmail:'Inserisci almeno una email valida.' },
-          en:{ title:'Cloud account', note:'First block of real cloud: user identity, login and account state. For now this is safe local UI; the next step will connect the backend.', email:'Email', pass:'Password', login:'Sign in', create:'Create account', google:'Continue with Google', logout:'Logout', stateOff:'Not connected', stateOn:'Local session', ready:'Ready for backend connection.', logged:'Local login recorded. Next step: real backend.', created:'Local account prepared. Next step: cloud database.', googleWait:'Google login prepared. Requires real auth provider.', out:'Logged out.', needEmail:'Enter at least a valid email.' },
-          es:{ title:'Cuenta cloud', note:'Primer bloque del cloud real: identidad de usuario, login y estado de cuenta. Por ahora es una UI local segura; el próximo paso conectará el backend.', email:'Email', pass:'Contraseña', login:'Entrar', create:'Crear cuenta', google:'Continuar con Google', logout:'Logout', stateOff:'No conectado', stateOn:'Sesión local', ready:'Listo para conectar backend.', logged:'Login local registrado. Próximo paso: backend real.', created:'Cuenta local preparada. Próximo paso: database cloud.', googleWait:'Google login preparado. Requiere proveedor auth real.', out:'Logout realizado.', needEmail:'Introduce al menos un email válido.' }
+          it:{ title:'Account cloud', note:'Sessione persistente locale: accedi una volta e Maestro ti ricorda alla riapertura. Il backend reale verrà collegato nel prossimo blocco.', email:'Email', pass:'Password', login:'Accedi', create:'Crea account', google:'Continua con Google', logout:'Logout', stateOff:'Non connesso', stateOn:'Sessione attiva', ready:'Non hai ancora effettuato l’accesso.', logged:'Accesso eseguito. La sessione resta attiva su questo dispositivo.', created:'Account locale creato e sessione attivata.', googleWait:'Google login preparato. Richiede provider auth reale.', out:'Logout eseguito. Sessione rimossa.', needEmail:'Inserisci una email valida.', needPass:'Inserisci una password di almeno 6 caratteri.', badLogin:'Account non trovato o password non valida.', restored:'Sessione ripristinata automaticamente.', expires:'Scadenza sessione', lastLogin:'Ultimo accesso', localOnly:'Locale ora · Cloud reale prossimo step' },
+          en:{ title:'Cloud account', note:'Persistent local session: sign in once and Maestro remembers you when reopened. The real backend will be connected in the next block.', email:'Email', pass:'Password', login:'Sign in', create:'Create account', google:'Continue with Google', logout:'Logout', stateOff:'Not connected', stateOn:'Active session', ready:'You are not signed in yet.', logged:'Signed in. Session stays active on this device.', created:'Local account created and session activated.', googleWait:'Google login prepared. Requires real auth provider.', out:'Logged out. Session removed.', needEmail:'Enter a valid email.', needPass:'Enter a password of at least 6 characters.', badLogin:'Account not found or password invalid.', restored:'Session restored automatically.', expires:'Session expiry', lastLogin:'Last sign-in', localOnly:'Local now · Real cloud next step' },
+          es:{ title:'Cuenta cloud', note:'Sesión local persistente: entra una vez y Maestro te recuerda al volver a abrir. El backend real se conectará en el próximo bloque.', email:'Email', pass:'Contraseña', login:'Entrar', create:'Crear cuenta', google:'Continuar con Google', logout:'Logout', stateOff:'No conectado', stateOn:'Sesión activa', ready:'Todavía no has iniciado sesión.', logged:'Acceso realizado. La sesión queda activa en este dispositivo.', created:'Cuenta local creada y sesión activada.', googleWait:'Google login preparado. Requiere proveedor auth real.', out:'Logout realizado. Sesión eliminada.', needEmail:'Introduce un email válido.', needPass:'Introduce una contraseña de al menos 6 caracteres.', badLogin:'Cuenta no encontrada o contraseña no válida.', restored:'Sesión restaurada automáticamente.', expires:'Caducidad sesión', lastLogin:'Último acceso', localOnly:'Local ahora · Cloud real próximo paso' }
         };
         return dict[code] || dict.it;
       }
-      function loadState(){
-        try{ return JSON.parse(localStorage.getItem(STATE_KEY) || '{}') || {}; }catch(e){ return {}; }
+      function safeJson(key, fallback){ try{ return JSON.parse(localStorage.getItem(key) || '') || fallback; }catch(e){ return fallback; } }
+      function saveJson(key, value){ try{ localStorage.setItem(key, JSON.stringify(value || {})); }catch(e){} }
+      function nowIso(){ return new Date().toISOString(); }
+      function addDaysIso(days){ const d = new Date(); d.setDate(d.getDate() + days); return d.toISOString(); }
+      function normalizeEmail(v){ return String(v || '').trim().toLowerCase(); }
+      function readEmail(){ return normalizeEmail(document.getElementById('maestroCloudAuthEmail')?.value); }
+      function readPassword(){ return String(document.getElementById('maestroCloudAuthPassword')?.value || ''); }
+      function simpleHash(str){
+        let h = 2166136261;
+        for(let i=0;i<str.length;i++){ h ^= str.charCodeAt(i); h += (h<<1) + (h<<4) + (h<<7) + (h<<8) + (h<<24); }
+        return ('00000000' + (h >>> 0).toString(16)).slice(-8);
       }
-      function saveState(state){ try{ localStorage.setItem(STATE_KEY, JSON.stringify(state || {})); }catch(e){} }
+      function loadUsers(){ return safeJson(USERS_KEY, {}); }
+      function loadSession(){
+        const session = safeJson(SESSION_KEY, {});
+        if(!session.email || !session.expiresAt) return {};
+        if(Date.parse(session.expiresAt) <= Date.now()){ try{ localStorage.removeItem(SESSION_KEY); }catch(e){} return {}; }
+        return session;
+      }
+      function saveSession(email, mode){
+        const session = { email, mode:mode || 'login', createdAt:nowIso(), lastSeenAt:nowIso(), expiresAt:addDaysIso(SESSION_DAYS), version:VERSION };
+        saveJson(SESSION_KEY, session);
+        saveJson(STATE_KEY, { email, mode:session.mode, updatedAt:session.createdAt, version:VERSION });
+        return session;
+      }
       function setStatus(message){
         try{ localStorage.setItem(STATUS_KEY, message); }catch(e){}
         const el = document.getElementById('maestroCloudAuthSafeStatus');
         if(el) el.textContent = message;
       }
+      function fmt(iso){ try{ return new Date(iso).toLocaleString(); }catch(e){ return '—'; } }
       function renderState(){
         const c = copy();
-        const state = loadState();
+        const session = loadSession();
         const pill = document.getElementById('maestroCloudAuthSafePill');
         const emailOut = document.getElementById('maestroCloudAuthSafeEmailOut');
-        const logged = !!state.email;
+        const meta = document.getElementById('maestroCloudAuthSafeMeta');
+        const logged = !!session.email;
         if(pill){ pill.textContent = logged ? c.stateOn : c.stateOff; pill.classList.toggle('ok', logged); }
-        if(emailOut) emailOut.textContent = logged ? state.email : c.ready;
+        if(emailOut) emailOut.textContent = logged ? session.email : c.ready;
+        if(meta) meta.textContent = logged ? (c.localOnly + '\n' + c.lastLogin + ': ' + fmt(session.createdAt) + '\n' + c.expires + ': ' + fmt(session.expiresAt)) : c.localOnly;
       }
-      function readEmail(){ return String(document.getElementById('maestroCloudAuthEmail')?.value || '').trim(); }
-      function localLogin(mode){
-        const c = copy();
-        const email = readEmail();
+      function createAccount(){
+        const c = copy(); const email = readEmail(); const password = readPassword();
         if(!email || !email.includes('@')){ setStatus(c.needEmail); return; }
-        saveState({ email, mode, updatedAt:new Date().toISOString(), version:VERSION });
-        setStatus(mode === 'create' ? c.created : c.logged);
-        renderState();
+        if(password.length < 6){ setStatus(c.needPass); return; }
+        const users = loadUsers();
+        users[email] = { email, passwordHash:simpleHash(email + ':' + password), createdAt:users[email]?.createdAt || nowIso(), updatedAt:nowIso(), version:VERSION };
+        saveJson(USERS_KEY, users); saveSession(email, 'create'); setStatus(c.created); renderState();
+      }
+      function login(){
+        const c = copy(); const email = readEmail(); const password = readPassword();
+        if(!email || !email.includes('@')){ setStatus(c.needEmail); return; }
+        if(password.length < 6){ setStatus(c.needPass); return; }
+        const users = loadUsers(); const hash = simpleHash(email + ':' + password);
+        if(!users[email] || users[email].passwordHash !== hash){ setStatus(c.badLogin); return; }
+        saveSession(email, 'login'); setStatus(c.logged); renderState();
       }
       function googleMock(){ setStatus(copy().googleWait); }
-      function logout(){ saveState({}); setStatus(copy().out); renderState(); }
+      function logout(){ try{ localStorage.removeItem(SESSION_KEY); localStorage.removeItem(STATE_KEY); }catch(e){} setStatus(copy().out); renderState(); }
       function ensurePanel(){
         const pageBody = document.querySelector('#cloudPage .page-body');
         if(!pageBody || document.getElementById(PANEL_ID)) return;
-        const c = copy();
-        const panel = document.createElement('div');
-        panel.className = 'maestro-auth-safe';
-        panel.id = PANEL_ID;
+        const c = copy(); const panel = document.createElement('div');
+        panel.className = 'maestro-auth-safe'; panel.id = PANEL_ID;
         panel.innerHTML = '<div class="maestro-auth-safe-title">' + c.title + '</div>' +
           '<span class="maestro-auth-safe-pill" id="maestroCloudAuthSafePill">' + c.stateOff + '</span>' +
           '<div class="maestro-auth-safe-note" id="maestroCloudAuthSafeEmailOut">' + c.ready + '</div>' +
+          '<div class="maestro-auth-safe-note" id="maestroCloudAuthSafeMeta"></div>' +
           '<div class="maestro-auth-safe-note">' + c.note + '</div>' +
           '<div class="maestro-auth-safe-grid">' +
             '<label class="maestro-auth-safe-field"><span class="maestro-auth-safe-label">' + c.email + '</span><input class="maestro-auth-safe-input" id="maestroCloudAuthEmail" type="email" autocomplete="email" placeholder="name@example.com" /></label>' +
@@ -2926,20 +2960,19 @@ async function callAiProxy(service, payload = {}){
             '<button class="maestro-auth-safe-btn" id="maestroCloudAuthLogout" type="button">' + c.logout + '</button>' +
           '</div>' +
           '<div class="maestro-auth-safe-status" id="maestroCloudAuthSafeStatus"></div>';
-        const backup = document.getElementById('maestroBackupSafePanel');
-        const after = document.getElementById('cloudLockedPanel');
+        const backup = document.getElementById('maestroBackupSafePanel'); const after = document.getElementById('cloudLockedPanel');
         if(backup && backup.parentNode === pageBody) pageBody.insertBefore(panel, backup);
         else if(after && after.parentNode === pageBody) after.insertAdjacentElement('afterend', panel);
         else pageBody.appendChild(panel);
-        document.getElementById('maestroCloudAuthLogin')?.addEventListener('click', () => localLogin('login'));
-        document.getElementById('maestroCloudAuthCreate')?.addEventListener('click', () => localLogin('create'));
+        document.getElementById('maestroCloudAuthLogin')?.addEventListener('click', login);
+        document.getElementById('maestroCloudAuthCreate')?.addEventListener('click', createAccount);
         document.getElementById('maestroCloudAuthGoogle')?.addEventListener('click', googleMock);
         document.getElementById('maestroCloudAuthLogout')?.addEventListener('click', logout);
         try{ const old = localStorage.getItem(STATUS_KEY); if(old) setStatus(old); }catch(e){}
+        const session = loadSession(); if(session.email){ setStatus(copy().restored); }
         renderState();
       }
-      if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', ensurePanel, {once:true});
-      else ensurePanel();
+      if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', ensurePanel, {once:true}); else ensurePanel();
     })();
 
 
@@ -2947,7 +2980,7 @@ async function callAiProxy(service, payload = {}){
        Backup locale isolato: non tocca render principale, rotellina, slider o navigazione.
     */
     (function maestroBackupMinimalSafe(){
-      const VERSION = 'master042';
+      const VERSION = 'master043';
       const PANEL_ID = 'maestroBackupSafePanel';
       const STATUS_KEY = 'maestro.backupSafe.status';
       const LAST_KEY = 'maestro.backupSafe.lastImport';
