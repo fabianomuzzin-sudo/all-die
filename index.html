@@ -653,7 +653,7 @@ body.light-mode .bottom-shell{
               </div>
               <div class="settings-section" id="settingsAppSection">
                 <div class="settings-section-title" id="settingsAppTitle">Sistema</div>
-                <div class="settings-small-note" id="settingsAppNote">Versione: Master040 · Base: Master039 · Architettura cloud utente</div>
+                <div class="settings-small-note" id="settingsAppNote">Versione: Master040A · Base: Master039 · Cloud tools working</div>
               </div>
               <div class="settings-section" id="settingsSecuritySection">
                 <div class="settings-section-title" id="settingsSecurityTitle">Sicurezza</div>
@@ -669,20 +669,26 @@ body.light-mode .bottom-shell{
             <div class="panel"><div class="panel-label" id="cloudBannerLabel"></div><div class="note" id="cloudBannerText"></div></div>
             <div class="panel" id="cloudUserSavePanel">
               <div class="panel-label" id="cloudUserSaveLabel">Cloud utente</div>
-              <div class="note" id="cloudUserSaveNote">Struttura futura: account utente, backup profilo, ricette, progressi e impostazioni. In questa build il salvataggio reale resta locale/export.</div>
+              <div class="note" id="cloudUserSaveNote">Backup locale di preparazione per il cloud utente: profilo, ricette, progressi e impostazioni.</div>
             </div>
             <div class="grid-2" id="cloudUserBucketsGrid">
               <div class="panel"><div class="panel-label" id="cloudBucketProfileLabel">Profilo</div><div class="panel-value" id="cloudBucketProfileValue">Locale</div></div>
-              <div class="panel"><div class="panel-label" id="cloudBucketRecipesLabel">Ricette</div><div class="panel-value" id="cloudBucketRecipesValue">Schema pronto</div></div>
-              <div class="panel"><div class="panel-label" id="cloudBucketProgressLabel">Progressi</div><div class="panel-value" id="cloudBucketProgressValue">Schema pronto</div></div>
+              <div class="panel"><div class="panel-label" id="cloudBucketRecipesLabel">Ricette</div><div class="panel-value" id="cloudBucketRecipesValue">Pronte</div></div>
+              <div class="panel"><div class="panel-label" id="cloudBucketProgressLabel">Progressi</div><div class="panel-value" id="cloudBucketProgressValue">Pronti</div></div>
               <div class="panel"><div class="panel-label" id="cloudBucketSettingsLabel">Impostazioni</div><div class="panel-value" id="cloudBucketSettingsValue">Locale</div></div>
             </div>
             <div class="action-row" id="cloudUserBackupActions">
-              <button class="slot-btn" id="cloudUserExportBtn" type="button">Export backup</button>
-              <button class="replace-btn" id="cloudUserImportBtn" type="button">Import backup</button>
+              <button class="slot-btn" id="cloudUserExportBtn" type="button">Esporta backup</button>
+              <button class="replace-btn" id="cloudUserImportBtn" type="button">Importa backup</button>
             </div>
             <input class="profile-photo-input" id="cloudUserImportInput" type="file" accept="application/json,.json" />
+            <div class="panel hidden" id="cloudUserExportFallbackPanel">
+              <div class="panel-label" id="cloudUserExportFallbackLabel">Backup manuale</div>
+              <textarea id="cloudUserExportFallbackText" class="coach-mock-input" readonly></textarea>
+              <div class="note" id="cloudUserExportFallbackNote">Se il download non parte, copia questo JSON e salvalo come file .json.</div>
+            </div>
             <div class="note" id="cloudUserSaveStatus"></div>
+
             <div class="grid-2">
               <div class="panel"><div class="panel-label" id="cloudBox1Label"></div><div class="panel-value" id="cloudBox1Value"></div></div>
               <div class="panel"><div class="panel-label" id="cloudBox2Label"></div><div class="panel-value" id="cloudBox2Value"></div></div>
@@ -1340,7 +1346,6 @@ body.light-mode .bottom-shell{
         coachApiState.response = 'Errore Coach AI: ' + (err && err.message ? err.message : String(err));
       }
       renderCloudApiPage();
-      renderCloudUserArchitecture();
       renderCoachPage();
       renderDietMock();
     }
@@ -1970,7 +1975,7 @@ async function callAiProxy(service, payload = {}){
       if(settingsThemeTitle) settingsThemeTitle.textContent = code === 'en' ? 'Theme' : (code === 'es' ? 'Tema' : 'Tema');
       if(settingsThemeNote) settingsThemeNote.textContent = code === 'en' ? 'Quick switch between dark mode and light mode demo.' : (code === 'es' ? 'Cambio rápido entre dark mode y light mode demo.' : 'Cambio rapido tra dark mode e light mode demo.');
       if(settingsAppTitle) settingsAppTitle.textContent = code === 'en' ? 'System' : (code === 'es' ? 'Sistema' : 'Sistema');
-      if(settingsAppNote) settingsAppNote.textContent = code === 'en' ? 'Version: Master040 · Base: Master039 · Cloud user architecture' : (code === 'es' ? 'Versión: Master040 · Base: Master039 · Arquitectura cloud usuario' : 'Versione: Master040 · Base: Master039 · Architettura cloud utente');
+      if(settingsAppNote) settingsAppNote.textContent = code === 'en' ? 'Version: Master035A · Base: Master035 · Public security layer' : (code === 'es' ? 'Versión: Master035A · Base: Master035 · Capa de seguridad pública' : 'Versione: Master035A · Base: Master035 · Security layer pubblico');
       if(settingsSecurityTitle) settingsSecurityTitle.textContent = code === 'en' ? 'Security' : (code === 'es' ? 'Seguridad' : 'Sicurezza');
       if(settingsSecurityNote) settingsSecurityNote.textContent = code === 'en' ? 'No real AI key is stored in the HTML file. This build is prepared for public use: domain control, anonymous client ID, optional Turnstile, rate limits and quotas in the Worker.' : (code === 'es' ? 'Ninguna clave AI real está guardada en el archivo HTML. Esta build está preparada para uso público: control de dominio, client ID anónimo, Turnstile opcional, rate limit y cuotas en el Worker.' : 'Nessuna chiave AI reale è salvata nel file HTML. Questa build è preparata per uso pubblico: controllo dominio, client ID anonimo, Turnstile opzionale, rate limit e quote lato Worker.');
       const isLight = document.body.classList.contains('light-mode');
@@ -2729,104 +2734,54 @@ async function callAiProxy(service, payload = {}){
     }
 
 
-
-    /* ===== Master040 Cloud user architecture =====
+    /* ===== Master040A Cloud tools working =====
        Base: Master039
-       Modifica unica: struttura backup/export-import per futuro cloud utente.
+       Modifica unica: export/import backup locale e AppCloud chiari.
        Nessun CSS layout principale modificato.
     */
-    const MAESTRO_CLOUD_BACKUP_VERSION = 'Master040_cloud_user_architecture';
-    const CLOUD_USER_STORAGE_KEY = 'maestro_cloud_user_architecture_v1';
+    const MAESTRO_CLOUD_BACKUP_VERSION = 'Master040A_cloud_tools_working';
+    const CLOUD_USER_STORAGE_KEY = 'maestro_cloud_user_tools_v1';
     const cloudUserState = { lastExportAt:'', lastImportAt:'', mode:'local-backup', auth:'future-email-google' };
-
     function cloudUserText(key){
       const code = (activePack().meta && activePack().meta.code) || 'it';
       const dict = {
-        it:{ label:'Cloud utente', note:'Struttura futura: account utente, backup profilo, ricette, progressi e impostazioni. In questa build il salvataggio reale resta locale/export.', profile:'Profilo', recipes:'Ricette', progress:'Progressi', settings:'Impostazioni', local:'Locale', ready:'Schema pronto', export:'Export backup', import:'Import backup', exported:'Backup JSON creato.', imported:'Backup importato in locale.', badImport:'Import non valido.', status:'Modo attuale: locale/export · login email/Google previsto nel backend reale.' },
-        en:{ label:'User cloud', note:'Future structure: user account, profile backup, recipes, progress and settings. In this build real saving remains local/export only.', profile:'Profile', recipes:'Recipes', progress:'Progress', settings:'Settings', local:'Local', ready:'Schema ready', export:'Export backup', import:'Import backup', exported:'JSON backup created.', imported:'Backup imported locally.', badImport:'Invalid import.', status:'Current mode: local/export · email/Google login planned for the real backend.' },
-        es:{ label:'Cloud usuario', note:'Estructura futura: cuenta usuario, backup de perfil, recetas, progreso y ajustes. En esta build el guardado real sigue local/export.', profile:'Perfil', recipes:'Recetas', progress:'Progreso', settings:'Ajustes', local:'Local', ready:'Schema listo', export:'Export backup', import:'Import backup', exported:'Backup JSON creado.', imported:'Backup importado localmente.', badImport:'Import no válido.', status:'Modo actual: local/export · login email/Google previsto en el backend real.' }
+        it:{ label:'Cloud utente', note:'Backup locale di preparazione: profilo, ricette, progressi e impostazioni. Il cloud reale arriverà con login email/Google + backend.', profile:'Profilo', recipes:'Ricette', progress:'Progressi', settings:'Impostazioni', local:'Locale', ready:'Pronto', export:'Esporta backup', import:'Importa backup', exported:'Backup creato. Se il download non compare, usa il riquadro backup manuale sotto.', imported:'Backup importato correttamente in locale.', badImport:'Import non valido: seleziona un backup Maestro .json.', status:'Modo attuale: backup locale/export · login email/Google previsto nel backend reale.', manualLabel:'Backup manuale', manualNote:'Se il download non parte, copia questo JSON e salvalo come file .json.', appCloud:'AppCloud' },
+        en:{ label:'User cloud', note:'Preparation local backup: profile, recipes, progress and settings. Real cloud will come with email/Google login + backend.', profile:'Profile', recipes:'Recipes', progress:'Progress', settings:'Settings', local:'Local', ready:'Ready', export:'Export backup', import:'Import backup', exported:'Backup created. If the download does not appear, use the manual backup box below.', imported:'Backup imported locally.', badImport:'Invalid import: select a Maestro .json backup.', status:'Current mode: local backup/export · email/Google login planned in the real backend.', manualLabel:'Manual backup', manualNote:'If the download does not start, copy this JSON and save it as a .json file.', appCloud:'AppCloud' },
+        es:{ label:'Cloud usuario', note:'Backup local de preparación: perfil, recetas, progreso y ajustes. El cloud real llegará con login email/Google + backend.', profile:'Perfil', recipes:'Recetas', progress:'Progreso', settings:'Ajustes', local:'Local', ready:'Listo', export:'Exportar backup', import:'Importar backup', exported:'Backup creado. Si la descarga no aparece, usa el cuadro manual de abajo.', imported:'Backup importado localmente.', badImport:'Import no válido: selecciona un backup Maestro .json.', status:'Modo actual: backup local/export · login email/Google previsto en el backend real.', manualLabel:'Backup manual', manualNote:'Si la descarga no empieza, copia este JSON y guárdalo como archivo .json.', appCloud:'AppCloud' }
       };
-      return (dict[code] && dict[code][key]) || dict.it[key] || key;
+      return (dict[code] && dict[code][key]) || (dict.it && dict.it[key]) || key;
     }
-
-    function loadCloudUserState(){
-      try{ const raw = localStorage.getItem(CLOUD_USER_STORAGE_KEY); if(raw) Object.assign(cloudUserState, JSON.parse(raw) || {}); }catch(e){}
-    }
-    function saveCloudUserState(){
-      try{ localStorage.setItem(CLOUD_USER_STORAGE_KEY, JSON.stringify(cloudUserState)); }catch(e){}
-    }
+    function loadCloudUserState(){ try{ const raw = localStorage.getItem(CLOUD_USER_STORAGE_KEY); if(raw) Object.assign(cloudUserState, JSON.parse(raw) || {}); }catch(e){} }
+    function saveCloudUserState(){ try{ localStorage.setItem(CLOUD_USER_STORAGE_KEY, JSON.stringify(cloudUserState)); }catch(e){} }
     function cloudUserBackupPayload(){
-      const profileData = (profileState && profileState.data) ? { ...profileState.data } : {};
-      return {
-        app:'Maestro',
-        build:MAESTRO_CLOUD_BACKUP_VERSION,
-        exportedAt:new Date().toISOString(),
-        futureCloud:{ auth:'email-password-or-google', backend:'Cloudflare Worker', database:'D1/KV/Supabase option', ownerId:getOrCreateClientId() },
-        buckets:{
-          profile:profileData,
-          profilePhoto:profileState ? (profileState.photo || '') : '',
-          recipes:[],
-          progress:{ sessions:[], bodyChecks: profileData ? { checkDate:profileData.checkDate || '', waist:profileData.waist || '', abdomen:profileData.abdomen || '', chest:profileData.chest || '', arm:profileData.arm || '', thigh:profileData.thigh || '', calf:profileData.calf || '', neck:profileData.neck || '', shoulders:profileData.shoulders || '' } : {} },
-          settings:{ language:{ ...languageState }, theme: (localStorage.getItem('maestro_theme_mode') || 'dark') },
-          coach:{ ...coachState },
-          cloudApiMock:{ ...cloudApiState, token:'' }
-        }
-      };
+      return { app:'Maestro', version:MAESTRO_CLOUD_BACKUP_VERSION, exportedAt:new Date().toISOString(), buckets:{
+        profile:{ ...(profileState && profileState.data ? profileState.data : {}) }, profilePhoto:(profileState && profileState.photo) || '', recipes:[],
+        progress:{ sessions:[], bodyChecks: profileState && profileState.data ? { checkDate:profileState.data.checkDate || '', waist:profileState.data.waist || '', abdomen:profileState.data.abdomen || '', chest:profileState.data.chest || '', arm:profileState.data.arm || '', thigh:profileState.data.thigh || '', calf:profileState.data.calf || '', neck:profileState.data.neck || '', shoulders:profileState.data.shoulders || '' } : {} },
+        settings:{ language: JSON.parse(JSON.stringify(languageState || {})), theme: (localStorage.getItem('maestro_theme_mode') || 'dark') }, coach:{ ...(coachState || {}) }, cloudApiMock:{ ...(cloudApiState || {}), token:'' }
+      }};
     }
-    function exportCloudUserBackup(){
-      const payload = cloudUserBackupPayload();
-      const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'maestro-user-backup-master040.json';
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
-      cloudUserState.lastExportAt = payload.exportedAt;
-      saveCloudUserState();
-      renderCloudUserArchitecture(cloudUserText('exported'));
+    function showCloudUserManualBackup(jsonText){
+      const panel = document.getElementById('cloudUserExportFallbackPanel');
+      const label = document.getElementById('cloudUserExportFallbackLabel');
+      const note = document.getElementById('cloudUserExportFallbackNote');
+      const textarea = document.getElementById('cloudUserExportFallbackText');
+      if(label) label.textContent = cloudUserText('manualLabel'); if(note) note.textContent = cloudUserText('manualNote'); if(textarea) textarea.value = jsonText; if(panel) panel.classList.remove('hidden');
+    }
+    async function exportCloudUserBackup(){
+      const payload = cloudUserBackupPayload(); const jsonText = JSON.stringify(payload, null, 2); showCloudUserManualBackup(jsonText);
+      try{ const blob = new Blob([jsonText], {type:'application/json;charset=utf-8'}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'maestro-user-backup-master040a.json'; a.rel = 'noopener'; a.style.display = 'none'; document.body.appendChild(a); a.click(); setTimeout(() => { try{ URL.revokeObjectURL(url); }catch(e){} try{ a.remove(); }catch(e){} }, 1200); }
+      catch(e){ if(navigator.clipboard && navigator.clipboard.writeText){ try{ await navigator.clipboard.writeText(jsonText); }catch(err){} } }
+      cloudUserState.lastExportAt = payload.exportedAt; saveCloudUserState(); renderCloudUserArchitecture(cloudUserText('exported'));
     }
     function importCloudUserBackupFile(file){
-      if(!file) return;
-      const reader = new FileReader();
-      reader.onload = () => {
-        try{
-          const payload = JSON.parse(String(reader.result || '{}'));
-          if(!payload || payload.app !== 'Maestro' || !payload.buckets) throw new Error('bad backup');
-          if(payload.buckets.profile){ Object.assign(profileState.data, payload.buckets.profile || {}); }
-          if(typeof payload.buckets.profilePhoto === 'string'){ profileState.photo = payload.buckets.profilePhoto; }
-          saveProfileState();
-          if(payload.buckets.coach){ Object.assign(coachState, payload.buckets.coach || {}); saveCoachState(); }
-          cloudUserState.lastImportAt = new Date().toISOString();
-          saveCloudUserState();
-          profileDirty = false;
-          renderMeViews();
-          updateTopAvatar();
-          updateCoachButtonState();
-          renderCloudUserArchitecture(cloudUserText('imported'));
-        }catch(e){
-          renderCloudUserArchitecture(cloudUserText('badImport'));
-        }
-      };
-      reader.readAsText(file);
+      if(!file){ renderCloudUserArchitecture(cloudUserText('status')); return; }
+      const reader = new FileReader(); reader.onload = () => { try{ const payload = JSON.parse(String(reader.result || '{}')); if(!payload || payload.app !== 'Maestro' || !payload.buckets) throw new Error('bad backup'); if(payload.buckets.profile && profileState && profileState.data){ Object.assign(profileState.data, payload.buckets.profile || {}); } if(typeof payload.buckets.profilePhoto === 'string' && profileState){ profileState.photo = payload.buckets.profilePhoto; } if(typeof saveProfileState === 'function') saveProfileState(); if(payload.buckets.coach && typeof coachState !== 'undefined'){ Object.assign(coachState, payload.buckets.coach || {}); if(typeof saveCoachState === 'function') saveCoachState(); } cloudUserState.lastImportAt = new Date().toISOString(); saveCloudUserState(); profileDirty = false; if(typeof renderMeViews === 'function') renderMeViews(); if(typeof updateTopAvatar === 'function') updateTopAvatar(); if(typeof updateCoachButtonState === 'function') updateCoachButtonState(); renderCloudUserArchitecture(cloudUserText('imported')); }catch(e){ renderCloudUserArchitecture(cloudUserText('badImport')); } };
+      reader.onerror = () => renderCloudUserArchitecture(cloudUserText('badImport')); reader.readAsText(file);
     }
     function renderCloudUserArchitecture(message){
       const setText = (id, text) => { const el = document.getElementById(id); if(el) el.textContent = text; };
-      setText('cloudUserSaveLabel', cloudUserText('label'));
-      setText('cloudUserSaveNote', cloudUserText('note'));
-      setText('cloudBucketProfileLabel', cloudUserText('profile'));
-      setText('cloudBucketRecipesLabel', cloudUserText('recipes'));
-      setText('cloudBucketProgressLabel', cloudUserText('progress'));
-      setText('cloudBucketSettingsLabel', cloudUserText('settings'));
-      setText('cloudBucketProfileValue', cloudUserText('local'));
-      setText('cloudBucketRecipesValue', cloudUserText('ready'));
-      setText('cloudBucketProgressValue', cloudUserText('ready'));
-      setText('cloudBucketSettingsValue', cloudUserText('local'));
-      setText('cloudUserExportBtn', cloudUserText('export'));
-      setText('cloudUserImportBtn', cloudUserText('import'));
-      setText('cloudUserSaveStatus', message || cloudUserText('status'));
+      setText('cloudUserSaveLabel', cloudUserText('label')); setText('cloudUserSaveNote', cloudUserText('note')); setText('cloudBucketProfileLabel', cloudUserText('profile')); setText('cloudBucketRecipesLabel', cloudUserText('recipes')); setText('cloudBucketProgressLabel', cloudUserText('progress')); setText('cloudBucketSettingsLabel', cloudUserText('settings')); setText('cloudBucketProfileValue', cloudUserText('local')); setText('cloudBucketRecipesValue', cloudUserText('ready')); setText('cloudBucketProgressValue', cloudUserText('ready')); setText('cloudBucketSettingsValue', cloudUserText('local')); setText('cloudUserExportBtn', cloudUserText('export')); setText('cloudUserImportBtn', cloudUserText('import')); setText('cloudUserExportFallbackLabel', cloudUserText('manualLabel')); setText('cloudUserExportFallbackNote', cloudUserText('manualNote'));
+      const detail = cloudUserState.lastExportAt ? ` · ultimo export: ${new Date(cloudUserState.lastExportAt).toLocaleString()}` : ''; setText('cloudUserSaveStatus', (message || cloudUserText('status')) + detail); if(dcOpenCloudBtn) dcOpenCloudBtn.textContent = cloudUserText('appCloud');
     }
 
     slider.addEventListener('input', () => { updateSliderUI(); rebuildWheelForCurrentPage(false); });
@@ -2892,13 +2847,13 @@ async function callAiProxy(service, payload = {}){
     if(cloudResetDataBtn) cloudResetDataBtn.addEventListener('click', () => resetServiceUsage('data'));
     if(cloudResetDcBtn) cloudResetDcBtn.addEventListener('click', () => resetServiceUsage('datacenter'));
     if(cloudResetAllBtn) cloudResetAllBtn.addEventListener('click', resetAllServiceUsage);
-    if(dcOpenCloudBtn) dcOpenCloudBtn.addEventListener('click', () => goToNav('cloud'));
+    if(dcOpenCloudBtn) dcOpenCloudBtn.addEventListener('click', () => { goToNav('cloud'); setTimeout(() => { try{ cloudPage && cloudPage.querySelector('.page-body') && (cloudPage.querySelector('.page-body').scrollTop = 0); }catch(e){} }, 80); });
     if(dcResetAllBtn) dcResetAllBtn.addEventListener('click', resetAllServiceUsage);
     const cloudUserExportBtn = document.getElementById('cloudUserExportBtn');
     const cloudUserImportBtn = document.getElementById('cloudUserImportBtn');
     const cloudUserImportInput = document.getElementById('cloudUserImportInput');
     if(cloudUserExportBtn) cloudUserExportBtn.addEventListener('click', exportCloudUserBackup);
-    if(cloudUserImportBtn) cloudUserImportBtn.addEventListener('click', () => cloudUserImportInput && cloudUserImportInput.click());
+    if(cloudUserImportBtn) cloudUserImportBtn.addEventListener('click', () => { renderCloudUserArchitecture('Seleziona un file backup Maestro .json dal dispositivo.'); if(cloudUserImportInput) cloudUserImportInput.click(); });
     if(cloudUserImportInput) cloudUserImportInput.addEventListener('change', e => importCloudUserBackupFile(e.target.files && e.target.files[0]));
 
     loadProfileState();
