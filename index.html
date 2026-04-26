@@ -459,6 +459,31 @@ body.light-mode .bottom-shell{
 }
 
 
+
+/* ===== Master042 cloud auth UI =====
+   Account cloud UI isolata: non tocca render principale, rotellina, slider o navigazione.
+*/
+.maestro-auth-safe{display:grid;gap:10px;border:1px solid rgba(46,204,113,.26);border-radius:16px;background:rgba(46,204,113,.06);padding:12px;margin-top:0}
+.maestro-auth-safe-title{font-size:15px;font-weight:900;color:#eef6ff;letter-spacing:.02em}
+.maestro-auth-safe-note{font-size:12px;color:var(--muted);line-height:1.35;white-space:pre-wrap}
+.maestro-auth-safe-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.maestro-auth-safe-field{display:grid;gap:6px}
+.maestro-auth-safe-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:900}
+.maestro-auth-safe-input{width:100%;min-height:42px;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);color:var(--text);font-size:13px;font-weight:800;padding:0 12px;outline:none}
+.maestro-auth-safe-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.maestro-auth-safe-btn{width:100%;min-height:42px;border-radius:12px;border:1px solid rgba(255,255,255,.10);background:#22262e;color:var(--text);font-size:12px;font-weight:900;cursor:pointer;padding:10px 12px;text-align:center}
+.maestro-auth-safe-btn.primary{background:var(--blue);color:#07111b;border-color:#87c0ff}
+.maestro-auth-safe-btn.google{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.16)}
+.maestro-auth-safe-status{font-size:12px;color:var(--muted);line-height:1.35;white-space:pre-wrap}
+.maestro-auth-safe-pill{display:inline-flex;align-items:center;justify-content:center;width:max-content;min-height:30px;border-radius:999px;padding:6px 10px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.04);font-size:11px;font-weight:900;color:#eef6ff}
+.maestro-auth-safe-pill.ok{background:rgba(46,204,113,.14);border-color:rgba(46,204,113,.36);color:#b8f1cf}
+@media (max-width:430px){.maestro-auth-safe-grid,.maestro-auth-safe-actions{grid-template-columns:1fr}}
+body.light-mode .maestro-auth-safe{background:rgba(22,163,74,.08);border-color:#cfd8e6;color:#111827}
+body.light-mode .maestro-auth-safe-title{color:#111827}
+body.light-mode .maestro-auth-safe-input{background:#fff!important;border-color:#cfd8e6!important;color:#111827!important}
+body.light-mode .maestro-auth-safe-btn{background:#eef2f8!important;border-color:#cfd8e6!important;color:#111827!important}
+body.light-mode .maestro-auth-safe-btn.primary{background:#2563eb!important;border-color:#1d4ed8!important;color:#fff!important}
+
 /* ===== Master041A backup minimal safe =====
    Inserimento isolato nella pagina Cloud.
    Non modifica layout principale, rotellina, slider o home.
@@ -670,7 +695,7 @@ body.light-mode .maestro-backup-safe-btn.primary{background:#2563eb!important;bo
               </div>
               <div class="settings-section" id="settingsAppSection">
                 <div class="settings-section-title" id="settingsAppTitle">Sistema</div>
-                <div class="settings-small-note" id="settingsAppNote">Versione: Master041A · Base: Master040 · Backup minimal safe</div>
+                <div class="settings-small-note" id="settingsAppNote">Versione: Master042 · Base: Master041 · Cloud auth UI</div>
               </div>
               <div class="settings-section" id="settingsSecuritySection">
                 <div class="settings-section-title" id="settingsSecurityTitle">Sicurezza</div>
@@ -1994,7 +2019,7 @@ async function callAiProxy(service, payload = {}){
       if(settingsThemeTitle) settingsThemeTitle.textContent = code === 'en' ? 'Theme' : (code === 'es' ? 'Tema' : 'Tema');
       if(settingsThemeNote) settingsThemeNote.textContent = code === 'en' ? 'Quick switch between dark mode and light mode demo.' : (code === 'es' ? 'Cambio rápido entre dark mode y light mode demo.' : 'Cambio rapido tra dark mode e light mode demo.');
       if(settingsAppTitle) settingsAppTitle.textContent = code === 'en' ? 'System' : (code === 'es' ? 'Sistema' : 'Sistema');
-      if(settingsAppNote) settingsAppNote.textContent = code === 'en' ? 'Version: Master035A · Base: Master035 · Public security layer' : (code === 'es' ? 'Versión: Master035A · Base: Master035 · Capa de seguridad pública' : 'Versione: Master041A · Base: Master040 · Backup minimal safe');
+      if(settingsAppNote) settingsAppNote.textContent = code === 'en' ? 'Version: Master042 · Base: Master041 · Cloud auth UI' : (code === 'es' ? 'Versión: Master042 · Base: Master041 · Cloud auth UI' : 'Versione: Master042 · Base: Master041 · Cloud auth UI');
       if(settingsSecurityTitle) settingsSecurityTitle.textContent = code === 'en' ? 'Security' : (code === 'es' ? 'Seguridad' : 'Sicurezza');
       if(settingsSecurityNote) settingsSecurityNote.textContent = code === 'en' ? 'No real AI key is stored in the HTML file. This build is prepared for public use: domain control, anonymous client ID, optional Turnstile, rate limits and quotas in the Worker.' : (code === 'es' ? 'Ninguna clave AI real está guardada en el archivo HTML. Esta build está preparada para uso público: control de dominio, client ID anónimo, Turnstile opcional, rate limit y cuotas en el Worker.' : 'Nessuna chiave AI reale è salvata nel file HTML. Questa build è preparata per uso pubblico: controllo dominio, client ID anonimo, Turnstile opzionale, rate limit e quote lato Worker.');
       const isLight = document.body.classList.contains('light-mode');
@@ -2830,11 +2855,99 @@ async function callAiProxy(service, payload = {}){
     if(dcResetAllBtn) dcResetAllBtn.addEventListener('click', resetAllServiceUsage);
 
 
+
+
+    /* ===== Master042 cloud auth UI =====
+       Account cloud mock/pre-auth isolato: prepara login reale senza toccare render principale.
+    */
+    (function maestroCloudAuthSafe(){
+      const VERSION = 'master042';
+      const PANEL_ID = 'maestroCloudAuthSafePanel';
+      const STATE_KEY = 'maestro.cloudAuthSafe.state';
+      const STATUS_KEY = 'maestro.cloudAuthSafe.status';
+      function activeLang(){ try { return activePack().meta.code || 'it'; } catch(e) { return 'it'; } }
+      function copy(){
+        const code = activeLang();
+        const dict = {
+          it:{ title:'Account cloud', note:'Primo blocco del cloud reale: identità utente, login e stato account. Per ora è una UI sicura locale; il prossimo step collegherà il backend.', email:'Email', pass:'Password', login:'Accedi', create:'Crea account', google:'Continua con Google', logout:'Logout', stateOff:'Non connesso', stateOn:'Connesso locale', ready:'Pronto per collegamento backend.', logged:'Login locale registrato. Prossimo step: backend reale.', created:'Account locale preparato. Prossimo step: database cloud.', googleWait:'Google login preparato. Richiede provider auth reale.', out:'Logout eseguito.', needEmail:'Inserisci almeno una email valida.' },
+          en:{ title:'Cloud account', note:'First block of real cloud: user identity, login and account state. For now this is safe local UI; the next step will connect the backend.', email:'Email', pass:'Password', login:'Sign in', create:'Create account', google:'Continue with Google', logout:'Logout', stateOff:'Not connected', stateOn:'Local session', ready:'Ready for backend connection.', logged:'Local login recorded. Next step: real backend.', created:'Local account prepared. Next step: cloud database.', googleWait:'Google login prepared. Requires real auth provider.', out:'Logged out.', needEmail:'Enter at least a valid email.' },
+          es:{ title:'Cuenta cloud', note:'Primer bloque del cloud real: identidad de usuario, login y estado de cuenta. Por ahora es una UI local segura; el próximo paso conectará el backend.', email:'Email', pass:'Contraseña', login:'Entrar', create:'Crear cuenta', google:'Continuar con Google', logout:'Logout', stateOff:'No conectado', stateOn:'Sesión local', ready:'Listo para conectar backend.', logged:'Login local registrado. Próximo paso: backend real.', created:'Cuenta local preparada. Próximo paso: database cloud.', googleWait:'Google login preparado. Requiere proveedor auth real.', out:'Logout realizado.', needEmail:'Introduce al menos un email válido.' }
+        };
+        return dict[code] || dict.it;
+      }
+      function loadState(){
+        try{ return JSON.parse(localStorage.getItem(STATE_KEY) || '{}') || {}; }catch(e){ return {}; }
+      }
+      function saveState(state){ try{ localStorage.setItem(STATE_KEY, JSON.stringify(state || {})); }catch(e){} }
+      function setStatus(message){
+        try{ localStorage.setItem(STATUS_KEY, message); }catch(e){}
+        const el = document.getElementById('maestroCloudAuthSafeStatus');
+        if(el) el.textContent = message;
+      }
+      function renderState(){
+        const c = copy();
+        const state = loadState();
+        const pill = document.getElementById('maestroCloudAuthSafePill');
+        const emailOut = document.getElementById('maestroCloudAuthSafeEmailOut');
+        const logged = !!state.email;
+        if(pill){ pill.textContent = logged ? c.stateOn : c.stateOff; pill.classList.toggle('ok', logged); }
+        if(emailOut) emailOut.textContent = logged ? state.email : c.ready;
+      }
+      function readEmail(){ return String(document.getElementById('maestroCloudAuthEmail')?.value || '').trim(); }
+      function localLogin(mode){
+        const c = copy();
+        const email = readEmail();
+        if(!email || !email.includes('@')){ setStatus(c.needEmail); return; }
+        saveState({ email, mode, updatedAt:new Date().toISOString(), version:VERSION });
+        setStatus(mode === 'create' ? c.created : c.logged);
+        renderState();
+      }
+      function googleMock(){ setStatus(copy().googleWait); }
+      function logout(){ saveState({}); setStatus(copy().out); renderState(); }
+      function ensurePanel(){
+        const pageBody = document.querySelector('#cloudPage .page-body');
+        if(!pageBody || document.getElementById(PANEL_ID)) return;
+        const c = copy();
+        const panel = document.createElement('div');
+        panel.className = 'maestro-auth-safe';
+        panel.id = PANEL_ID;
+        panel.innerHTML = '<div class="maestro-auth-safe-title">' + c.title + '</div>' +
+          '<span class="maestro-auth-safe-pill" id="maestroCloudAuthSafePill">' + c.stateOff + '</span>' +
+          '<div class="maestro-auth-safe-note" id="maestroCloudAuthSafeEmailOut">' + c.ready + '</div>' +
+          '<div class="maestro-auth-safe-note">' + c.note + '</div>' +
+          '<div class="maestro-auth-safe-grid">' +
+            '<label class="maestro-auth-safe-field"><span class="maestro-auth-safe-label">' + c.email + '</span><input class="maestro-auth-safe-input" id="maestroCloudAuthEmail" type="email" autocomplete="email" placeholder="name@example.com" /></label>' +
+            '<label class="maestro-auth-safe-field"><span class="maestro-auth-safe-label">' + c.pass + '</span><input class="maestro-auth-safe-input" id="maestroCloudAuthPassword" type="password" autocomplete="current-password" placeholder="••••••••" /></label>' +
+          '</div>' +
+          '<div class="maestro-auth-safe-actions">' +
+            '<button class="maestro-auth-safe-btn primary" id="maestroCloudAuthLogin" type="button">' + c.login + '</button>' +
+            '<button class="maestro-auth-safe-btn" id="maestroCloudAuthCreate" type="button">' + c.create + '</button>' +
+            '<button class="maestro-auth-safe-btn google" id="maestroCloudAuthGoogle" type="button">' + c.google + '</button>' +
+            '<button class="maestro-auth-safe-btn" id="maestroCloudAuthLogout" type="button">' + c.logout + '</button>' +
+          '</div>' +
+          '<div class="maestro-auth-safe-status" id="maestroCloudAuthSafeStatus"></div>';
+        const backup = document.getElementById('maestroBackupSafePanel');
+        const after = document.getElementById('cloudLockedPanel');
+        if(backup && backup.parentNode === pageBody) pageBody.insertBefore(panel, backup);
+        else if(after && after.parentNode === pageBody) after.insertAdjacentElement('afterend', panel);
+        else pageBody.appendChild(panel);
+        document.getElementById('maestroCloudAuthLogin')?.addEventListener('click', () => localLogin('login'));
+        document.getElementById('maestroCloudAuthCreate')?.addEventListener('click', () => localLogin('create'));
+        document.getElementById('maestroCloudAuthGoogle')?.addEventListener('click', googleMock);
+        document.getElementById('maestroCloudAuthLogout')?.addEventListener('click', logout);
+        try{ const old = localStorage.getItem(STATUS_KEY); if(old) setStatus(old); }catch(e){}
+        renderState();
+      }
+      if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', ensurePanel, {once:true});
+      else ensurePanel();
+    })();
+
+
     /* ===== Master041A backup minimal safe =====
        Backup locale isolato: non tocca render principale, rotellina, slider o navigazione.
     */
     (function maestroBackupMinimalSafe(){
-      const VERSION = 'master041a';
+      const VERSION = 'master042';
       const PANEL_ID = 'maestroBackupSafePanel';
       const STATUS_KEY = 'maestro.backupSafe.status';
       const LAST_KEY = 'maestro.backupSafe.lastImport';
