@@ -718,7 +718,7 @@ body.light-mode .maestro-backend-safe-btn.primary{background:#2563eb!important;b
               </div>
               <div class="settings-section" id="settingsAppSection">
                 <div class="settings-section-title" id="settingsAppTitle">Sistema</div>
-                <div class="settings-small-note" id="settingsAppNote">Versione: Master044 · Base: Master043 · Backend ready auth</div>
+                <div class="settings-small-note" id="settingsAppNote">Versione: Master045 · Base: Master044 · Backend connesso</div>
               </div>
               <div class="settings-section" id="settingsSecuritySection">
                 <div class="settings-section-title" id="settingsSecurityTitle">Sicurezza</div>
@@ -2042,7 +2042,7 @@ async function callAiProxy(service, payload = {}){
       if(settingsThemeTitle) settingsThemeTitle.textContent = code === 'en' ? 'Theme' : (code === 'es' ? 'Tema' : 'Tema');
       if(settingsThemeNote) settingsThemeNote.textContent = code === 'en' ? 'Quick switch between dark mode and light mode demo.' : (code === 'es' ? 'Cambio rápido entre dark mode y light mode demo.' : 'Cambio rapido tra dark mode e light mode demo.');
       if(settingsAppTitle) settingsAppTitle.textContent = code === 'en' ? 'System' : (code === 'es' ? 'Sistema' : 'Sistema');
-      if(settingsAppNote) settingsAppNote.textContent = code === 'en' ? 'Version: Master044 · Base: Master043 · Backend ready auth' : (code === 'es' ? 'Versión: Master044 · Base: Master043 · Backend ready auth' : 'Versione: Master044 · Base: Master043 · Backend ready auth');
+      if(settingsAppNote) settingsAppNote.textContent = code === 'en' ? 'Version: Master045 · Base: Master044 · Connected backend' : (code === 'es' ? 'Versión: Master045 · Base: Master044 · Backend conectado' : 'Versione: Master045 · Base: Master044 · Backend connesso');
       if(settingsSecurityTitle) settingsSecurityTitle.textContent = code === 'en' ? 'Security' : (code === 'es' ? 'Seguridad' : 'Sicurezza');
       if(settingsSecurityNote) settingsSecurityNote.textContent = code === 'en' ? 'No real AI key is stored in the HTML file. This build is prepared for public use: domain control, anonymous client ID, optional Turnstile, rate limits and quotas in the Worker.' : (code === 'es' ? 'Ninguna clave AI real está guardada en el archivo HTML. Esta build está preparada para uso público: control de dominio, client ID anónimo, Turnstile opcional, rate limit y cuotas en el Worker.' : 'Nessuna chiave AI reale è salvata nel file HTML. Questa build è preparata per uso pubblico: controllo dominio, client ID anonimo, Turnstile opzionale, rate limit e quote lato Worker.');
       const isLight = document.body.classList.contains('light-mode');
@@ -3102,13 +3102,13 @@ async function callAiProxy(service, payload = {}){
        Non esegue ancora login cloud reale e non modifica il motore auth locale Master043.
     */
     (function maestroBackendReadyAuth(){
-      const VERSION = 'master044';
+      const VERSION = 'master045';
       const PANEL_ID = 'maestroBackendReadyPanel';
       const CONFIG_KEY = 'maestro.backendReady.config';
       const STATUS_KEY = 'maestro.backendReady.status';
       const defaultConfig = {
         enabled:false,
-        baseUrl:'',
+        baseUrl:'https://maestro-api-proxy.fabiano-muzzin.workers.dev',
         endpoints:{ signup:'/signup', login:'/login', me:'/me', logout:'/logout', sync:'/sync' },
         updatedAt:null,
         version:VERSION
@@ -3116,9 +3116,9 @@ async function callAiProxy(service, payload = {}){
       function lang(){ try{return (languageState && languageState[languageState.activeSlot] && languageState[languageState.activeSlot].code) || 'it';}catch(e){return 'it';} }
       function copy(){
         const d={
-          it:{ title:'Backend cloud reale', note:'Preparazione collegamento multi-device. Il login locale resta attivo; qui salviamo solo indirizzo Worker e endpoint futuri.', stateOff:'Backend non collegato', stateReady:'Backend configurato', base:'URL Worker', signup:'Signup', login:'Login', me:'Me', logout:'Logout', sync:'Sync', save:'Salva backend', test:'Test configurazione', clear:'Reset backend', hooks:'Hook API pronti: /signup, /login, /me, /logout, /sync', saved:'Configurazione backend salvata. Prossimo step: Worker reale + database.', testOk:'Configurazione leggibile. Nessuna chiamata reale ancora eseguita.', reset:'Configurazione backend rimossa.', missing:'Inserisci un URL Worker valido oppure lascia vuoto finché non lo creiamo.' },
-          en:{ title:'Real cloud backend', note:'Multi-device connection preparation. Local login stays active; this only stores the future Worker URL and endpoints.', stateOff:'Backend not connected', stateReady:'Backend configured', base:'Worker URL', signup:'Signup', login:'Login', me:'Me', logout:'Logout', sync:'Sync', save:'Save backend', test:'Test configuration', clear:'Reset backend', hooks:'API hooks ready: /signup, /login, /me, /logout, /sync', saved:'Backend configuration saved. Next step: real Worker + database.', testOk:'Configuration readable. No real network call executed yet.', reset:'Backend configuration removed.', missing:'Enter a valid Worker URL or leave it empty until we create it.' },
-          es:{ title:'Backend cloud real', note:'Preparación conexión multi-dispositivo. El login local sigue activo; aquí solo guardamos URL Worker y endpoints futuros.', stateOff:'Backend no conectado', stateReady:'Backend configurado', base:'URL Worker', signup:'Signup', login:'Login', me:'Me', logout:'Logout', sync:'Sync', save:'Guardar backend', test:'Probar configuración', clear:'Reset backend', hooks:'Hooks API listos: /signup, /login, /me, /logout, /sync', saved:'Configuración backend guardada. Siguiente paso: Worker real + database.', testOk:'Configuración legible. Aún no se ejecuta llamada real.', reset:'Configuración backend eliminada.', missing:'Introduce una URL Worker válida o déjala vacía hasta crearla.' }
+          it:{ title:'Backend cloud reale', note:'Worker reale collegato. Il login locale resta attivo; signup/login/logout inviano anche un test al backend.', stateOff:'Backend live non testato', stateReady:'Backend collegato', base:'URL Worker', signup:'Signup', login:'Login', me:'Me', logout:'Logout', sync:'Sync', save:'Salva backend', test:'Test live', clear:'Reset backend', hooks:'Hook API pronti: /signup, /login, /me, /logout, /sync', saved:'Configurazione backend salvata. Worker reale pronto.', testOk:'Configurazione leggibile. Nessuna chiamata reale ancora eseguita.', reset:'Configurazione backend rimossa.', missing:'Inserisci un URL Worker valido oppure lascia vuoto finché non lo creiamo.' },
+          en:{ title:'Real cloud backend', note:'Real Worker connected. Local login stays active; signup/login/logout also send a backend test.', stateOff:'Live backend not tested', stateReady:'Backend connected', base:'Worker URL', signup:'Signup', login:'Login', me:'Me', logout:'Logout', sync:'Sync', save:'Save backend', test:'Live test', clear:'Reset backend', hooks:'API hooks ready: /signup, /login, /me, /logout, /sync', saved:'Backend configuration saved. Real Worker ready.', testOk:'Configuration readable. No real network call executed yet.', reset:'Backend configuration removed.', missing:'Enter a valid Worker URL or leave it empty until we create it.' },
+          es:{ title:'Backend cloud real', note:'Worker real conectado. El login local sigue activo; signup/login/logout también envían una prueba al backend.', stateOff:'Backend live no probado', stateReady:'Backend conectado', base:'URL Worker', signup:'Signup', login:'Login', me:'Me', logout:'Logout', sync:'Sync', save:'Guardar backend', test:'Test live', clear:'Reset backend', hooks:'Hooks API listos: /signup, /login, /me, /logout, /sync', saved:'Configuración backend guardada. Worker real listo.', testOk:'Configuración legible. Aún no se ejecuta llamada real.', reset:'Configuración backend eliminada.', missing:'Introduce una URL Worker válida o déjala vacía hasta crearla.' }
         };
         return d[lang()] || d.it;
       }
@@ -3224,6 +3224,105 @@ async function callAiProxy(service, payload = {}){
       }
       if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', ensurePanel, {once:true});
       else ensurePanel();
+    })();
+
+
+    /* ===== Master045 connect real backend =====
+       Collega l'app al Worker reale già creato.
+       Non tocca layout principale, rotellina, slider o PWA.
+    */
+    (function maestroConnectRealBackend(){
+      const VERSION = 'master045';
+      const LIVE_URL = 'https://maestro-api-proxy.fabiano-muzzin.workers.dev';
+      const CONFIG_KEY = 'maestro.backendReady.config';
+      const STATUS_KEY = 'maestro.backendReady.status';
+      const LAST_KEY = 'maestro.backendReady.lastLiveResult';
+      function safeJson(key, fallback){ try{return JSON.parse(localStorage.getItem(key)||'')||fallback;}catch(e){return fallback;} }
+      function saveJson(key, value){ try{localStorage.setItem(key, JSON.stringify(value));}catch(e){} }
+      function setBackendStatus(msg){
+        try{localStorage.setItem(STATUS_KEY, msg);}catch(e){}
+        const el=document.getElementById('maestroBackendSafeStatus');
+        if(el) el.textContent=msg;
+      }
+      function ensureDefaultBackend(){
+        const cfg=safeJson(CONFIG_KEY, null);
+        if(!cfg || !cfg.baseUrl){
+          saveJson(CONFIG_KEY, {
+            enabled:true,
+            baseUrl:LIVE_URL,
+            endpoints:{signup:'/signup', login:'/login', me:'/me', logout:'/logout', sync:'/sync'},
+            updatedAt:new Date().toISOString(),
+            version:VERSION
+          });
+        }
+      }
+      function getCfg(){
+        const cfg=safeJson(CONFIG_KEY, {});
+        return {
+          baseUrl:String(cfg.baseUrl||LIVE_URL).replace(/\/+$/,''),
+          endpoints:Object.assign({signup:'/signup', login:'/login', me:'/me', logout:'/logout', sync:'/sync'}, cfg.endpoints||{})
+        };
+      }
+      async function callBackend(name, payload, method){
+        const cfg=getCfg();
+        const path = name === 'health' ? '/health' : (cfg.endpoints[name] || '/' + name);
+        const res = await fetch(cfg.baseUrl + path, {
+          method: method || (payload ? 'POST' : 'GET'),
+          headers:{'Content-Type':'application/json'},
+          body: payload ? JSON.stringify(payload) : undefined
+        });
+        const text = await res.text();
+        let data;
+        try{ data=JSON.parse(text); }catch(e){ data={raw:text}; }
+        return {ok:res.ok && data && data.ok !== false, status:res.status, data};
+      }
+      async function liveHealth(){
+        setBackendStatus('Test backend reale in corso...');
+        try{
+          const out = await callBackend('health');
+          const msg = out.ok ? ('Backend online: ' + (out.data.version || 'ok')) : ('Backend risponde ma con errore HTTP ' + out.status);
+          saveJson(LAST_KEY, {type:'health', at:new Date().toISOString(), result:out});
+          setBackendStatus(msg);
+        }catch(e){
+          setBackendStatus('Backend non raggiungibile: ' + (e && e.message ? e.message : 'errore rete'));
+        }
+      }
+      function authPayload(){
+        const email = String(document.getElementById('maestroCloudAuthEmail')?.value || '').trim().toLowerCase();
+        const password = String(document.getElementById('maestroCloudAuthPassword')?.value || '');
+        return {email, password, app:'Maestro', source:'Master045'};
+      }
+      async function authBridge(action){
+        const payload=authPayload();
+        if((action==='signup' || action==='login') && (!payload.email || !payload.password)) return;
+        setBackendStatus('Invio ' + action + ' al backend reale...');
+        try{
+          const out = await callBackend(action, payload, 'POST');
+          saveJson(LAST_KEY, {type:action, at:new Date().toISOString(), result:out});
+          setBackendStatus((out.ok ? 'Backend ' : 'Errore backend ') + action + ': ' + (out.data.message || out.data.status || out.status));
+        }catch(e){
+          setBackendStatus('Errore rete backend ' + action + ': ' + (e && e.message ? e.message : 'fetch fallito'));
+        }
+      }
+      function attach(){
+        ensureDefaultBackend();
+        const base=document.getElementById('maestroBackendBaseUrl');
+        if(base && !base.value) base.value = LIVE_URL;
+        const testBtn=document.getElementById('maestroBackendTest');
+        if(testBtn && !testBtn.dataset.master045Live){ testBtn.dataset.master045Live='1'; testBtn.addEventListener('click', () => setTimeout(liveHealth, 20)); }
+        const saveBtn=document.getElementById('maestroBackendSave');
+        if(saveBtn && !saveBtn.dataset.master045Save){ saveBtn.dataset.master045Save='1'; saveBtn.addEventListener('click', () => setTimeout(liveHealth, 80)); }
+        const loginBtn=document.getElementById('maestroCloudAuthLogin');
+        if(loginBtn && !loginBtn.dataset.master045Backend){ loginBtn.dataset.master045Backend='1'; loginBtn.addEventListener('click', () => setTimeout(() => authBridge('login'), 120)); }
+        const createBtn=document.getElementById('maestroCloudAuthCreate');
+        if(createBtn && !createBtn.dataset.master045Backend){ createBtn.dataset.master045Backend='1'; createBtn.addEventListener('click', () => setTimeout(() => authBridge('signup'), 120)); }
+        const logoutBtn=document.getElementById('maestroCloudAuthLogout');
+        if(logoutBtn && !logoutBtn.dataset.master045Backend){ logoutBtn.dataset.master045Backend='1'; logoutBtn.addEventListener('click', () => setTimeout(() => authBridge('logout'), 80)); }
+      }
+      window.MaestroBackendLive = { health:liveHealth, call:callBackend, version:VERSION, url:LIVE_URL };
+      if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', attach, {once:true}); else attach();
+      setTimeout(attach, 600);
+      setTimeout(attach, 1600);
     })();
 
 
