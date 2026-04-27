@@ -718,7 +718,7 @@ body.light-mode .maestro-backend-safe-btn.primary{background:#2563eb!important;b
               </div>
               <div class="settings-section" id="settingsAppSection">
                 <div class="settings-section-title" id="settingsAppTitle">Sistema</div>
-                <div class="settings-small-note" id="settingsAppNote">Versione: Master045 · Base: Master044 · Backend connesso</div>
+                <div class="settings-small-note" id="settingsAppNote">Versione: Master046 · Base: Master045 · Backend state fix</div>
               </div>
               <div class="settings-section" id="settingsSecuritySection">
                 <div class="settings-section-title" id="settingsSecurityTitle">Sicurezza</div>
@@ -2042,7 +2042,7 @@ async function callAiProxy(service, payload = {}){
       if(settingsThemeTitle) settingsThemeTitle.textContent = code === 'en' ? 'Theme' : (code === 'es' ? 'Tema' : 'Tema');
       if(settingsThemeNote) settingsThemeNote.textContent = code === 'en' ? 'Quick switch between dark mode and light mode demo.' : (code === 'es' ? 'Cambio rápido entre dark mode y light mode demo.' : 'Cambio rapido tra dark mode e light mode demo.');
       if(settingsAppTitle) settingsAppTitle.textContent = code === 'en' ? 'System' : (code === 'es' ? 'Sistema' : 'Sistema');
-      if(settingsAppNote) settingsAppNote.textContent = code === 'en' ? 'Version: Master045 · Base: Master044 · Connected backend' : (code === 'es' ? 'Versión: Master045 · Base: Master044 · Backend conectado' : 'Versione: Master045 · Base: Master044 · Backend connesso');
+      if(settingsAppNote) settingsAppNote.textContent = code === 'en' ? 'Version: Master046 · Base: Master045 · Backend state fix' : (code === 'es' ? 'Versión: Master046 · Base: Master045 · Backend state fix' : 'Versione: Master046 · Base: Master045 · Backend state fix');
       if(settingsSecurityTitle) settingsSecurityTitle.textContent = code === 'en' ? 'Security' : (code === 'es' ? 'Seguridad' : 'Sicurezza');
       if(settingsSecurityNote) settingsSecurityNote.textContent = code === 'en' ? 'No real AI key is stored in the HTML file. This build is prepared for public use: domain control, anonymous client ID, optional Turnstile, rate limits and quotas in the Worker.' : (code === 'es' ? 'Ninguna clave AI real está guardada en el archivo HTML. Esta build está preparada para uso público: control de dominio, client ID anónimo, Turnstile opcional, rate limit y cuotas en el Worker.' : 'Nessuna chiave AI reale è salvata nel file HTML. Questa build è preparata per uso pubblico: controllo dominio, client ID anonimo, Turnstile opzionale, rate limit e quote lato Worker.');
       const isLight = document.body.classList.contains('light-mode');
@@ -3290,7 +3290,7 @@ async function callAiProxy(service, payload = {}){
       function authPayload(){
         const email = String(document.getElementById('maestroCloudAuthEmail')?.value || '').trim().toLowerCase();
         const password = String(document.getElementById('maestroCloudAuthPassword')?.value || '');
-        return {email, password, app:'Maestro', source:'Master045'};
+        return {email, password, app:'Maestro', source:'Master046'};
       }
       async function authBridge(action){
         const payload=authPayload();
@@ -3323,6 +3323,89 @@ async function callAiProxy(service, payload = {}){
       if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', attach, {once:true}); else attach();
       setTimeout(attach, 600);
       setTimeout(attach, 1600);
+    })();
+
+
+    /* ===== Master046 backend state fix =====
+       Fix isolato dello stato backend dopo Reset/Test/Salva.
+       Non tocca layout, rotellina, slider, PWA o funzioni principali.
+    */
+    (function maestroBackendStateFix(){
+      const CONFIG_KEY = 'maestro.backendReady.config';
+      const STATUS_KEY = 'maestro.backendReady.status';
+      const RESET_KEY = 'maestro.backendReady.reset';
+      const endpoints = {signup:'/signup', login:'/login', me:'/me', logout:'/logout', sync:'/sync'};
+      function cfgEmpty(){ return {enabled:false, baseUrl:'', endpoints, updatedAt:null, version:'master046'}; }
+      function cleanUrl(v){ return String(v || '').trim().replace(/\/+$/,''); }
+      function isUrl(v){ try{ const u = new URL(v); return u.protocol === 'https:' || u.hostname === 'localhost'; }catch(e){ return false; } }
+      function setStatus(msg){
+        try{ localStorage.setItem(STATUS_KEY, msg); }catch(e){}
+        const el = document.getElementById('maestroBackendSafeStatus');
+        if(el) el.textContent = msg;
+      }
+      function setVisual(connected){
+        const pill = document.getElementById('maestroBackendSafePill');
+        if(pill){
+          pill.textContent = connected ? 'Backend collegato' : 'Backend non collegato';
+          pill.classList.toggle('ready', !!connected);
+        }
+        const info = document.getElementById('maestroBackendSafeInfo');
+        const base = cleanUrl(document.getElementById('maestroBackendBaseUrl')?.value || '');
+        if(info) info.textContent = connected && base ? (base + '\nHook API pronti: /signup, /login, /me, /logout, /sync') : 'Hook API pronti: /signup, /login, /me, /logout, /sync';
+      }
+      function forceDisconnected(message){
+        try{
+          localStorage.setItem(RESET_KEY, '1');
+          localStorage.setItem(CONFIG_KEY, JSON.stringify(cfgEmpty()));
+        }catch(e){}
+        const base = document.getElementById('maestroBackendBaseUrl');
+        if(base) base.value = '';
+        setVisual(false);
+        setStatus(message || 'Configurazione backend rimossa. Backend non collegato.');
+      }
+      function connectFromInput(){
+        const base = cleanUrl(document.getElementById('maestroBackendBaseUrl')?.value || '');
+        if(!base || !isUrl(base)){
+          forceDisconnected('Inserisci un URL Worker valido prima di salvare o testare.');
+          return false;
+        }
+        try{
+          localStorage.removeItem(RESET_KEY);
+          localStorage.setItem(CONFIG_KEY, JSON.stringify({enabled:true, baseUrl:base, endpoints, updatedAt:new Date().toISOString(), version:'master046'}));
+        }catch(e){}
+        setVisual(true);
+        return true;
+      }
+      function attachFix(){
+        const clearBtn = document.getElementById('maestroBackendClear');
+        if(clearBtn && !clearBtn.dataset.master046StateFix){
+          clearBtn.dataset.master046StateFix = '1';
+          clearBtn.addEventListener('click', () => setTimeout(() => forceDisconnected('Configurazione backend rimossa. Backend non collegato.'), 60));
+        }
+        const saveBtn = document.getElementById('maestroBackendSave');
+        if(saveBtn && !saveBtn.dataset.master046StateFix){
+          saveBtn.dataset.master046StateFix = '1';
+          saveBtn.addEventListener('click', () => setTimeout(() => { if(connectFromInput()) setStatus('Backend salvato. Backend collegato.'); }, 90));
+        }
+        const testBtn = document.getElementById('maestroBackendTest');
+        if(testBtn && !testBtn.dataset.master046StateFix){
+          testBtn.dataset.master046StateFix = '1';
+          testBtn.addEventListener('click', () => setTimeout(() => {
+            const base = cleanUrl(document.getElementById('maestroBackendBaseUrl')?.value || '');
+            if(!base || !isUrl(base)) forceDisconnected('Test live non eseguito: backend non configurato.');
+          }, 180));
+        }
+        try{
+          if(localStorage.getItem(RESET_KEY) === '1') forceDisconnected(localStorage.getItem(STATUS_KEY) || 'Backend non collegato.');
+          else {
+            const cfg = JSON.parse(localStorage.getItem(CONFIG_KEY) || '{}');
+            setVisual(!!cfg.baseUrl);
+          }
+        }catch(e){}
+      }
+      if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', attachFix, {once:true}); else attachFix();
+      setTimeout(attachFix, 500);
+      setTimeout(attachFix, 1500);
     })();
 
 
