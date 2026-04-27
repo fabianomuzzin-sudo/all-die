@@ -3102,7 +3102,7 @@ async function callAiProxy(service, payload = {}){
        Non esegue ancora login cloud reale e non modifica il motore auth locale Master043.
     */
     (function maestroBackendReadyAuth(){
-      const VERSION = 'master046A';
+      const VERSION = 'master046B';
       const PANEL_ID = 'maestroBackendReadyPanel';
       const CONFIG_KEY = 'maestro.backendReady.config';
       const STATUS_KEY = 'maestro.backendReady.status';
@@ -3116,9 +3116,9 @@ async function callAiProxy(service, payload = {}){
       function lang(){ try{return (languageState && languageState[languageState.activeSlot] && languageState[languageState.activeSlot].code) || 'it';}catch(e){return 'it';} }
       function copy(){
         const d={
-          it:{ title:'Backend cloud reale', note:'Worker reale collegato. Il login locale resta attivo; signup/login/logout inviano anche un test al backend.', stateOff:'Backend non collegato', stateReady:'Backend collegato', base:'URL Worker', signup:'Signup', login:'Login', me:'Me', logout:'Logout', sync:'Sync', save:'Salva backend', test:'Test live', clear:'Reset backend', hooks:'Hook API pronti: /signup, /login, /me, /logout, /sync', saved:'Configurazione backend salvata. Worker reale pronto.', testOk:'Configurazione leggibile. Nessuna chiamata reale ancora eseguita.', reset:'Configurazione backend rimossa.', missing:'Inserisci un URL Worker valido oppure lascia vuoto finché non lo creiamo.' },
-          en:{ title:'Real cloud backend', note:'Real Worker connected. Local login stays active; signup/login/logout also send a backend test.', stateOff:'Backend not connected', stateReady:'Backend connected', base:'Worker URL', signup:'Signup', login:'Login', me:'Me', logout:'Logout', sync:'Sync', save:'Save backend', test:'Live test', clear:'Reset backend', hooks:'API hooks ready: /signup, /login, /me, /logout, /sync', saved:'Backend configuration saved. Real Worker ready.', testOk:'Configuration readable. No real network call executed yet.', reset:'Backend configuration removed.', missing:'Enter a valid Worker URL or leave it empty until we create it.' },
-          es:{ title:'Backend cloud real', note:'Worker real conectado. El login local sigue activo; signup/login/logout también envían una prueba al backend.', stateOff:'Backend no conectado', stateReady:'Backend conectado', base:'URL Worker', signup:'Signup', login:'Login', me:'Me', logout:'Logout', sync:'Sync', save:'Guardar backend', test:'Test live', clear:'Reset backend', hooks:'Hooks API listos: /signup, /login, /me, /logout, /sync', saved:'Configuración backend guardada. Worker real listo.', testOk:'Configuración legible. Aún no se ejecuta llamada real.', reset:'Configuración backend eliminada.', missing:'Introduce una URL Worker válida o déjala vacía hasta crearla.' }
+          it:{ title:'Backend cloud reale', note:'Worker reale collegato. Il login locale resta attivo; signup/login/logout inviano anche un test al backend.', noteOff:'Backend non configurato. Inserisci e salva l’URL Worker prima di usare Test live o sync.', noteOn:'Worker reale collegato. Il login locale resta attivo; signup/login/logout inviano anche un test al backend.', stateOff:'Backend non collegato', stateReady:'Backend collegato', base:'URL Worker', signup:'Signup', login:'Login', me:'Me', logout:'Logout', sync:'Sync', save:'Salva backend', test:'Test live', clear:'Reset backend', hooks:'Hook API pronti: /signup, /login, /me, /logout, /sync', saved:'Configurazione backend salvata. Worker reale pronto.', testOk:'Configurazione leggibile. Nessuna chiamata reale ancora eseguita.', reset:'Configurazione backend rimossa.', missing:'Inserisci un URL Worker valido oppure lascia vuoto finché non lo creiamo.' },
+          en:{ title:'Real cloud backend', note:'Real Worker connected. Local login stays active; signup/login/logout also send a backend test.', noteOff:'Backend not configured. Enter and save the Worker URL before using Live test or sync.', noteOn:'Real Worker connected. Local login stays active; signup/login/logout also send a backend test.', stateOff:'Backend not connected', stateReady:'Backend connected', base:'Worker URL', signup:'Signup', login:'Login', me:'Me', logout:'Logout', sync:'Sync', save:'Save backend', test:'Live test', clear:'Reset backend', hooks:'API hooks ready: /signup, /login, /me, /logout, /sync', saved:'Backend configuration saved. Real Worker ready.', testOk:'Configuration readable. No real network call executed yet.', reset:'Backend configuration removed.', missing:'Enter a valid Worker URL or leave it empty until we create it.' },
+          es:{ title:'Backend cloud real', note:'Worker real conectado. El login local sigue activo; signup/login/logout también envían una prueba al backend.', noteOff:'Backend no configurado. Introduce y guarda la URL Worker antes de usar Test live o sync.', noteOn:'Worker real conectado. El login local sigue activo; signup/login/logout también envían una prueba al backend.', stateOff:'Backend no conectado', stateReady:'Backend conectado', base:'URL Worker', signup:'Signup', login:'Login', me:'Me', logout:'Logout', sync:'Sync', save:'Guardar backend', test:'Test live', clear:'Reset backend', hooks:'Hooks API listos: /signup, /login, /me, /logout, /sync', saved:'Configuración backend guardada. Worker real listo.', testOk:'Configuración legible. Aún no se ejecuta llamada real.', reset:'Configuración backend eliminada.', missing:'Introduce una URL Worker válida o déjala vacía hasta crearla.' }
         };
         return d[lang()] || d.it;
       }
@@ -3156,6 +3156,8 @@ async function callAiProxy(service, payload = {}){
         if(pill){ pill.textContent=ready?c.stateReady:c.stateOff; pill.classList.toggle('ready', ready); }
         const info=document.getElementById('maestroBackendSafeInfo');
         if(info) info.textContent = ready ? (cfg.baseUrl + '\n' + c.hooks) : c.hooks;
+        const note=document.getElementById('maestroBackendSafeDynamicNote');
+        if(note) note.textContent = ready ? (c.noteOn || c.note) : (c.noteOff || c.missing);
       }
       function save(){
         const c=copy();
@@ -3195,7 +3197,7 @@ async function callAiProxy(service, payload = {}){
         panel.innerHTML='<div class="maestro-backend-safe-title">'+c.title+'</div>'+
           '<span class="maestro-backend-safe-pill" id="maestroBackendSafePill">'+c.stateOff+'</span>'+
           '<div class="maestro-backend-safe-note" id="maestroBackendSafeInfo">'+c.hooks+'</div>'+
-          '<div class="maestro-backend-safe-note">'+c.note+'</div>'+
+          '<div class="maestro-backend-safe-note" id="maestroBackendSafeDynamicNote">'+c.noteOff+'</div>'+
           '<div class="maestro-backend-safe-field"><span class="maestro-backend-safe-label">'+c.base+'</span><input class="maestro-backend-safe-input" id="maestroBackendBaseUrl" type="url" placeholder="https://maestro-api.tuodominio.workers.dev" /></div>'+
           '<div class="maestro-backend-safe-grid">'+
             '<label class="maestro-backend-safe-field"><span class="maestro-backend-safe-label">'+c.signup+'</span><input class="maestro-backend-safe-input" id="maestroBackendSignup" value="/signup" /></label>'+
@@ -3227,12 +3229,12 @@ async function callAiProxy(service, payload = {}){
     })();
 
 
-    /* ===== Master046A backend test strict =====
+    /* ===== Master046B backend text coherence =====
        Collega l'app al Worker reale già creato.
        Non tocca layout principale, rotellina, slider o PWA.
     */
     (function maestroConnectRealBackend(){
-      const VERSION = 'master046A';
+      const VERSION = 'master046B';
       const LIVE_URL = 'https://maestro-api-proxy.fabiano-muzzin.workers.dev';
       const CONFIG_KEY = 'maestro.backendReady.config';
       const STATUS_KEY = 'maestro.backendReady.status';
@@ -3245,7 +3247,7 @@ async function callAiProxy(service, payload = {}){
         if(el) el.textContent=msg;
       }
       function ensureDefaultBackend(){
-        // Master046A: no fallback automatico. Se l'utente fa Reset backend,
+        // Master046B: no fallback automatico. Se l'utente fa Reset backend,
         // Test live deve fallire finché non viene salvato un URL Worker valido.
       }
       function getCfg(){
@@ -3280,6 +3282,8 @@ async function callAiProxy(service, payload = {}){
           if(pill){ pill.textContent='Backend non collegato'; pill.classList.remove('ready'); }
           const info=document.getElementById('maestroBackendSafeInfo');
           if(info) info.textContent='Hook API pronti: /signup, /login, /me, /logout, /sync';
+          const note=document.getElementById('maestroBackendSafeDynamicNote');
+          if(note) note.textContent='Backend non configurato. Inserisci e salva l’URL Worker prima di usare Test live o sync.';
           return;
         }
         setBackendStatus('Test backend reale in corso...');
