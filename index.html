@@ -500,6 +500,29 @@ body.light-mode .maestro-backup-safe-title{color:#111827}
 body.light-mode .maestro-backup-safe-btn{background:#eef2f8!important;border-color:#cfd8e6!important;color:#111827!important}
 body.light-mode .maestro-backup-safe-btn.primary{background:#2563eb!important;border-color:#1d4ed8!important;color:#fff!important}
 
+
+/* ===== Master044 backend ready auth =====
+   Ganci backend cloud reale isolati: non tocca layout principale, rotellina, slider o PWA.
+*/
+.maestro-backend-safe{display:grid;gap:10px;border:1px solid rgba(87,166,255,.28);border-radius:16px;background:rgba(87,166,255,.07);padding:12px;margin-top:0}
+.maestro-backend-safe-title{font-size:15px;font-weight:900;color:#eef6ff;letter-spacing:.02em}
+.maestro-backend-safe-note{font-size:12px;color:var(--muted);line-height:1.35;white-space:pre-wrap}
+.maestro-backend-safe-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.maestro-backend-safe-field{display:grid;gap:6px}
+.maestro-backend-safe-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:900}
+.maestro-backend-safe-input{width:100%;min-height:42px;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);color:var(--text);font-size:13px;font-weight:800;padding:0 12px;outline:none}
+.maestro-backend-safe-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.maestro-backend-safe-btn{width:100%;min-height:42px;border-radius:12px;border:1px solid rgba(255,255,255,.10);background:#22262e;color:var(--text);font-size:12px;font-weight:900;cursor:pointer;padding:10px 12px;text-align:center}
+.maestro-backend-safe-btn.primary{background:var(--blue);color:#07111b;border-color:#87c0ff}
+.maestro-backend-safe-pill{display:inline-flex;align-items:center;justify-content:center;width:max-content;min-height:30px;border-radius:999px;padding:6px 10px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.04);font-size:11px;font-weight:900;color:#eef6ff}
+.maestro-backend-safe-pill.ready{background:rgba(87,166,255,.14);border-color:rgba(87,166,255,.36);color:#dcebff}
+@media (max-width:430px){.maestro-backend-safe-grid,.maestro-backend-safe-actions{grid-template-columns:1fr}}
+body.light-mode .maestro-backend-safe{background:rgba(37,99,235,.08);border-color:#cfd8e6;color:#111827}
+body.light-mode .maestro-backend-safe-title{color:#111827}
+body.light-mode .maestro-backend-safe-input{background:#fff!important;border-color:#cfd8e6!important;color:#111827!important}
+body.light-mode .maestro-backend-safe-btn{background:#eef2f8!important;border-color:#cfd8e6!important;color:#111827!important}
+body.light-mode .maestro-backend-safe-btn.primary{background:#2563eb!important;border-color:#1d4ed8!important;color:#fff!important}
+
 </style>
 
   <!-- ===== Master039_icon_only_safe =====
@@ -695,7 +718,7 @@ body.light-mode .maestro-backup-safe-btn.primary{background:#2563eb!important;bo
               </div>
               <div class="settings-section" id="settingsAppSection">
                 <div class="settings-section-title" id="settingsAppTitle">Sistema</div>
-                <div class="settings-small-note" id="settingsAppNote">Versione: Master043 · Base: Master042 · Real auth engine</div>
+                <div class="settings-small-note" id="settingsAppNote">Versione: Master044 · Base: Master043 · Backend ready auth</div>
               </div>
               <div class="settings-section" id="settingsSecuritySection">
                 <div class="settings-section-title" id="settingsSecurityTitle">Sicurezza</div>
@@ -2019,7 +2042,7 @@ async function callAiProxy(service, payload = {}){
       if(settingsThemeTitle) settingsThemeTitle.textContent = code === 'en' ? 'Theme' : (code === 'es' ? 'Tema' : 'Tema');
       if(settingsThemeNote) settingsThemeNote.textContent = code === 'en' ? 'Quick switch between dark mode and light mode demo.' : (code === 'es' ? 'Cambio rápido entre dark mode y light mode demo.' : 'Cambio rapido tra dark mode e light mode demo.');
       if(settingsAppTitle) settingsAppTitle.textContent = code === 'en' ? 'System' : (code === 'es' ? 'Sistema' : 'Sistema');
-      if(settingsAppNote) settingsAppNote.textContent = code === 'en' ? 'Version: Master043 · Base: Master042 · Real auth engine' : (code === 'es' ? 'Versión: Master043 · Base: Master042 · Real auth engine' : 'Versione: Master043 · Base: Master042 · Real auth engine');
+      if(settingsAppNote) settingsAppNote.textContent = code === 'en' ? 'Version: Master044 · Base: Master043 · Backend ready auth' : (code === 'es' ? 'Versión: Master044 · Base: Master043 · Backend ready auth' : 'Versione: Master044 · Base: Master043 · Backend ready auth');
       if(settingsSecurityTitle) settingsSecurityTitle.textContent = code === 'en' ? 'Security' : (code === 'es' ? 'Seguridad' : 'Sicurezza');
       if(settingsSecurityNote) settingsSecurityNote.textContent = code === 'en' ? 'No real AI key is stored in the HTML file. This build is prepared for public use: domain control, anonymous client ID, optional Turnstile, rate limits and quotas in the Worker.' : (code === 'es' ? 'Ninguna clave AI real está guardada en el archivo HTML. Esta build está preparada para uso público: control de dominio, client ID anónimo, Turnstile opcional, rate limit y cuotas en el Worker.' : 'Nessuna chiave AI reale è salvata nel file HTML. Questa build è preparata per uso pubblico: controllo dominio, client ID anonimo, Turnstile opzionale, rate limit e quote lato Worker.');
       const isLight = document.body.classList.contains('light-mode');
@@ -3070,6 +3093,136 @@ async function callAiProxy(service, payload = {}){
         try{ const old = localStorage.getItem(STATUS_KEY); if(old) setStatus(old); }catch(e){}
       }
       if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', ensurePanel, {once:true});
+      else ensurePanel();
+    })();
+
+
+    /* ===== Master044 backend ready auth =====
+       Prepara collegamento a backend Cloudflare: endpoint, stato connessione e API hooks.
+       Non esegue ancora login cloud reale e non modifica il motore auth locale Master043.
+    */
+    (function maestroBackendReadyAuth(){
+      const VERSION = 'master044';
+      const PANEL_ID = 'maestroBackendReadyPanel';
+      const CONFIG_KEY = 'maestro.backendReady.config';
+      const STATUS_KEY = 'maestro.backendReady.status';
+      const defaultConfig = {
+        enabled:false,
+        baseUrl:'',
+        endpoints:{ signup:'/signup', login:'/login', me:'/me', logout:'/logout', sync:'/sync' },
+        updatedAt:null,
+        version:VERSION
+      };
+      function lang(){ try{return (languageState && languageState[languageState.activeSlot] && languageState[languageState.activeSlot].code) || 'it';}catch(e){return 'it';} }
+      function copy(){
+        const d={
+          it:{ title:'Backend cloud reale', note:'Preparazione collegamento multi-device. Il login locale resta attivo; qui salviamo solo indirizzo Worker e endpoint futuri.', stateOff:'Backend non collegato', stateReady:'Backend configurato', base:'URL Worker', signup:'Signup', login:'Login', me:'Me', logout:'Logout', sync:'Sync', save:'Salva backend', test:'Test configurazione', clear:'Reset backend', hooks:'Hook API pronti: /signup, /login, /me, /logout, /sync', saved:'Configurazione backend salvata. Prossimo step: Worker reale + database.', testOk:'Configurazione leggibile. Nessuna chiamata reale ancora eseguita.', reset:'Configurazione backend rimossa.', missing:'Inserisci un URL Worker valido oppure lascia vuoto finché non lo creiamo.' },
+          en:{ title:'Real cloud backend', note:'Multi-device connection preparation. Local login stays active; this only stores the future Worker URL and endpoints.', stateOff:'Backend not connected', stateReady:'Backend configured', base:'Worker URL', signup:'Signup', login:'Login', me:'Me', logout:'Logout', sync:'Sync', save:'Save backend', test:'Test configuration', clear:'Reset backend', hooks:'API hooks ready: /signup, /login, /me, /logout, /sync', saved:'Backend configuration saved. Next step: real Worker + database.', testOk:'Configuration readable. No real network call executed yet.', reset:'Backend configuration removed.', missing:'Enter a valid Worker URL or leave it empty until we create it.' },
+          es:{ title:'Backend cloud real', note:'Preparación conexión multi-dispositivo. El login local sigue activo; aquí solo guardamos URL Worker y endpoints futuros.', stateOff:'Backend no conectado', stateReady:'Backend configurado', base:'URL Worker', signup:'Signup', login:'Login', me:'Me', logout:'Logout', sync:'Sync', save:'Guardar backend', test:'Probar configuración', clear:'Reset backend', hooks:'Hooks API listos: /signup, /login, /me, /logout, /sync', saved:'Configuración backend guardada. Siguiente paso: Worker real + database.', testOk:'Configuración legible. Aún no se ejecuta llamada real.', reset:'Configuración backend eliminada.', missing:'Introduce una URL Worker válida o déjala vacía hasta crearla.' }
+        };
+        return d[lang()] || d.it;
+      }
+      function readConfig(){
+        try{ return Object.assign({}, defaultConfig, JSON.parse(localStorage.getItem(CONFIG_KEY) || '{}')); }catch(e){ return Object.assign({}, defaultConfig); }
+      }
+      function writeConfig(cfg){ try{ localStorage.setItem(CONFIG_KEY, JSON.stringify(cfg)); }catch(e){} }
+      function setStatus(msg){ try{ localStorage.setItem(STATUS_KEY, msg); }catch(e){} const el=document.getElementById('maestroBackendSafeStatus'); if(el) el.textContent=msg; }
+      function normalizeUrl(v){ return String(v||'').trim().replace(/\/+$/,''); }
+      function isValidUrl(v){ if(!v) return false; try{ const u=new URL(v); return u.protocol==='https:' || u.hostname==='localhost'; }catch(e){ return false; } }
+      function readInputs(){
+        return {
+          enabled:false,
+          baseUrl:normalizeUrl(document.getElementById('maestroBackendBaseUrl')?.value),
+          endpoints:{
+            signup:document.getElementById('maestroBackendSignup')?.value || '/signup',
+            login:document.getElementById('maestroBackendLogin')?.value || '/login',
+            me:document.getElementById('maestroBackendMe')?.value || '/me',
+            logout:document.getElementById('maestroBackendLogout')?.value || '/logout',
+            sync:document.getElementById('maestroBackendSync')?.value || '/sync'
+          },
+          updatedAt:new Date().toISOString(),
+          version:VERSION
+        };
+      }
+      function applyInputs(cfg){
+        if(document.getElementById('maestroBackendBaseUrl')) document.getElementById('maestroBackendBaseUrl').value = cfg.baseUrl || '';
+        const e=cfg.endpoints||{};
+        [['Signup','signup'],['Login','login'],['Me','me'],['Logout','logout'],['Sync','sync']].forEach(([id,k])=>{ const el=document.getElementById('maestroBackend'+id); if(el) el.value=e[k]||defaultConfig.endpoints[k]; });
+      }
+      function renderState(){
+        const c=copy(), cfg=readConfig();
+        const ready=!!cfg.baseUrl;
+        const pill=document.getElementById('maestroBackendSafePill');
+        if(pill){ pill.textContent=ready?c.stateReady:c.stateOff; pill.classList.toggle('ready', ready); }
+        const info=document.getElementById('maestroBackendSafeInfo');
+        if(info) info.textContent = ready ? (cfg.baseUrl + '\n' + c.hooks) : c.hooks;
+      }
+      function save(){
+        const c=copy();
+        const cfg=readInputs();
+        if(cfg.baseUrl && !isValidUrl(cfg.baseUrl)){ setStatus(c.missing); return; }
+        cfg.enabled=!!cfg.baseUrl;
+        writeConfig(cfg);
+        setStatus(c.saved);
+        renderState();
+      }
+      function test(){
+        const c=copy(), cfg=readConfig();
+        if(!cfg.baseUrl){ setStatus(c.missing); return; }
+        setStatus(c.testOk + '\n' + cfg.baseUrl + cfg.endpoints.me);
+        renderState();
+      }
+      function clear(){
+        const c=copy();
+        try{ localStorage.removeItem(CONFIG_KEY); }catch(e){}
+        applyInputs(defaultConfig);
+        setStatus(c.reset);
+        renderState();
+      }
+      window.MaestroBackendAuth = {
+        getConfig: readConfig,
+        isConfigured: () => !!readConfig().baseUrl,
+        buildUrl: (name) => { const cfg=readConfig(); return cfg.baseUrl ? (cfg.baseUrl + ((cfg.endpoints||{})[name] || '')) : ''; },
+        version: VERSION
+      };
+      function ensurePanel(){
+        const pageBody=document.querySelector('#cloudPage .page-body');
+        if(!pageBody || document.getElementById(PANEL_ID)) return;
+        const c=copy();
+        const panel=document.createElement('div');
+        panel.className='maestro-backend-safe';
+        panel.id=PANEL_ID;
+        panel.innerHTML='<div class="maestro-backend-safe-title">'+c.title+'</div>'+
+          '<span class="maestro-backend-safe-pill" id="maestroBackendSafePill">'+c.stateOff+'</span>'+
+          '<div class="maestro-backend-safe-note" id="maestroBackendSafeInfo">'+c.hooks+'</div>'+
+          '<div class="maestro-backend-safe-note">'+c.note+'</div>'+
+          '<div class="maestro-backend-safe-field"><span class="maestro-backend-safe-label">'+c.base+'</span><input class="maestro-backend-safe-input" id="maestroBackendBaseUrl" type="url" placeholder="https://maestro-api.tuodominio.workers.dev" /></div>'+
+          '<div class="maestro-backend-safe-grid">'+
+            '<label class="maestro-backend-safe-field"><span class="maestro-backend-safe-label">'+c.signup+'</span><input class="maestro-backend-safe-input" id="maestroBackendSignup" value="/signup" /></label>'+
+            '<label class="maestro-backend-safe-field"><span class="maestro-backend-safe-label">'+c.login+'</span><input class="maestro-backend-safe-input" id="maestroBackendLogin" value="/login" /></label>'+
+            '<label class="maestro-backend-safe-field"><span class="maestro-backend-safe-label">'+c.me+'</span><input class="maestro-backend-safe-input" id="maestroBackendMe" value="/me" /></label>'+
+            '<label class="maestro-backend-safe-field"><span class="maestro-backend-safe-label">'+c.logout+'</span><input class="maestro-backend-safe-input" id="maestroBackendLogout" value="/logout" /></label>'+
+            '<label class="maestro-backend-safe-field"><span class="maestro-backend-safe-label">'+c.sync+'</span><input class="maestro-backend-safe-input" id="maestroBackendSync" value="/sync" /></label>'+
+          '</div>'+
+          '<div class="maestro-backend-safe-actions">'+
+            '<button class="maestro-backend-safe-btn primary" id="maestroBackendSave" type="button">'+c.save+'</button>'+
+            '<button class="maestro-backend-safe-btn" id="maestroBackendTest" type="button">'+c.test+'</button>'+
+            '<button class="maestro-backend-safe-btn" id="maestroBackendClear" type="button">'+c.clear+'</button>'+
+          '</div>'+
+          '<div class="maestro-backend-safe-note" id="maestroBackendSafeStatus"></div>';
+        const auth=document.getElementById('maestroCloudAuthSafePanel');
+        const backup=document.getElementById('maestroBackupSafePanel');
+        if(auth && auth.parentNode===pageBody) auth.insertAdjacentElement('afterend', panel);
+        else if(backup && backup.parentNode===pageBody) backup.insertAdjacentElement('beforebegin', panel);
+        else pageBody.appendChild(panel);
+        document.getElementById('maestroBackendSave')?.addEventListener('click', save);
+        document.getElementById('maestroBackendTest')?.addEventListener('click', test);
+        document.getElementById('maestroBackendClear')?.addEventListener('click', clear);
+        applyInputs(readConfig());
+        try{ const old=localStorage.getItem(STATUS_KEY); if(old) setStatus(old); }catch(e){}
+        renderState();
+      }
+      if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', ensurePanel, {once:true});
       else ensurePanel();
     })();
 
