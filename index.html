@@ -725,6 +725,35 @@ body.maestro-cloud-module4-active .maestro-schema-pre{
   .slider-ticks{bottom:-16px;}
 }
 
+
+/* ===== Master068G Cloud mobile status pill fit =====
+   Modifica solo responsive della pagina Cloud modulo 4: il badge stato account
+   rientra correttamente nel bottoncino su telefono senza alterare laptop, slider,
+   cloud, Worker, PWA o resto del layout.
+*/
+body.maestro-cloud-module4-active #m49AccountPill{
+  min-width:0;
+  max-width:100%;
+}
+@media(max-width:430px){
+  body.maestro-cloud-module4-active .maestro-premium-head{
+    align-items:flex-start;
+    gap:10px;
+  }
+  body.maestro-cloud-module4-active #m49AccountPill{
+    flex:0 1 auto;
+    max-width:44vw;
+    min-height:28px;
+    padding:6px 9px;
+    font-size:11px;
+    line-height:1.05;
+    text-align:center;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+}
+
 </style>
 
   <!-- ===== Master039_icon_only_safe =====
@@ -733,7 +762,7 @@ body.maestro-cloud-module4-active .maestro-schema-pre{
        Layout non toccato: .module-a-main, .main-card, .module-bottom, .bottom-shell, .wheel invariati.
        Nessun manifest esterno e nessun nuovo service worker: resta attivo il kill/reset cache della base approvata.
   -->
-  <meta name="maestro-build" content="Master068F_cloud_slider_ticks_centered" />
+  <meta name="maestro-build" content="Master068G_cloud_mobile_status_pill_fix" />
   <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
