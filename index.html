@@ -741,16 +741,19 @@ body.maestro-cloud-module4-active #m49AccountPill{
     gap:10px;
   }
   body.maestro-cloud-module4-active #m49AccountPill{
-    flex:0 1 auto;
-    max-width:44vw;
-    min-height:28px;
-    padding:6px 9px;
+    flex:0 0 auto;
+    width:132px;
+    max-width:46vw;
+    min-height:44px;
+    padding:7px 10px;
     font-size:11px;
     line-height:1.05;
     text-align:center;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
+    white-space:normal;
+    overflow:visible;
+    text-overflow:clip;
+    word-break:keep-all;
+    overflow-wrap:normal;
   }
 }
 
@@ -762,7 +765,7 @@ body.maestro-cloud-module4-active #m49AccountPill{
        Layout non toccato: .module-a-main, .main-card, .module-bottom, .bottom-shell, .wheel invariati.
        Nessun manifest esterno e nessun nuovo service worker: resta attivo il kill/reset cache della base approvata.
   -->
-  <meta name="maestro-build" content="Master068G_cloud_mobile_status_pill_fix" />
+  <meta name="maestro-build" content="Master068H_cloud_mobile_status_pill_multiline_fix" />
   <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
