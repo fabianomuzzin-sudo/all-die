@@ -2172,80 +2172,6 @@ body.light-mode.maestro-days-module4-active #m086cTitle{
 
 
 <style>
-/* ===== Master090B: preview swipe Home -> Allenamento, niente vecchio foglio Giorno/ES ===== */
-#swipeShell .swipe-panel:first-child .m071h-swipe-preview{
-  display:none!important;
-}
-#swipeShell .swipe-panel:first-child .m090b-allen-preview{
-  width:100%;
-  height:100%;
-  min-height:0;
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-  padding:12px;
-  border-radius:18px;
-  background:var(--panel);
-  border:1px solid rgba(255,255,255,.08);
-  overflow:hidden;
-}
-.m090b-allen-head{
-  flex:0 0 auto;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-}
-.m090b-allen-title{
-  font-size:22px;
-  font-weight:950;
-  color:#dcebff;
-  line-height:1.05;
-}
-.m090b-allen-pill{
-  border:1px solid rgba(87,166,255,.42);
-  background:rgba(87,166,255,.14);
-  color:#dcebff;
-  border-radius:999px;
-  padding:7px 10px;
-  font-size:11px;
-  font-weight:950;
-}
-.m090b-allen-list{
-  flex:1 1 auto;
-  min-height:0;
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-  overflow:hidden;
-}
-.m090b-allen-day{
-  min-height:46px;
-  border-radius:15px;
-  border:1px solid rgba(46,204,113,.26);
-  background:linear-gradient(180deg,rgba(46,204,113,.26),rgba(46,204,113,.16));
-  color:#eafff0;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:9px 11px;
-  font-size:14px;
-  font-weight:950;
-}
-.m090b-allen-day span:last-child{
-  font-size:11px;
-  opacity:.78;
-}
-body.light-mode #swipeShell .swipe-panel:first-child .m090b-allen-preview{
-  background:#ffffff;
-  border-color:#d1d5db;
-}
-body.light-mode .m090b-allen-title{color:#1e3a8a;}
-body.light-mode .m090b-allen-pill{color:#1e3a8a;background:rgba(37,99,235,.10);border-color:rgba(37,99,235,.35);}
-</style>
-
-
-<style>
 /* ===== Master092: selector valori esercizio (ripetizioni/peso) ===== */
 .m092-picker{
   position:fixed;
@@ -2348,6 +2274,20 @@ body.light-mode .m092-head{border-color:#d1d5db;}
 body.light-mode .m092-option{background:#f8fafc;border-color:#d1d5db;color:#111827;}
 body.light-mode .m092-option.current{background:rgba(37,99,235,.10);border-color:rgba(37,99,235,.45);color:#1e3a8a;}
 body.light-mode .m092-empty{background:#f8fafc;border-color:#d1d5db;color:#64748b;}
+</style>
+
+
+<style>
+/* ===== Master096: nasconde il vecchio pannello fisico Home sinistra / Allen legacy =====
+   La pagina vera è Allenamento (ex Giorni). Questo pannello non deve più apparire.
+*/
+#swipeShell .swipe-panel:first-child{
+  visibility:hidden!important;
+}
+#swipeShell .swipe-panel:first-child .hero-panel,
+#swipeShell .swipe-panel:first-child .m071h-swipe-preview{
+  display:none!important;
+}
 </style>
 
 </head>
@@ -10238,66 +10178,13 @@ setTimeout(m086dBoot, 150); setTimeout(m086dBoot, 800);
 </script>
 
 
+
 <script>
-/* ===== Master090B: swipe diretto Home <-> Allenamento =====
-   - durante lo swipe da Home non mostra più il vecchio foglio Giorno/ES,
-     ma una preview Allenamento.
-   - il ritorno Allenamento -> Home funziona anche dal centro lista esercizi.
-*/
-(function m090bAllenamentoSwipeDirectBothWays(){
+/* ===== Master096: rimosso preview legacy Giorno 1/2/3; resta solo swipe Allenamento -> Home ===== */
+(function m096AllenamentoSwipeBackClean(){
   let startX = null;
   let startY = null;
   let lastSwipeAt = 0;
-
-  function label(it,en,es){
-    try{
-      const code = activePack().meta.code || 'it';
-      return code === 'en' ? en : (code === 'es' ? es : it);
-    }catch(e){ return it; }
-  }
-
-  function dayCount(dayKey){
-    try{
-      const raw = JSON.parse(localStorage.getItem('maestro.training.dayExercisePlan.v1') || 'null');
-      const slots = raw && raw.days && raw.days[dayKey] && Array.isArray(raw.days[dayKey].slots) ? raw.days[dayKey].slots : [];
-      return slots.length || (dayKey === 'day3' ? 7 : 6);
-    }catch(e){
-      return dayKey === 'day3' ? 7 : 6;
-    }
-  }
-
-  function ensureHomeAllenPreview(){
-    const firstPanel = document.querySelector('#swipeShell .swipe-panel:first-child .hero-panel');
-    if(!firstPanel) return;
-    let box = document.getElementById('m090bAllenPreview');
-    if(!box){
-      firstPanel.insertAdjacentHTML('beforeend',
-        '<div class="m090b-allen-preview" id="m090bAllenPreview">' +
-          '<div class="m090b-allen-head">' +
-            '<div class="m090b-allen-title" id="m090bAllenTitle">Allenamento</div>' +
-            '<div class="m090b-allen-pill" id="m090bAllenPill">Apri</div>' +
-          '</div>' +
-          '<div class="m090b-allen-list">' +
-            '<div class="m090b-allen-day"><span id="m090bAllenD1">Giorno 1</span><span id="m090bAllenC1">6 esercizi</span></div>' +
-            '<div class="m090b-allen-day"><span id="m090bAllenD2">Giorno 2</span><span id="m090bAllenC2">6 esercizi</span></div>' +
-            '<div class="m090b-allen-day"><span id="m090bAllenD3">Giorno 3</span><span id="m090bAllenC3">7 esercizi</span></div>' +
-          '</div>' +
-        '</div>');
-    }
-    const title = document.getElementById('m090bAllenTitle');
-    const pill = document.getElementById('m090bAllenPill');
-    if(title) title.textContent = label('Allenamento','Training','Entrenamiento');
-    if(pill) pill.textContent = label('Apri','Open','Abrir');
-
-    const base = label('Giorno','Day','Día');
-    const exWord = label('esercizi','exercises','ejercicios');
-    [['D1','day1',1],['D2','day2',2],['D3','day3',3]].forEach(([suffix,key,num])=>{
-      const d = document.getElementById('m090bAllen' + suffix);
-      const c = document.getElementById('m090bAllenC' + num);
-      if(d) d.textContent = base + ' ' + num;
-      if(c) c.textContent = dayCount(key) + ' ' + exWord;
-    });
-  }
 
   function reset(){ startX = null; startY = null; }
 
@@ -10309,8 +10196,8 @@ setTimeout(m086dBoot, 150); setTimeout(m086dBoot, 800);
 
   function bindBackSwipe(){
     const page = document.getElementById('m086cDaysPage');
-    if(!page || page.dataset.m090bSwipeHomeBound === '1') return;
-    page.dataset.m090bSwipeHomeBound = '1';
+    if(!page || page.dataset.m096SwipeHomeBound === '1') return;
+    page.dataset.m096SwipeHomeBound = '1';
 
     page.addEventListener('touchstart', ev => {
       if(!ev.touches || ev.touches.length !== 1) return;
@@ -10344,19 +10231,17 @@ setTimeout(m086dBoot, 150); setTimeout(m086dBoot, 800);
   }
 
   function boot(){
-    ensureHomeAllenPreview();
     bindBackSwipe();
   }
 
   if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, {once:true});
   else boot();
 
-  setTimeout(boot, 250);
-  setTimeout(boot, 900);
-  setTimeout(boot, 1800);
+  setTimeout(boot, 120);
+  setTimeout(boot, 600);
+  setTimeout(boot, 1400);
 })();
 </script>
-
 
 <script>
 /* ===== Master090C: Home -> Allenamento senza pannello intermedio A/Allen =====
@@ -10991,6 +10876,63 @@ setTimeout(m086dBoot, 150); setTimeout(m086dBoot, 800);
 
 
 <!-- Master094D: timer usa solo lo stato interno originale; rimossi override window.* che causavano ripartenza al secondo tap. -->
+
+<script>
+/* ===== Master096: startup stabile su Home =====
+   Per i primi istanti forza Home e ricentra rotellina/swipe, così non slitta su Info all'apertura.
+*/
+(function m096StableHomeStartup(){
+  const startAt = Date.now();
+  const guardMs = 1700;
+
+  function centerSwipeHome(){
+    try{
+      const shell = document.getElementById('swipeShell');
+      if(shell) shell.scrollTo({left:shell.clientWidth, behavior:'auto'});
+    }catch(e){}
+  }
+
+  function forceHome(){
+    try{
+      const key = (typeof currentNavKey === 'function') ? currentNavKey() : '';
+      if(key !== 'home' && typeof goToNav === 'function'){
+        goToNav('home');
+      }else{
+        const slider = document.getElementById('subSlider');
+        if(slider) slider.value = '1';
+        if(typeof updateSliderMeta === 'function') updateSliderMeta();
+        if(typeof rebuildWheelForCurrentPage === 'function') rebuildWheelForCurrentPage(true);
+      }
+      centerSwipeHome();
+    }catch(e){}
+  }
+
+  function boot(){
+    const wheel = document.getElementById('mainWheel');
+    if(wheel){
+      wheel.style.pointerEvents = 'none';
+      setTimeout(() => { wheel.style.pointerEvents = ''; }, guardMs);
+    }
+
+    forceHome();
+    [60, 180, 360, 700, 1100, 1600].forEach(ms => setTimeout(forceHome, ms));
+
+    // Se durante il boot un evento scroll prova a cambiare pagina, la riportiamo subito su Home.
+    const interval = setInterval(() => {
+      if(Date.now() - startAt > guardMs + 120){
+        clearInterval(interval);
+        return;
+      }
+      forceHome();
+    }, 160);
+  }
+
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, {once:true});
+  else boot();
+})();
+</script>
+
+<!-- Master096: rimosso preview legacy Giorno 1/2/3 e stabilizzato avvio su Home. -->
 </body>
 </html>
 <!-- Master076A: filtri peso Data Center Attrezzi e pesi: niente negativi nei campi strutturati; manubri interi; bilancieri/Smith/dischi fino a due decimali; prima gestione fasce step variabili. -->
