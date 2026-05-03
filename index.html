@@ -13198,6 +13198,152 @@ body.light-mode #m098RRecipeInputPage .m101g-ai-import-status.ok{color:#166534}
 </script>
 <!-- Master101K: Coach AI usa /api/ai; messaggio chiaro se Worker non aggiornato. -->
 
+
+<style id="m101LUsageQuotaStyle">
+/* Master101L: display consumi AI da backend/KV */
+.m101l-usage-card{border:1px solid rgba(96,165,250,.24);background:rgba(15,23,42,.42);border-radius:16px;padding:12px;display:grid;gap:8px;box-shadow:0 0 0 1px rgba(255,255,255,.035) inset}
+.m101l-usage-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.m101l-usage-title{font-size:16px;font-weight:950;line-height:1.1;color:#f8fafc;text-align:left}
+.m101l-usage-pill{font-size:10px;font-weight:950;line-height:1;border:1px solid rgba(96,165,250,.35);background:rgba(96,165,250,.14);color:#bfdbfe;border-radius:999px;padding:6px 8px;white-space:nowrap}
+.m101l-usage-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+.m101l-usage-cell{border:1px solid rgba(148,163,184,.16);background:rgba(2,6,23,.18);border-radius:12px;padding:8px;display:grid;gap:3px;min-width:0;text-align:left}
+.m101l-usage-cell span{font-size:9px;font-weight:950;color:rgba(191,219,254,.80);text-transform:uppercase;letter-spacing:.04em;line-height:1}
+.m101l-usage-cell strong{font-size:14px;font-weight:950;color:#f8fafc;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.m101l-usage-note{font-size:11px;font-weight:800;color:rgba(226,232,240,.72);line-height:1.25;text-align:left;white-space:pre-wrap}
+.m101l-mini-usage{font-size:11px;font-weight:900;color:#bfdbfe;line-height:1.18;margin-top:4px;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#m098RRecipeInputPage .m101l-mini-usage{max-width:210px}
+body.light-mode .m101l-usage-card{background:#fff;border-color:#dbeafe;color:#111827}
+body.light-mode .m101l-usage-title{color:#111827}
+body.light-mode .m101l-usage-pill{background:#dbeafe;color:#1d4ed8;border-color:#bfdbfe}
+body.light-mode .m101l-usage-cell{background:#f8fafc;border-color:#e2e8f0}
+body.light-mode .m101l-usage-cell span{color:#1d4ed8}
+body.light-mode .m101l-usage-cell strong{color:#111827}
+body.light-mode .m101l-usage-note, body.light-mode .m101l-mini-usage{color:#1d4ed8}
+@media(max-width:430px){.m101l-usage-grid{grid-template-columns:1fr 1fr}.m101l-usage-title{font-size:15px}.m101l-usage-cell strong{font-size:13px}.m101l-mini-usage{font-size:10px}}
+</style>
+<script id="m101LUsageQuotaFrontendScript">
+(function m101LUsageQuotaFrontend(){
+  'use strict';
+  var BASE = 'https://maestro-api-proxy.fabiano-muzzin.workers.dev';
+  var SESSION_KEY = 'maestro.cloudReal.session.v1';
+  var USAGE_KEY = 'maestro.ai.usage.latest.v1';
+  var lastFetchAt = 0;
+  function jget(k, f){ try{ return JSON.parse(localStorage.getItem(k) || '') || f; }catch(e){ return f; } }
+  function jset(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+  function session(){ return jget(SESSION_KEY, {}); }
+  function token(){ return String((session() || {}).token || '').trim(); }
+  function authHeaders(headers){
+    var h = new Headers(headers || {});
+    var t = token();
+    if(t && !h.has('Authorization')) h.set('Authorization', 'Bearer ' + t);
+    return h;
+  }
+  function saveUsage(u){ if(u && typeof u === 'object'){ jset(USAGE_KEY, u); window.dispatchEvent(new CustomEvent('maestro:ai-usage-updated', {detail:u})); } }
+  function latestUsage(){ return jget(USAGE_KEY, null); }
+  function n(v){ var x=Number(v||0); return Number.isFinite(x)?x:0; }
+  function usageText(u, service){
+    if(!u) return token() ? 'AI: caricamento…' : 'AI: accedi al Cloud Account';
+    var used = u.used || {}, limits = u.limits || {}, rem = u.remaining || {};
+    if(service === 'coach') return 'AI Coach: '+n(used.coach)+'/'+n(limits.coach)+' · residue '+n(rem.coach);
+    if(service === 'recipeImport') return 'AI ricette: '+n(used.recipeImport)+'/'+n(limits.recipeImport)+' · residue '+n(rem.recipeImport);
+    return 'AI totale: '+n(used.totalAi)+'/'+n(limits.totalAi)+' · residue '+n(rem.totalAi);
+  }
+  function resetLabel(u){
+    if(!u || !u.resetAt) return 'Reset: —';
+    try{ var d=new Date(u.resetAt); return 'Reset: '+String(d.getUTCDate()).padStart(2,'0')+'/'+String(d.getUTCMonth()+1).padStart(2,'0'); }catch(e){ return 'Reset: '+u.resetAt; }
+  }
+  var originalFetch = window.fetch;
+  if(!window.__m101LUsageFetchPatched){
+    window.__m101LUsageFetchPatched = true;
+    window.fetch = function(input, init){
+      init = init || {};
+      var url = '';
+      try{ url = typeof input === 'string' ? input : (input && input.url) || ''; }catch(e){}
+      var isMaestroAi = /maestro-api-proxy\.fabiano-muzzin\.workers\.dev\/(api\/ai|api\/ping|ai\/recipe\/import|usage)/.test(url);
+      if(isMaestroAi){
+        init = Object.assign({}, init, { headers: authHeaders(init.headers || (input && input.headers) || {}) });
+      }
+      return originalFetch(input, init).then(function(res){
+        if(isMaestroAi){
+          try{ res.clone().json().then(function(data){ if(data && data.usage) saveUsage(data.usage); }).catch(function(){}); }catch(e){}
+        }
+        return res;
+      });
+    };
+  }
+  async function fetchUsage(force){
+    var t = token();
+    if(!t){ renderUsage(); return null; }
+    var now = Date.now();
+    if(!force && now - lastFetchAt < 6000) return latestUsage();
+    lastFetchAt = now;
+    try{
+      var res = await originalFetch(BASE + '/usage', { method:'GET', headers:{ 'Authorization':'Bearer '+t, 'Content-Type':'application/json' } });
+      var data = await res.json().catch(function(){ return null; });
+      if(res.ok && data && data.usage){ saveUsage(data.usage); renderUsage(); return data.usage; }
+      if(data && (data.error || data.message)){ renderUsage(data.error || data.message); }
+    }catch(e){ renderUsage('backend non disponibile'); }
+    return null;
+  }
+  function ensureCloudUsageCard(){
+    var panel = document.querySelector('[data-cloud-tab-panel="account"]');
+    if(!panel) return null;
+    var card = document.getElementById('m101LCloudUsageCard');
+    if(!card){
+      card = document.createElement('section');
+      card.id = 'm101LCloudUsageCard';
+      card.className = 'maestro-premium-card m101l-usage-card';
+      card.innerHTML = '<div class="m101l-usage-head"><div class="m101l-usage-title">Piano e consumi AI</div><span class="m101l-usage-pill" id="m101LPlanPill">Backend</span></div><div class="m101l-usage-grid"><div class="m101l-usage-cell"><span>Totale AI</span><strong id="m101LTotalUsage">—</strong></div><div class="m101l-usage-cell"><span>Residue</span><strong id="m101LRemainingUsage">—</strong></div><div class="m101l-usage-cell"><span>Coach</span><strong id="m101LCoachUsage">—</strong></div><div class="m101l-usage-cell"><span>Import ricette</span><strong id="m101LRecipeUsage">—</strong></div></div><div class="m101l-usage-note" id="m101LUsageNote">Accedi al Cloud Account per vedere i consumi AI.</div>';
+      var first = panel.querySelector('section');
+      if(first && first.nextSibling) panel.insertBefore(card, first.nextSibling); else panel.appendChild(card);
+    }
+    return card;
+  }
+  function ensureMiniCounters(){
+    var send = document.getElementById('coachMockSend');
+    if(send && !document.getElementById('m101LCoachMiniUsage')){
+      var d=document.createElement('div'); d.id='m101LCoachMiniUsage'; d.className='m101l-mini-usage'; d.textContent='AI Coach: —'; send.insertAdjacentElement('afterend', d);
+    }
+    var importBtn = document.getElementById('m101EImportRecipeBtn');
+    if(importBtn && !document.getElementById('m101LRecipeMiniUsage')){
+      var r=document.createElement('div'); r.id='m101LRecipeMiniUsage'; r.className='m101l-mini-usage'; r.textContent='AI ricette: —'; importBtn.insertAdjacentElement('afterend', r);
+    }
+  }
+  function setTxt(id, value){ var el=document.getElementById(id); if(el) el.textContent=value; }
+  function renderUsage(error){
+    ensureCloudUsageCard(); ensureMiniCounters();
+    var u = latestUsage();
+    if(!token()){
+      setTxt('m101LPlanPill','Non connesso'); setTxt('m101LTotalUsage','—'); setTxt('m101LRemainingUsage','—'); setTxt('m101LCoachUsage','—'); setTxt('m101LRecipeUsage','—');
+      setTxt('m101LUsageNote','Accedi al Cloud Account per usare e conteggiare le funzioni AI.');
+      setTxt('m101LCoachMiniUsage','AI Coach: accedi al Cloud'); setTxt('m101LRecipeMiniUsage','AI ricette: accedi al Cloud');
+      return;
+    }
+    if(!u){
+      setTxt('m101LPlanPill','Cloud'); setTxt('m101LUsageNote', error ? ('Errore consumi: '+error) : 'Consumi AI in caricamento dal backend.');
+      setTxt('m101LCoachMiniUsage','AI Coach: caricamento…'); setTxt('m101LRecipeMiniUsage','AI ricette: caricamento…');
+      return;
+    }
+    var used=u.used||{}, limits=u.limits||{}, rem=u.remaining||{};
+    setTxt('m101LPlanPill', 'Piano: '+(u.plan || 'test'));
+    setTxt('m101LTotalUsage', n(used.totalAi)+' / '+n(limits.totalAi));
+    setTxt('m101LRemainingUsage', String(n(rem.totalAi)));
+    setTxt('m101LCoachUsage', n(used.coach)+' / '+n(limits.coach));
+    setTxt('m101LRecipeUsage', n(used.recipeImport)+' / '+n(limits.recipeImport));
+    setTxt('m101LUsageNote', resetLabel(u)+' · I blocchi e le quote arrivano dal Worker, non dal frontend.');
+    setTxt('m101LCoachMiniUsage', usageText(u,'coach'));
+    setTxt('m101LRecipeMiniUsage', usageText(u,'recipeImport'));
+  }
+  window.addEventListener('maestro:ai-usage-updated', function(){ renderUsage(); });
+  document.addEventListener('click', function(){ setTimeout(function(){ ensureCloudUsageCard(); ensureMiniCounters(); renderUsage(); fetchUsage(false); }, 120); }, true);
+  function tick(){ ensureCloudUsageCard(); ensureMiniCounters(); renderUsage(); fetchUsage(false); }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', tick, {once:true}); else tick();
+  setInterval(tick, 8000);
+  window.MaestroAiUsage = { refresh:function(){ return fetchUsage(true); }, latest:latestUsage };
+})();
+</script>
+<!-- Master101L: frontend consumi AI reali da Worker/KV, con card Cloud Account e mini contatori Coach/Import ricetta. -->
+
 </body>
 </html>
 <!-- Master076A: filtri peso Data Center Attrezzi e pesi: niente negativi nei campi strutturati; manubri interi; bilancieri/Smith/dischi fino a due decimali; prima gestione fasce step variabili. -->
