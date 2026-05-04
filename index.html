@@ -2963,7 +2963,7 @@ body.light-mode .m092-empty{background:#f8fafc;border-color:#d1d5db;color:#64748
         'sub.coach.1':'Progressi','sub.coach.2':'Audio all.','sub.coach.3':'Audio nutr.','sub.coach.4':'Nuova dieta','sub.coach.5':'Revisioni','sub.coach.6':'API',
         'sub.diet.1':'Oggi','sub.diet.2':'Giorni','sub.diet.3':'Calendario','sub.diet.4':'Ricette','sub.diet.5':'Alimenti','sub.diet.6':'Target',
         'sub.training.1':'Giorni','sub.training.2':'Giorno 1','sub.training.3':'Giorno 2','sub.training.4':'Giorno 3','sub.training.5':'Esercizi','sub.training.6':'Intensità',
-        'sub.dataCenter.1':'Allen','sub.dataCenter.2':'Dieta','sub.dataCenter.3':'Cloud/API',
+        'sub.dataCenter.1':'Allen','sub.dataCenter.2':'Dieta','sub.dataCenter.3':'Dieta',
         'sub.languages.1':'Lingue','sub.languages.2':'Strumenti','sub.languages.3':'Sistema',
         'sub.cloud.1':'Accesso','sub.cloud.2':'Cloud','sub.cloud.3':'Schema',
         'sub.me.1':'Profilo','sub.me.2':'Dati','sub.me.3':'Body','sub.me.4':'App S','sub.me.5':'Ritmi',
@@ -2980,7 +2980,7 @@ body.light-mode .m092-empty{background:#f8fafc;border-color:#d1d5db;color:#64748
         'sub.coach.1':'Progress','sub.coach.2':'Audio train.','sub.coach.3':'Audio nutr.','sub.coach.4':'New diet','sub.coach.5':'Reviews','sub.coach.6':'API',
         'sub.diet.1':'Today','sub.diet.2':'Days','sub.diet.3':'Calendar','sub.diet.4':'Recipes','sub.diet.5':'Foods','sub.diet.6':'Targets',
         'sub.training.1':'Days','sub.training.2':'Day 1','sub.training.3':'Day 2','sub.training.4':'Day 3','sub.training.5':'Exercises','sub.training.6':'Intensity',
-        'sub.dataCenter.1':'Train','sub.dataCenter.2':'Diet','sub.dataCenter.3':'Cloud/API',
+        'sub.dataCenter.1':'Train','sub.dataCenter.2':'Diet','sub.dataCenter.3':'Diet',
         'sub.languages.1':'Languages','sub.languages.2':'Tools','sub.languages.3':'System',
         'sub.cloud.1':'Access','sub.cloud.2':'Cloud','sub.cloud.3':'Schema',
         'sub.me.1':'Profile','sub.me.2':'Data','sub.me.3':'Body','sub.me.4':'Health','sub.me.5':'Pattern',
@@ -2997,7 +2997,7 @@ body.light-mode .m092-empty{background:#f8fafc;border-color:#d1d5db;color:#64748
         'sub.coach.1':'Progreso','sub.coach.2':'Audio entreno','sub.coach.3':'Audio nutr.','sub.coach.4':'Nueva dieta','sub.coach.5':'Revisiones','sub.coach.6':'API',
         'sub.diet.1':'Hoy','sub.diet.2':'Días','sub.diet.3':'Calendario','sub.diet.4':'Recetas','sub.diet.5':'Alimentos','sub.diet.6':'Objetivos',
         'sub.training.1':'Días','sub.training.2':'Día 1','sub.training.3':'Día 2','sub.training.4':'Día 3','sub.training.5':'Ejercicios','sub.training.6':'Intensidad',
-        'sub.dataCenter.1':'Entreno','sub.dataCenter.2':'Dieta','sub.dataCenter.3':'Cloud/API',
+        'sub.dataCenter.1':'Entreno','sub.dataCenter.2':'Dieta','sub.dataCenter.3':'Dieta',
         'sub.languages.1':'Idiomas','sub.languages.2':'Herramientas','sub.languages.3':'Sistema',
         'sub.cloud.1':'Acceso','sub.cloud.2':'Cloud','sub.cloud.3':'Esquema',
         'sub.me.1':'Perfil','sub.me.2':'Datos','sub.me.3':'Body','sub.me.4':'App S','sub.me.5':'Ritmos',
@@ -3007,7 +3007,7 @@ body.light-mode .m092-empty{background:#f8fafc;border-color:#d1d5db;color:#64748
 
     const languageState = { slotA:{code:'it'}, slotB:{code:'en'}, activeSlot:'slotA' };
     const navOrder = ['home','coach','diet','training','training2','training3','dataCenter','languages','cloud','me','info'];
-    const subNavMap = { home:[1,2,3,4,5,6,7,8], coach:[1,2,3,4,5,6], diet:[1,2,3,4,5,6], training:[1,2,3,4,5,6], training2:[1,2,3,4,5,6], training3:[1,2,3,4,5,6], dataCenter:[1,2,3], languages:[1,2,3], cloud:[1,2,3], me:[1,2,3,4,5], info:[1,2,3] };
+    const subNavMap = { home:[1,2,3,4,5,6,7,8], coach:[1,2,3,4,5,6], diet:[1,2,3,4,5,6], training:[1,2,3,4,5,6], training2:[1,2,3,4,5,6], training3:[1,2,3,4,5,6], dataCenter:[1,2], languages:[1,2,3], cloud:[1,2,3], me:[1,2,3,4,5], info:[1,2,3] };
 
 
     /* ===== Master033 rotellina contestuale =====
@@ -3022,7 +3022,6 @@ body.light-mode .m092-empty{background:#f8fafc;border-color:#d1d5db;color:#64748
         { label:'Home', nav:'home', sub:1 },
         { label:'D Allen', nav:'dataCenter', sub:1 },
         { label:'D Dieta', nav:'dataCenter', sub:2 },
-        { label:'D API', nav:'dataCenter', sub:3 },
         { label:'Info', nav:'info', sub:1 }
       ]
     };
@@ -3523,8 +3522,7 @@ body.light-mode .m092-empty{background:#f8fafc;border-color:#d1d5db;color:#64748
     function dataCenterMode(){
       if(currentNavKey() !== 'dataCenter') return 'training';
       const idx = Number(slider.value || 1);
-      if(idx === 2) return 'diet';
-      if(idx === 3) return 'cloud';
+      if(idx >= 2) return 'diet';
       return 'training';
     }
     function renderDataCenterPanel(){
@@ -4042,7 +4040,7 @@ async function callAiProxy(service, payload = {}){
         genericTitle.textContent = navLabel(navKey);
         if(navKey === 'dataCenter'){
           const mode = dataCenterMode();
-          genericSub.textContent = mode === 'cloud' ? tdc('subCloud') : (mode === 'diet' ? tdc('subDiet') : tdc('subTraining'));
+          genericSub.textContent = mode === 'diet' ? tdc('subDiet') : tdc('subTraining');
         } else {
           genericSub.textContent = t('page.placeholder', { page: navLabel(navKey) }) + ' ' + t('page.placeholderSub');
         }
@@ -4050,7 +4048,7 @@ async function callAiProxy(service, payload = {}){
       if(dietMockCard) dietMockCard.classList.toggle('hidden', navKey !== 'diet');
       if(dataCenterTrainingPanel) dataCenterTrainingPanel.classList.toggle('hidden', !(navKey === 'dataCenter' && dataCenterMode() === 'training'));
       if(dataCenterDietPanel) dataCenterDietPanel.classList.toggle('hidden', !(navKey === 'dataCenter' && dataCenterMode() === 'diet'));
-      if(dataCenterPanel) dataCenterPanel.classList.toggle('hidden', !(navKey === 'dataCenter' && dataCenterMode() === 'cloud'));
+      if(dataCenterPanel) dataCenterPanel.classList.add('hidden'); // Master106: vecchio Cloud/API mock/dev ritirato, consumi AI veri stanno in Cloud Account.
       if(navKey === 'dataCenter' && dataCenterMode() === 'training'){ m074aInitEquipmentPanel(); m074aRenderEquipmentPage(); }
       updateCoachButtonState();
       updateTopRightButtonState();
@@ -12558,11 +12556,13 @@ body.light-mode #m098RRecipeInputPage .m098r-input-left{color:#111827!important;
   display:flex;
   justify-content:flex-end;
   align-items:center;
+  gap:8px;
   padding-top:7px;
   margin-top:1px;
   border-top:1px solid rgba(148,163,184,.10);
 }
-#m098ORecipeArchivePage .m101d-edit-recipe{
+#m098ORecipeArchivePage .m101d-edit-recipe,
+#m098ORecipeArchivePage .m101d-add-ingredient{
   border:1px solid rgba(148,163,184,.35);
   background:rgba(15,23,42,.58);
   color:#f8fafc;
@@ -12574,6 +12574,33 @@ body.light-mode #m098RRecipeInputPage .m098r-input-left{color:#111827!important;
   min-height:34px;
   cursor:pointer;
 }
+
+#m098ORecipeArchivePage .m101d-add-ingredient{
+  display:none;
+  background:rgba(34,197,94,.14)!important;
+  color:#bbf7d0!important;
+  border-color:rgba(134,239,172,.36)!important;
+}
+#m098ORecipeArchivePage .m099c-recipe-card.is-editing .m101d-add-ingredient{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+}
+#m098ORecipeArchivePage .m104-added-ingredient span:empty::before,
+#m098ORecipeArchivePage .m104-added-ingredient strong:empty::before{
+  content:attr(data-placeholder);
+  color:rgba(226,232,240,.42);
+}
+body.light-mode #m098ORecipeArchivePage .m101d-add-ingredient{
+  background:#dcfce7!important;
+  color:#166534!important;
+  border-color:#bbf7d0!important;
+}
+body.light-mode #m098ORecipeArchivePage .m104-added-ingredient span:empty::before,
+body.light-mode #m098ORecipeArchivePage .m104-added-ingredient strong:empty::before{
+  color:#94a3b8;
+}
+
 #m098ORecipeArchivePage .m099c-recipe-card.is-editing{
   border-color:rgba(96,165,250,.55)!important;
   box-shadow:0 0 0 2px rgba(96,165,250,.12),0 0 0 1px rgba(255,255,255,.025) inset!important;
@@ -12599,7 +12626,8 @@ body.light-mode #m098RRecipeInputPage .m098r-input-left{color:#111827!important;
 #m098ORecipeArchivePage .m100b-recipe-procedure-text{
   min-height:18px;
 }
-body.light-mode #m098ORecipeArchivePage .m101d-edit-recipe{
+body.light-mode #m098ORecipeArchivePage .m101d-edit-recipe,
+#m098ORecipeArchivePage .m101d-add-ingredient{
   background:#fff;
   color:#111827;
   border-color:#cbd5e1;
@@ -12623,7 +12651,8 @@ body.light-mode #m098ORecipeArchivePage .m100b-recipe-procedure-text[contentedit
   }
   #m098ORecipeArchivePage .m098o-recipe-back,
   #m098ORecipeArchivePage #m098RRecipeInputOpen,
-  #m098ORecipeArchivePage .m101d-edit-recipe{
+  #m098ORecipeArchivePage .m101d-edit-recipe,
+#m098ORecipeArchivePage .m101d-add-ingredient{
     min-height:32px!important;
     padding:7px 10px!important;
     font-size:12px!important;
@@ -12637,6 +12666,7 @@ body.light-mode #m098ORecipeArchivePage .m100b-recipe-procedure-text[contentedit
   var TABLE_EDITS_KEY = 'maestro.diet.tables.m099D.dedup.v1';
   var FOOD_SEED = [{"id":"ricette_nutriz_acciughe","name":"acciughe","energyKj100":418.2,"proteinG100":25.9,"carbsG100":0.2,"fatG100":11.3,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_aceto","name":"aceto","energyKj100":16.728,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_aceto_balsamico","name":"aceto balsamico","energyKj100":20.91,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_aceto_bianco","name":"Aceto bianco","energyKj100":75,"proteinG100":0,"carbsG100":0.1,"fatG100":0,"fiberG100":0,"sodiumMg100":2},{"id":"base_global_aceto_di_mele","name":"Aceto di mele","energyKj100":90,"proteinG100":0,"carbsG100":0.9,"fatG100":0,"fiberG100":0,"sodiumMg100":5},{"id":"base_global_aceto_di_riso","name":"Aceto di riso","energyKj100":75,"proteinG100":0,"carbsG100":0.8,"fatG100":0,"fiberG100":0,"sodiumMg100":5},{"id":"ricette_nutriz_acqua","name":"Acqua","energyKj100":0,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_acqua_di_cottura","name":"acqua di cottura","energyKj100":0,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_acqua_san_benedetto_0_5","name":"acqua san benedetto 0,5","energyKj100":0,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_acqua_san_benedetto_0_75","name":"acqua san benedetto 0,75","energyKj100":0,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_acqua_san_benedetto_1l","name":"acqua san benedetto 1l","energyKj100":0,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"food_actimel_0","name":"Actimel 0%","energyKj100":116,"proteinG100":2.6,"carbsG100":3.2,"fatG100":0.1,"fiberG100":0.2,"sodiumMg100":44},{"id":"ricette_nutriz_aglio","name":"aglio","energyKj100":470.475,"proteinG100":0.81,"carbsG100":7.56,"fatG100":0.54,"fiberG100":2.79,"sodiumMg100":0},{"id":"base_global_agnello_spalla_cruda","name":"Agnello spalla cruda","energyKj100":687,"proteinG100":22,"carbsG100":0,"fatG100":8.47,"fiberG100":0,"sodiumMg100":84.2},{"id":"ricette_nutriz_albume","name":"Albume","energyKj100":113.29,"proteinG100":6.741,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_alcool_95","name":"Alcool 95","energyKj100":6691.2,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_aldi_barrette_proteiche_cookie","name":"Aldi barrette proteiche Cookie","energyKj100":1526.43,"proteinG100":35,"carbsG100":0,"fatG100":14,"fiberG100":0,"sodiumMg100":0.021},{"id":"ricette_nutriz_aldi_barrette_proteiche_wc_p","name":"Aldi barrette proteiche WC&P","energyKj100":1559.886,"proteinG100":35,"carbsG100":0,"fatG100":15.5,"fiberG100":0,"sodiumMg100":0.024},{"id":"food_aldi_protein_bar","name":"Aldi Protein Bar","energyKj100":1524,"proteinG100":35.2,"carbsG100":27,"fatG100":14,"fiberG100":11.6,"sodiumMg100":84},{"id":"base_global_alga_wakame_secca","name":"Alga wakame secca","energyKj100":156,"proteinG100":2.32,"carbsG100":5.32,"fatG100":0.35,"fiberG100":1.68,"sodiumMg100":32.5},{"id":"base_global_alghe_nori","name":"Alghe nori","energyKj100":131,"proteinG100":2.14,"carbsG100":4,"fatG100":0.34,"fiberG100":1.81,"sodiumMg100":33.8},{"id":"base_global_amaranto","name":"Amaranto","energyKj100":1684,"proteinG100":11.6,"carbsG100":79.5,"fatG100":2.77,"fiberG100":4.06,"sodiumMg100":9.12},{"id":"ricette_nutriz_amido_di_mais","name":"amido di mais","energyKj100":1480.428,"proteinG100":0.3,"carbsG100":88,"fatG100":0.1,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_amido_di_riso","name":"amido di riso","energyKj100":1409.334,"proteinG100":0.4,"carbsG100":77.4,"fatG100":0.2,"fiberG100":0,"sodiumMg100":0},{"id":"food_aminoacidi_essenziali","name":"Aminoacidi essenziali","energyKj100":1674,"proteinG100":100,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_anatra_petto_crudo","name":"Anatra petto crudo","energyKj100":687,"proteinG100":21.2,"carbsG100":0,"fatG100":8.82,"fiberG100":0,"sodiumMg100":63.8},{"id":"ricette_nutriz_anelli_di_totano","name":"anelli di totano","energyKj100":292.74,"proteinG100":12.6,"carbsG100":0.6,"fatG100":1.7,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_aneto_fresco","name":"Aneto fresco","energyKj100":128,"proteinG100":2.16,"carbsG100":3.74,"fatG100":0.27,"fiberG100":2.27,"sodiumMg100":40.5},{"id":"base_global_anguria","name":"Anguria","energyKj100":272,"proteinG100":0.66,"carbsG100":13.6,"fatG100":0.22,"fiberG100":2.66,"sodiumMg100":1.73},{"id":"base_global_anice_stellato","name":"Anice stellato","energyKj100":1454,"proteinG100":11.4,"carbsG100":48.7,"fatG100":8.15,"fiberG100":16.4,"sodiumMg100":26.1},{"id":"ricette_nutriz_aperol","name":"aperol","energyKj100":673.302,"proteinG100":0,"carbsG100":25.3,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"food_arancia","name":"Arancia","energyKj100":170,"proteinG100":0.8,"carbsG100":8.2,"fatG100":0.2,"fiberG100":1.2,"sodiumMg100":40},{"id":"ricette_nutriz_asparagi","name":"asparagi","energyKj100":69.003,"proteinG100":2.25,"carbsG100":2.25,"fatG100":0.075,"fiberG100":1.575,"sodiumMg100":0},{"id":"base_global_avena_in_fiocchi","name":"Avena in fiocchi","energyKj100":1762,"proteinG100":9.26,"carbsG100":85.3,"fatG100":2.73,"fiberG100":6.72,"sodiumMg100":6.84},{"id":"ricette_nutriz_avocado","name":"avocado","energyKj100":966.042,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_babaghanouj","name":"Babaghanouj","energyKj100":433.53,"proteinG100":5.234,"carbsG100":2.941,"fatG100":7.621,"fiberG100":3.394,"sodiumMg100":0.003},{"id":"ricette_nutriz_baileys","name":"Baileys","energyKj100":1367.514,"proteinG100":3,"carbsG100":25,"fatG100":13,"fiberG100":0,"sodiumMg100":0},{"id":"food_banana","name":"Banana","energyKj100":320,"proteinG100":1.1,"carbsG100":22.8,"fatG100":0.3,"fiberG100":2.6,"sodiumMg100":0},{"id":"base_global_banana_plantain_dolce","name":"Banana plantain dolce","energyKj100":222,"proteinG100":0.8,"carbsG100":10.5,"fatG100":0.24,"fiberG100":2.65,"sodiumMg100":2.64},{"id":"base_global_barbabietola","name":"Barbabietola","energyKj100":156,"proteinG100":2.31,"carbsG100":4.65,"fatG100":0.37,"fiberG100":2.98,"sodiumMg100":41.7},{"id":"ricette_nutriz_basilico","name":"basilico","energyKj100":52.693,"proteinG100":2.79,"carbsG100":4.59,"fatG100":0.72,"fiberG100":0,"sodiumMg100":0},{"id":"food_bastoncini_di_merluzzo","name":"Bastoncini di Merluzzo","energyKj100":824,"proteinG100":13.1,"carbsG100":19.6,"fatG100":6.9,"fiberG100":1.6,"sodiumMg100":304},{"id":"food_beef_protein","name":"Beef Protein","energyKj100":1640,"proteinG100":97,"carbsG100":0,"fatG100":1.5,"fiberG100":0,"sodiumMg100":660},{"id":"ricette_nutriz_besciamella","name":"Besciamella","energyKj100":773.583,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_bevanda_di_mandorla_non_zuccherata","name":"Bev. mandorla 0 zuccheri","energyKj100":408,"proteinG100":6.57,"carbsG100":4.69,"fatG100":5.85,"fiberG100":0,"sodiumMg100":117},{"id":"base_global_bevanda_di_soia_non_zuccherata","name":"Bev. soia 0 zuccheri","energyKj100":468,"proteinG100":7.44,"carbsG100":4.62,"fatG100":7.12,"fiberG100":0,"sodiumMg100":66.2},{"id":"ricette_nutriz_biscotto_leggero_alla_mandorla","name":"Biscotto leggero alla mandorla","energyKj100":1187.622,"proteinG100":8.142,"carbsG100":35.015,"fatG100":14.012,"fiberG100":2.845,"sodiumMg100":0},{"id":"base_global_bok_choy","name":"Bok choy","energyKj100":155,"proteinG100":2.31,"carbsG100":4.87,"fatG100":0.3,"fiberG100":2.69,"sodiumMg100":32.8},{"id":"ricette_nutriz_brandy","name":"brandy","energyKj100":961.86,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_branzino","name":"branzino","energyKj100":185.179,"proteinG100":8.91,"carbsG100":0.324,"fatG100":0.81,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_bresaola_valtellina_igp","name":"bresaola valtellina igp","energyKj100":977.333,"proteinG100":31.445,"carbsG100":0.38,"fatG100":1.9,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_brie","name":"brie","energyKj100":1339.913,"proteinG100":17.37,"carbsG100":0,"fatG100":24.21,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_brodo_di_carne","name":"brodo di carne","energyKj100":29.274,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_brodo_vegetale","name":"brodo vegetale","energyKj100":20.91,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_bulghur","name":"Bulghur","energyKj100":1768,"proteinG100":12.3,"carbsG100":81.7,"fatG100":2.89,"fiberG100":7.85,"sodiumMg100":8.87},{"id":"food_burro","name":"Burro","energyKj100":3066,"proteinG100":0.6,"carbsG100":0,"fatG100":82.2,"fiberG100":0.4,"sodiumMg100":8},{"id":"food_burro_chiarificato","name":"Burro Chiarificato","energyKj100":3757,"proteinG100":0,"carbsG100":0,"fatG100":99.8,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_burro_di_anacardi","name":"Burro di anacardi","energyKj100":2235,"proteinG100":17.7,"carbsG100":16.4,"fatG100":42.5,"fiberG100":10.3,"sodiumMg100":4.83},{"id":"base_global_burro_di_arachidi_naturale","name":"Burro di arachidi naturale","energyKj100":1375,"proteinG100":19.6,"carbsG100":49.3,"fatG100":3.26,"fiberG100":10.4,"sodiumMg100":10.9},{"id":"base_global_burro_di_mandorle","name":"Burro di mandorle","energyKj100":2641,"proteinG100":20.9,"carbsG100":15.9,"fatG100":52.4,"fiberG100":9.57,"sodiumMg100":3.42},{"id":"base_global_cacao_nibs","name":"Cacao nibs","energyKj100":2749,"proteinG100":19.7,"carbsG100":14.4,"fatG100":57.4,"fiberG100":5.68,"sodiumMg100":6.03},{"id":"ricette_nutriz_cacao_polvere_amaro","name":"cacao polvere amaro","energyKj100":1484.61,"proteinG100":20.4,"carbsG100":11.5,"fatG100":25.6,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_cachi","name":"Cachi","energyKj100":285,"proteinG100":0.72,"carbsG100":14.7,"fatG100":0.28,"fiberG100":1.56,"sodiumMg100":4.43},{"id":"ricette_nutriz_caffe_carraro","name":"caffe carraro","energyKj100":54.366,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_caffe_carraro_decaffeinato","name":"caffe carraro decaffeinato","energyKj100":54.366,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_caffe_carraro_orzo","name":"caffe carraro orzo","energyKj100":54.366,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_calamari_crudi","name":"Calamari crudi","energyKj100":551,"proteinG100":21.9,"carbsG100":0,"fatG100":4.82,"fiberG100":0,"sodiumMg100":114},{"id":"ricette_nutriz_calamari_surg_puliti_iqf_10_20","name":"calamari surg puliti iqf 10/20","energyKj100":292.74,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_cannella","name":"cannella","energyKj100":1053.864,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_capesante","name":"capesante","energyKj100":443.292,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_capperi_di_pantelleria","name":"capperi di Pantelleria","energyKj100":66.912,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_capra_carne_cruda","name":"Capra carne cruda","energyKj100":756,"proteinG100":21.4,"carbsG100":0,"fatG100":10.6,"fiberG100":0,"sodiumMg100":87.5},{"id":"ricette_nutriz_carciofi_corolle","name":"carciofi corolle","energyKj100":71.094,"proteinG100":10.1,"carbsG100":9.3,"fatG100":0.7,"fiberG100":7.9,"sodiumMg100":0},{"id":"ricette_nutriz_carciofo_alla_romana","name":"carciofo alla romana","energyKj100":71.094,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_carciofo_fresco","name":"Carciofo fresco","energyKj100":135,"proteinG100":2.09,"carbsG100":4.42,"fatG100":0.27,"fiberG100":1.79,"sodiumMg100":23.6},{"id":"base_global_cardamomo","name":"Cardamomo","energyKj100":1477,"proteinG100":8.07,"carbsG100":45.7,"fatG100":9.23,"fiberG100":27.7,"sodiumMg100":39.3},{"id":"base_global_cardo","name":"Cardo","energyKj100":120,"proteinG100":1.66,"carbsG100":3.72,"fatG100":0.37,"fiberG100":1.8,"sodiumMg100":27.1},{"id":"food_carote","name":"Carote","energyKj100":171,"proteinG100":0.5,"carbsG100":7.7,"fatG100":0.4,"fiberG100":2.1,"sodiumMg100":40},{"id":"ricette_nutriz_carpaccio_di_manzo","name":"carpaccio di manzo","energyKj100":485.112,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_carpaccio_di_struzzo","name":"carpaccio di struzzo","energyKj100":384.744,"proteinG100":20.9,"carbsG100":0,"fatG100":0.9,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_cassava_manioca","name":"Cassava manioca","energyKj100":670,"proteinG100":1.4,"carbsG100":38,"fatG100":0.3,"fiberG100":1.8,"sodiumMg100":14},{"id":"base_global_castagne","name":"Castagne","energyKj100":3008,"proteinG100":21.1,"carbsG100":19.6,"fatG100":60.9,"fiberG100":7.91,"sodiumMg100":2.68},{"id":"base_global_cavoletti_di_bruxelles","name":"Cavoletti di Bruxelles","energyKj100":155,"proteinG100":2.01,"carbsG100":5.25,"fatG100":0.3,"fiberG100":2.52,"sodiumMg100":24.6},{"id":"base_global_cavolfiore","name":"Cavolfiore","energyKj100":151,"proteinG100":1.97,"carbsG100":5.39,"fatG100":0.33,"fiberG100":1.71,"sodiumMg100":43.4},{"id":"base_global_cavolo_cappuccio","name":"Cavolo cappuccio","energyKj100":155,"proteinG100":2.28,"carbsG100":5.35,"fatG100":0.32,"fiberG100":1.71,"sodiumMg100":40.1},{"id":"base_global_cavolo_riccio_kale","name":"Cavolo riccio kale","energyKj100":149,"proteinG100":2.3,"carbsG100":4.99,"fatG100":0.28,"fiberG100":1.88,"sodiumMg100":27.3},{"id":"base_global_cavolo_rosso","name":"Cavolo rosso","energyKj100":153,"proteinG100":2.29,"carbsG100":4.6,"fatG100":0.32,"fiberG100":2.97,"sodiumMg100":44.9},{"id":"ricette_nutriz_ceci","name":"ceci","energyKj100":1509.702,"proteinG100":20.9,"carbsG100":46.9,"fatG100":6.3,"fiberG100":13.6,"sodiumMg100":0},{"id":"food_ceci_secchi","name":"Ceci (secchi)","energyKj100":570,"proteinG100":8.9,"carbsG100":11.2,"fatG100":2.9,"fiberG100":15.1,"sodiumMg100":40},{"id":"ricette_nutriz_cetrioli","name":"cetrioli","energyKj100":62.73,"proteinG100":0.7,"carbsG100":1.8,"fatG100":0.5,"fiberG100":0.8,"sodiumMg100":0},{"id":"food_cetrioli_baby","name":"Cetrioli baby","energyKj100":59,"proteinG100":0.7,"carbsG100":1.8,"fatG100":0.5,"fiberG100":0.8,"sodiumMg100":4},{"id":"base_global_cheddar","name":"Cheddar","energyKj100":464,"proteinG100":9.48,"carbsG100":4.73,"fatG100":6,"fiberG100":0,"sodiumMg100":101},{"id":"base_global_chiodi_di_garofano","name":"Chiodi di garofano","energyKj100":1624,"proteinG100":8.86,"carbsG100":50.7,"fatG100":11.8,"fiberG100":21.8,"sodiumMg100":29.7},{"id":"ricette_nutriz_ciliegie","name":"ciliegie","energyKj100":136.668,"proteinG100":0.86,"carbsG100":13.76,"fatG100":0.172,"fiberG100":1.72,"sodiumMg100":0},{"id":"ricette_nutriz_ciliegini","name":"ciliegini","energyKj100":60.221,"proteinG100":0.9,"carbsG100":3.15,"fatG100":0.18,"fiberG100":1.8,"sodiumMg100":0},{"id":"base_global_cime_di_rapa","name":"Cime di rapa","energyKj100":134,"proteinG100":2.07,"carbsG100":4.37,"fatG100":0.25,"fiberG100":1.88,"sodiumMg100":19.3},{"id":"food_cioccolato_85","name":"Cioccolato 85%","energyKj100":2395,"proteinG100":10.8,"carbsG100":21.4,"fatG100":46.8,"fiberG100":14.5,"sodiumMg100":12},{"id":"ricette_nutriz_cioccolato_al_latte","name":"cioccolato al latte","energyKj100":2279.19,"proteinG100":7.3,"carbsG100":50.5,"fatG100":36.3,"fiberG100":3.2,"sodiumMg100":0},{"id":"ricette_nutriz_cioccolato_bianco","name":"cioccolato bianco","energyKj100":2224.824,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_cioccolato_fondente_60_percento","name":"cioccolato fondente 60%","energyKj100":2153.73,"proteinG100":6.6,"carbsG100":49.7,"fatG100":33.6,"fiberG100":8,"sodiumMg100":0},{"id":"food_cipolla","name":"Cipolla","energyKj100":110,"proteinG100":1,"carbsG100":5.7,"fatG100":0.1,"fiberG100":1,"sodiumMg100":4},{"id":"ricette_nutriz_cipolla_tropea","name":"cipolla tropea","energyKj100":80.294,"proteinG100":0.8,"carbsG100":4.56,"fatG100":0.08,"fiberG100":0.8,"sodiumMg100":0},{"id":"base_global_clementine","name":"Clementine","energyKj100":266,"proteinG100":0.72,"carbsG100":12.8,"fatG100":0.38,"fiberG100":2.78,"sodiumMg100":3.19},{"id":"ricette_nutriz_coca_18l","name":"coca 18l","energyKj100":154.734,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_cocco_fresco","name":"Cocco fresco","energyKj100":1480,"proteinG100":3.3,"carbsG100":15,"fatG100":33,"fiberG100":9,"sodiumMg100":20},{"id":"ricette_nutriz_cocomero","name":"cocomero","energyKj100":34.794,"proteinG100":0.208,"carbsG100":1.924,"fatG100":0,"fiberG100":0.104,"sodiumMg100":0},{"id":"base_global_coniglio_carne_cruda","name":"Coniglio carne cruda","energyKj100":602,"proteinG100":17.4,"carbsG100":0,"fatG100":8.28,"fiberG100":0,"sodiumMg100":40.2},{"id":"ricette_nutriz_coriandolo_bacche","name":"coriandolo (bacche)","energyKj100":1246.236,"proteinG100":12,"carbsG100":55,"fatG100":17,"fiberG100":42,"sodiumMg100":0.035},{"id":"base_global_coriandolo_fresco","name":"Coriandolo fresco","energyKj100":117,"proteinG100":1.77,"carbsG100":3.6,"fatG100":0.37,"fiberG100":1.52,"sodiumMg100":18.9},{"id":"base_global_coriandolo_semi","name":"Coriandolo semi","energyKj100":1656,"proteinG100":9.99,"carbsG100":53.1,"fatG100":8.77,"fiberG100":32.4,"sodiumMg100":52.5},{"id":"base_global_coscia_di_pollo_cruda","name":"Coscia di pollo cruda","energyKj100":809,"proteinG100":19.3,"carbsG100":0,"fatG100":13,"fiberG100":0,"sodiumMg100":83.4},{"id":"base_global_cous_cous_secco","name":"Cous cous secco","energyKj100":1344,"proteinG100":11,"carbsG100":59.9,"fatG100":2.5,"fiberG100":5.8,"sodiumMg100":11},{"id":"ricette_nutriz_cozze","name":"cozze","energyKj100":112.412,"proteinG100":3.744,"carbsG100":1.088,"fatG100":0.864,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_cracker_semplici","name":"Cracker semplici","energyKj100":1817,"proteinG100":12.7,"carbsG100":85.2,"fatG100":2.57,"fiberG100":7.18,"sodiumMg100":4.78},{"id":"base_global_cranberry_mirtilli_rossi","name":"Cranberry mirtilli rossi","energyKj100":234,"proteinG100":0.59,"carbsG100":11.1,"fatG100":0.36,"fiberG100":2.75,"sodiumMg100":2.47},{"id":"base_global_crauti","name":"Crauti","energyKj100":134,"proteinG100":1.94,"carbsG100":3.77,"fatG100":0.33,"fiberG100":3.06,"sodiumMg100":42.4},{"id":"food_creamfield_mild","name":"Creamfield Mild","energyKj100":1725,"proteinG100":25.4,"carbsG100":0.1,"fatG100":34.9,"fiberG100":0,"sodiumMg100":720},{"id":"ricette_nutriz_creamfield_mild_sottilette","name":"Creamfield mild (sottilette)","energyKj100":1725.075,"proteinG100":25.4,"carbsG100":0.1,"fatG100":34.9,"fiberG100":0,"sodiumMg100":1.8},{"id":"ricette_nutriz_crema_al_burro","name":"Crema al burro","energyKj100":88.099,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_crema_di_cocco","name":"Crema di cocco","energyKj100":2522,"proteinG100":0.47,"carbsG100":0.83,"fatG100":67.5,"fiberG100":0.36,"sodiumMg100":3.9},{"id":"ricette_nutriz_crema_di_porcini","name":"crema di porcini","energyKj100":1421.88,"proteinG100":4,"carbsG100":5,"fatG100":28,"fiberG100":0,"sodiumMg100":3},{"id":"ricette_nutriz_crema_di_zucca","name":"Crema di zucca","energyKj100":2.374,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_crema_pasticcera","name":"Crema pasticcera","energyKj100":700.919,"proteinG100":3.469,"carbsG100":17.352,"fatG100":10.376,"fiberG100":0,"sodiumMg100":0},{"id":"food_crocchette_di_pollo","name":"Crocchette di Pollo","energyKj100":1084,"proteinG100":13,"carbsG100":22,"fatG100":13,"fiberG100":1,"sodiumMg100":392},{"id":"ricette_nutriz_cumino","name":"cumino","energyKj100":1568.25,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_cumino_semi","name":"Cumino semi","energyKj100":1582,"proteinG100":11.8,"carbsG100":49.8,"fatG100":10,"fiberG100":20.6,"sodiumMg100":48.3},{"id":"base_global_curcuma_fresca","name":"Curcuma fresca","energyKj100":140,"proteinG100":2.32,"carbsG100":4.35,"fatG100":0.34,"fiberG100":1.8,"sodiumMg100":52.4},{"id":"base_global_curcuma_in_polvere","name":"Curcuma in polvere","energyKj100":1666,"proteinG100":10.3,"carbsG100":51.6,"fatG100":12.1,"fiberG100":20.7,"sodiumMg100":54.7},{"id":"base_global_curry_in_polvere","name":"Curry in polvere","energyKj100":1437,"proteinG100":11.7,"carbsG100":38.9,"fatG100":8.81,"fiberG100":31.3,"sodiumMg100":40.3},{"id":"ricette_nutriz_cynar","name":"Cynar","energyKj100":627.3,"proteinG100":0,"carbsG100":20,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_dado_di_carne","name":"dado di carne","energyKj100":1087.32,"proteinG100":15.7,"carbsG100":5,"fatG100":18.7,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_daikon","name":"Daikon","energyKj100":456,"proteinG100":1.87,"carbsG100":23.8,"fatG100":0.19,"fiberG100":1.61,"sodiumMg100":26.4},{"id":"base_global_datteri_secchi","name":"Datteri secchi","energyKj100":228,"proteinG100":0.61,"carbsG100":10.6,"fatG100":0.32,"fiberG100":3.2,"sodiumMg100":2.64},{"id":"ricette_nutriz_demi_glace","name":"Demi-glace","energyKj100":189.905,"proteinG100":2,"carbsG100":6,"fatG100":1.5,"fiberG100":0.5,"sodiumMg100":0.94},{"id":"ricette_nutriz_destrosio","name":"Destrosio","energyKj100":1522.248,"proteinG100":0,"carbsG100":99.5,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_ditalini_rigati","name":"ditalini rigati","energyKj100":572.934,"proteinG100":4.7,"carbsG100":30.3,"fatG100":0.5,"fiberG100":1.5,"sodiumMg100":0},{"id":"ricette_nutriz_dolcificante_bustina","name":"dolcificante bustina","energyKj100":1003.68,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_dragon_fruit_pitaya","name":"Dragon fruit pitaya","energyKj100":277,"proteinG100":0.64,"carbsG100":14.3,"fatG100":0.23,"fiberG100":1.8,"sodiumMg100":4.49},{"id":"base_global_durian","name":"Durian","energyKj100":260,"proteinG100":0.78,"carbsG100":12.3,"fatG100":0.33,"fiberG100":3.15,"sodiumMg100":2.49},{"id":"base_global_edamame_surgelato","name":"Edamame surgelato","energyKj100":510,"proteinG100":11,"carbsG100":9,"fatG100":5,"fiberG100":5,"sodiumMg100":6},{"id":"ricette_nutriz_emmenthal","name":"emmenthal","energyKj100":1685.346,"proteinG100":28.5,"carbsG100":3.6,"fatG100":30.6,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_erba_cipollina","name":"erba cipollina","energyKj100":100.368,"proteinG100":2.616,"carbsG100":3.48,"fatG100":0.584,"fiberG100":2,"sodiumMg100":0},{"id":"base_global_fagioli_azuki_secchi","name":"Fagioli azuki secchi","energyKj100":1330,"proteinG100":17.1,"carbsG100":45.4,"fatG100":4.08,"fiberG100":14.6,"sodiumMg100":14.1},{"id":"ricette_nutriz_fagioli_borlotti","name":"fagioli borlotti","energyKj100":288.558,"proteinG100":5.7,"carbsG100":11.2,"fatG100":0.5,"fiberG100":4.2,"sodiumMg100":0},{"id":"food_fagioli_borlotti_pinto","name":"Fagioli Borlotti (Pinto)","energyKj100":682,"proteinG100":13.1,"carbsG100":15.7,"fatG100":1.3,"fiberG100":18.9,"sodiumMg100":40},{"id":"base_global_fagioli_cannellini_secchi","name":"Fagioli cannellini secchi","energyKj100":1495,"proteinG100":21.6,"carbsG100":51.6,"fatG100":4.22,"fiberG100":11.8,"sodiumMg100":13.1},{"id":"base_global_fagioli_mung_secchi","name":"Fagioli mung secchi","energyKj100":1651,"proteinG100":23.9,"carbsG100":53,"fatG100":5.51,"fiberG100":17.5,"sodiumMg100":6.69},{"id":"food_fagioli_neri","name":"Fagioli Neri","energyKj100":494,"proteinG100":8,"carbsG100":14.6,"fatG100":1.1,"fiberG100":8.7,"sodiumMg100":40},{"id":"base_global_fagioli_pinto_secchi","name":"Fagioli pinto secchi","energyKj100":1219,"proteinG100":18.6,"carbsG100":38.9,"fatG100":3.75,"fiberG100":12.8,"sodiumMg100":11.2},{"id":"base_global_fagioli_rossi_kidney_secchi","name":"Fagioli rossi kidney secchi","energyKj100":1436,"proteinG100":16.8,"carbsG100":50.4,"fatG100":5.11,"fiberG100":13.1,"sodiumMg100":9.82},{"id":"food_falafel_al_forno","name":"Falafel (al forno)","energyKj100":1138.0,"proteinG100":9.6,"carbsG100":20.5,"fatG100":17.4,"fiberG100":5.7,"sodiumMg100":0},{"id":"ricette_nutriz_farfalle","name":"farfalle","energyKj100":572.934,"proteinG100":4.7,"carbsG100":30.3,"fatG100":0.5,"fiberG100":1.5,"sodiumMg100":0},{"id":"ricette_nutriz_farina_00_x_cucina","name":"Farina 00 x cucina","energyKj100":1442.79,"proteinG100":11,"carbsG100":77.3,"fatG100":0.7,"fiberG100":2.2,"sodiumMg100":0},{"id":"ricette_nutriz_farina_caputo_blu","name":"farina caputo blu","energyKj100":1338.24,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_farina_di_avena","name":"Farina di avena","energyKj100":1734,"proteinG100":12.8,"carbsG100":79.3,"fatG100":3.22,"fiberG100":6.17,"sodiumMg100":11.4},{"id":"ricette_nutriz_farina_di_baobab","name":"farina di baobab","energyKj100":999.498,"proteinG100":2.3,"carbsG100":35.2,"fatG100":0.3,"fiberG100":44,"sodiumMg100":0},{"id":"base_global_farina_di_ceci","name":"Farina di ceci","energyKj100":1676,"proteinG100":12.7,"carbsG100":78.4,"fatG100":2.02,"fiberG100":6.62,"sodiumMg100":5.64},{"id":"base_global_farina_di_mais","name":"Farina di mais","energyKj100":1444,"proteinG100":10,"carbsG100":66.5,"fatG100":2.87,"fiberG100":4.7,"sodiumMg100":10.9},{"id":"base_global_farina_di_mandorle","name":"Farina di mandorle","energyKj100":1462,"proteinG100":10.8,"carbsG100":67.6,"fatG100":2.49,"fiberG100":4.65,"sodiumMg100":6.63},{"id":"base_global_farina_di_riso","name":"Farina di riso","energyKj100":1480,"proteinG100":9.17,"carbsG100":68.8,"fatG100":2.82,"fiberG100":6.31,"sodiumMg100":6.86},{"id":"ricette_nutriz_farina_di_segale","name":"farina di segale","energyKj100":1300.602,"proteinG100":11.7,"carbsG100":65,"fatG100":2.3,"fiberG100":14.3,"sodiumMg100":0},{"id":"ricette_nutriz_farina_di_semi_di_carrube","name":"farina di semi di carrube","energyKj100":928.404,"proteinG100":4.62,"carbsG100":88.88,"fatG100":0.65,"fiberG100":39.8,"sodiumMg100":0},{"id":"ricette_nutriz_farina_di_semola_rimacinata_di_grano_duro","name":"farina di semola rimacinata di grano duro","energyKj100":1338.24,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_farina_integrale_di_frumento","name":"Farina integrale di frumento","energyKj100":1521,"proteinG100":12.1,"carbsG100":69.7,"fatG100":2.63,"fiberG100":4.11,"sodiumMg100":8.15},{"id":"ricette_nutriz_farina_luna_nera","name":"farina luna nera","energyKj100":1421.88,"proteinG100":16,"carbsG100":77.3,"fatG100":0.7,"fiberG100":2,"sodiumMg100":0},{"id":"ricette_nutriz_farina_petra_9","name":"farina petra 9","energyKj100":1380.06,"proteinG100":14,"carbsG100":81,"fatG100":1.99,"fiberG100":8.1,"sodiumMg100":0},{"id":"food_farina_very_strong","name":"Farina (very strong)","energyKj100":1460,"proteinG100":13.6,"carbsG100":68.1,"fatG100":1.3,"fiberG100":2.9,"sodiumMg100":4},{"id":"ricette_nutriz_farina_vita","name":"Farina + vita","energyKj100":1442.79,"proteinG100":13.7,"carbsG100":73.1,"fatG100":0.7,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_farina_x_fritture","name":"farina x fritture","energyKj100":710.94,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_farina_x_pasta_fresca","name":"farina x pasta fresca","energyKj100":1438.608,"proteinG100":9.8,"carbsG100":72.9,"fatG100":1,"fiberG100":2.1,"sodiumMg100":0},{"id":"base_global_farro_decorticato","name":"Farro decorticato","energyKj100":1789,"proteinG100":12.9,"carbsG100":82.6,"fatG100":3.15,"fiberG100":6.18,"sodiumMg100":11.7},{"id":"base_global_fave_secche","name":"Fave secche","energyKj100":1447,"proteinG100":22.4,"carbsG100":43.1,"fatG100":5.21,"fiberG100":17.6,"sodiumMg100":7.8},{"id":"ricette_nutriz_fesa_bovino_adulto","name":"fesa bovino adulto","energyKj100":752.76,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_feta","name":"feta","energyKj100":1045.5,"proteinG100":15.6,"carbsG100":1.5,"fatG100":20.2,"fiberG100":0,"sodiumMg100":0},{"id":"food_feta_greca","name":"Feta Greca","energyKj100":1168,"proteinG100":16.2,"carbsG100":0.2,"fatG100":24,"fiberG100":0.4,"sodiumMg100":800},{"id":"base_global_fichi_freschi","name":"Fichi freschi","energyKj100":293,"proteinG100":0.77,"carbsG100":14.9,"fatG100":0.26,"fiberG100":2.11,"sodiumMg100":3.73},{"id":"ricette_nutriz_fichi_neri_freschi","name":"fichi neri freschi","energyKj100":147.416,"proteinG100":0.675,"carbsG100":8.4,"fatG100":0.15,"fiberG100":1.5,"sodiumMg100":0},{"id":"ricette_nutriz_fichi_secchi","name":"fichi secchi","energyKj100":1041.318,"proteinG100":3.3,"carbsG100":63.87,"fatG100":0.93,"fiberG100":9.8,"sodiumMg100":0},{"id":"base_global_fieno_greco","name":"Fieno greco","energyKj100":1461,"proteinG100":9.44,"carbsG100":45.7,"fatG100":8.31,"fiberG100":27,"sodiumMg100":60.1},{"id":"ricette_nutriz_filetti_di_merluzzo","name":"filetti di merluzzo","energyKj100":292.74,"proteinG100":15.6,"carbsG100":0,"fatG100":0.6,"fiberG100":0,"sodiumMg100":0},{"id":"food_filetti_di_merluzzo_pastellati","name":"Filetti di Merluzzo Pastellati","energyKj100":961,"proteinG100":11,"carbsG100":17,"fatG100":13,"fiberG100":0.5,"sodiumMg100":400},{"id":"food_filetto_al_pepe_verde","name":"Filetto al Pepe Verde","energyKj100":1140.0,"proteinG100":13.06,"carbsG100":1.9,"fatG100":24.01,"fiberG100":0.55,"sodiumMg100":307.16},{"id":"food_filetto_di_manzo","name":"Filetto di Manzo","energyKj100":648,"proteinG100":21,"carbsG100":0,"fatG100":7.9,"fiberG100":0,"sodiumMg100":44},{"id":"base_global_finocchio","name":"Finocchio","energyKj100":142,"proteinG100":1.66,"carbsG100":5.01,"fatG100":0.3,"fiberG100":2.17,"sodiumMg100":41.3},{"id":"base_global_finocchio_semi","name":"Finocchio semi","energyKj100":1462,"proteinG100":8.43,"carbsG100":42,"fatG100":9.53,"fiberG100":31.5,"sodiumMg100":64.4},{"id":"base_global_foglie_di_curry","name":"Foglie di curry","energyKj100":122,"proteinG100":1.81,"carbsG100":3.77,"fatG100":0.34,"fiberG100":1.84,"sodiumMg100":28.5},{"id":"ricette_nutriz_fontina","name":"fontina","energyKj100":1434.426,"proteinG100":24.5,"carbsG100":0.8,"fatG100":26.9,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_formaggio_caprino","name":"formaggio caprino","energyKj100":907.494,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"food_fragole","name":"Fragole","energyKj100":118,"proteinG100":0.9,"carbsG100":5.3,"fatG100":0,"fiberG100":1.6,"sodiumMg100":0},{"id":"food_frutta_secca_mista_aldi","name":"Frutta Secca Mista Aldi","energyKj100":2675,"proteinG100":20,"carbsG100":4.3,"fatG100":59,"fiberG100":11,"sodiumMg100":16},{"id":"base_global_frutto_della_passione","name":"Frutto della passione","energyKj100":244,"proteinG100":0.75,"carbsG100":11.6,"fatG100":0.29,"fiberG100":2.91,"sodiumMg100":1.88},{"id":"ricette_nutriz_funghi","name":"funghi","energyKj100":104.55,"proteinG100":3.7,"carbsG100":0.8,"fatG100":0.2,"fiberG100":2.3,"sodiumMg100":0},{"id":"base_global_funghi_champignon","name":"Funghi champignon","energyKj100":126,"proteinG100":1.69,"carbsG100":3.86,"fatG100":0.35,"fiberG100":2.34,"sodiumMg100":35.8},{"id":"ricette_nutriz_funghi_chiodini","name":"funghi chiodini","energyKj100":54.366,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_funghi_enoki","name":"Funghi enoki","energyKj100":140,"proteinG100":1.83,"carbsG100":4.77,"fatG100":0.36,"fiberG100":1.84,"sodiumMg100":39.4},{"id":"ricette_nutriz_funghi_finferli_trifolati","name":"funghi finferli trifolati","energyKj100":560.388,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_funghi_porcini_secchi","name":"funghi porcini secchi","energyKj100":104.55,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_funghi_porcini_trifolati","name":"funghi porcini trifolati","energyKj100":560.388,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_funghi_portobello","name":"Funghi portobello","energyKj100":147,"proteinG100":2.02,"carbsG100":5.26,"fatG100":0.3,"fiberG100":1.57,"sodiumMg100":50.4},{"id":"base_global_funghi_shiitake_freschi","name":"Funghi shiitake freschi","energyKj100":135,"proteinG100":1.97,"carbsG100":4.65,"fatG100":0.25,"fiberG100":1.71,"sodiumMg100":50.2},{"id":"ricette_nutriz_fungi_porcini_freschi","name":"fungi porcini freschi","energyKj100":104.55,"proteinG100":3.9,"carbsG100":1,"fatG100":0.7,"fiberG100":2.5,"sodiumMg100":0},{"id":"ricette_nutriz_fusilli","name":"fusilli","energyKj100":572.934,"proteinG100":4.7,"carbsG100":30.3,"fatG100":0.5,"fiberG100":1.5,"sodiumMg100":0},{"id":"food_gallette_di_mais","name":"Gallette di Mais","energyKj100":1638,"proteinG100":6.9,"carbsG100":86,"fatG100":1.2,"fiberG100":7.3,"sodiumMg100":80},{"id":"food_gallette_di_riso","name":"Gallette di Riso","energyKj100":1615,"proteinG100":8.9,"carbsG100":77.2,"fatG100":3.2,"fiberG100":4.1,"sodiumMg100":80},{"id":"ricette_nutriz_gamberetti_freschi","name":"gamberetti freschi","energyKj100":334.56,"proteinG100":13.6,"carbsG100":2.9,"fatG100":0.6,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_gamberetti_in_salamoia","name":"gamberetti in salamoia","energyKj100":334.56,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_gamberetti_in_salamoia_2","name":"gamberetti in salamoia 2","energyKj100":439.11,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_gamberi_crudi","name":"Gamberi crudi","energyKj100":492,"proteinG100":18,"carbsG100":0,"fatG100":5.02,"fiberG100":0,"sodiumMg100":74.2},{"id":"ricette_nutriz_gamberi_surg_sgusciati","name":"gamberi surg sgusciati","energyKj100":355.47,"proteinG100":16.5,"carbsG100":2.9,"fatG100":0.9,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_garam_masala","name":"Garam masala","energyKj100":1271,"proteinG100":9.64,"carbsG100":39,"fatG100":7.13,"fiberG100":22.5,"sodiumMg100":38.6},{"id":"ricette_nutriz_gelatina","name":"gelatina","energyKj100":1480.428,"proteinG100":76,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_gelato_al_limone","name":"gelato al limone","energyKj100":685.848,"proteinG100":1.4,"carbsG100":32,"fatG100":3.5,"fiberG100":0,"sodiumMg100":0.06},{"id":"base_global_germogli_di_bambu","name":"Germogli di bambù","energyKj100":142,"proteinG100":2.15,"carbsG100":4.2,"fatG100":0.29,"fiberG100":2.92,"sodiumMg100":19.4},{"id":"base_global_germogli_di_soia","name":"Germogli di soia","energyKj100":140,"proteinG100":1.93,"carbsG100":4.71,"fatG100":0.35,"fiberG100":1.71,"sodiumMg100":47},{"id":"base_global_ghee","name":"Ghee","energyKj100":3690,"proteinG100":0,"carbsG100":0,"fatG100":99.5,"fiberG100":0,"sodiumMg100":2},{"id":"ricette_nutriz_glucosio","name":"Glucosio","energyKj100":1564.068,"proteinG100":0,"carbsG100":99.5,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"food_gnocchi_al_pomodoro_fresco","name":"Gnocchi al Pomodoro Fresco","energyKj100":488.0,"proteinG100":3.73,"carbsG100":23.04,"fatG100":0.45,"fiberG100":2.34,"sodiumMg100":2.72},{"id":"food_gnocchi_al_pomodoro_passata","name":"Gnocchi al Pomodoro (passata)","energyKj100":476.0,"proteinG100":3.61,"carbsG100":23.14,"fatG100":0.35,"fiberG100":2.28,"sodiumMg100":67.56},{"id":"food_gnocchi_al_ragu","name":"Gnocchi al Ragu","energyKj100":709.0,"proteinG100":7.08,"carbsG100":22.04,"fatG100":5.28,"fiberG100":2.09,"sodiumMg100":53.28},{"id":"base_global_gochujang","name":"Gochujang","energyKj100":587,"proteinG100":4.49,"carbsG100":18.1,"fatG100":4.96,"fiberG100":2.37,"sodiumMg100":1780},{"id":"ricette_nutriz_gorgonzola","name":"gorgonzola","energyKj100":1396.788,"proteinG100":19.1,"carbsG100":1,"fatG100":27.1,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_granchio","name":"Granchio","energyKj100":609,"proteinG100":22.6,"carbsG100":0,"fatG100":6.08,"fiberG100":0,"sodiumMg100":129},{"id":"base_global_grano_saraceno","name":"Grano saraceno","energyKj100":1366,"proteinG100":9.08,"carbsG100":63,"fatG100":2.88,"fiberG100":4.28,"sodiumMg100":4.33},{"id":"ricette_nutriz_grissini","name":"grissini","energyKj100":1798.26,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_guava","name":"Guava","energyKj100":263,"proteinG100":0.6,"carbsG100":13.3,"fatG100":0.36,"fiberG100":1.73,"sodiumMg100":1.62},{"id":"base_global_harissa","name":"Harissa","energyKj100":625,"proteinG100":4.22,"carbsG100":20.3,"fatG100":5.3,"fiberG100":1.52,"sodiumMg100":1509},{"id":"base_global_hummus","name":"Hummus","energyKj100":1545,"proteinG100":18,"carbsG100":53.8,"fatG100":4.41,"fiberG100":20.2,"sodiumMg100":9.74},{"id":"ricette_nutriz_impasto_x_pizza","name":"Impasto x pizza","energyKj100":280.194,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_indivia","name":"Indivia","energyKj100":147,"proteinG100":2.04,"carbsG100":4.56,"fatG100":0.29,"fiberG100":3.02,"sodiumMg100":23.5},{"id":"ricette_nutriz_insalata_belga_riccia","name":"insalata belga riccia","energyKj100":41.82,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_insalata_gentile","name":"insalata gentile","energyKj100":56.875,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_inulina","name":"inulina","energyKj100":878.22,"proteinG100":0,"carbsG100":97,"fatG100":0,"fiberG100":90,"sodiumMg100":0},{"id":"base_global_jackfruit","name":"Jackfruit","energyKj100":220,"proteinG100":0.61,"carbsG100":10.6,"fatG100":0.33,"fiberG100":2.15,"sodiumMg100":4.3},{"id":"base_global_jalapeno","name":"Jalapeno","energyKj100":142,"proteinG100":1.89,"carbsG100":5.09,"fatG100":0.21,"fiberG100":1.99,"sodiumMg100":43.7},{"id":"base_global_kefir","name":"Kefir","energyKj100":407,"proteinG100":8.35,"carbsG100":3.41,"fatG100":5.59,"fiberG100":0,"sodiumMg100":93.5},{"id":"base_global_ketchup","name":"Ketchup","energyKj100":420,"proteinG100":1.3,"carbsG100":24,"fatG100":0.2,"fiberG100":0.3,"sodiumMg100":900},{"id":"base_global_kimchi","name":"Kimchi","energyKj100":130,"proteinG100":1.62,"carbsG100":3.81,"fatG100":0.36,"fiberG100":3.08,"sodiumMg100":50.1},{"id":"ricette_nutriz_kiwi","name":"kiwi","energyKj100":160.087,"proteinG100":1.044,"carbsG100":7.83,"fatG100":0.522,"fiberG100":1.914,"sodiumMg100":0},{"id":"ricette_nutriz_kuzu","name":"kuzu","energyKj100":1438.608,"proteinG100":0,"carbsG100":85,"fatG100":0,"fiberG100":0.6,"sodiumMg100":0},{"id":"ricette_nutriz_lamponi","name":"Lamponi","energyKj100":142.188,"proteinG100":1,"carbsG100":6.5,"fatG100":0.6,"fiberG100":7.4,"sodiumMg100":0},{"id":"base_global_lardo","name":"Lardo","energyKj100":4244,"proteinG100":0.46,"carbsG100":0.98,"fatG100":114,"fiberG100":0.23,"sodiumMg100":5.96},{"id":"ricette_nutriz_lasagne","name":"Lasagne","energyKj100":856.546,"proteinG100":0.092,"carbsG100":0.12,"fatG100":0.078,"fiberG100":0.004,"sodiumMg100":0},{"id":"base_global_latte_di_capra","name":"Latte di capra","energyKj100":384,"proteinG100":8.41,"carbsG100":3.53,"fatG100":4.88,"fiberG100":0,"sodiumMg100":94.6},{"id":"base_global_latte_di_cocco_in_lattina","name":"Latte di cocco in lattina","energyKj100":422,"proteinG100":8.47,"carbsG100":3.75,"fatG100":5.79,"fiberG100":0,"sodiumMg100":58.3},{"id":"ricette_nutriz_latte_fresco","name":"latte fresco","energyKj100":276.012,"proteinG100":3.3,"carbsG100":4.9,"fatG100":3.6,"fiberG100":0,"sodiumMg100":0},{"id":"food_latte_intero","name":"Latte Intero","energyKj100":276,"proteinG100":3.5,"carbsG100":4.7,"fatG100":3.7,"fiberG100":0,"sodiumMg100":40},{"id":"ricette_nutriz_latte_magro_in_polvere","name":"latte magro in polvere","energyKj100":1467.882,"proteinG100":33.1,"carbsG100":56.2,"fatG100":0.9,"fiberG100":0,"sodiumMg100":0},{"id":"food_latte_parzialmente_scremato","name":"Latte Parzialmente Scremato","energyKj100":209,"proteinG100":3.6,"carbsG100":4.8,"fatG100":1.8,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_latte_uht_intero","name":"latte uht intero","energyKj100":271.83,"proteinG100":3.3,"carbsG100":4.7,"fatG100":3.6,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_latterini","name":"latterini","energyKj100":618.936,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_lattuga_iceberg","name":"Lattuga iceberg","energyKj100":148,"proteinG100":2.18,"carbsG100":4.67,"fatG100":0.25,"fiberG100":2.81,"sodiumMg100":51.7},{"id":"base_global_lattuga_romana","name":"Lattuga romana","energyKj100":140,"proteinG100":2.28,"carbsG100":3.91,"fatG100":0.3,"fiberG100":2.93,"sodiumMg100":50.3},{"id":"ricette_nutriz_lecitina_di_soia","name":"lecitina di soia","energyKj100":3450.15,"proteinG100":3.5,"carbsG100":5,"fatG100":90,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_lemongrass","name":"Lemongrass","energyKj100":143,"proteinG100":2.2,"carbsG100":4.73,"fatG100":0.29,"fiberG100":1.8,"sodiumMg100":19.8},{"id":"ricette_nutriz_lievito_di_birra","name":"lievito di birra","energyKj100":234.192,"proteinG100":12.1,"carbsG100":1.1,"fatG100":0.4,"fiberG100":6.9,"sodiumMg100":0},{"id":"ricette_nutriz_lievito_x_dolci","name":"lievito x dolci","energyKj100":652.392,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_lime","name":"Lime","energyKj100":221,"proteinG100":0.81,"carbsG100":10.7,"fatG100":0.24,"fiberG100":2.02,"sodiumMg100":3.47},{"id":"base_global_limone","name":"Limone","energyKj100":302,"proteinG100":0.8,"carbsG100":15.1,"fatG100":0.32,"fiberG100":2.42,"sodiumMg100":4.05},{"id":"ricette_nutriz_limoni","name":"limoni","energyKj100":58.548,"proteinG100":0.6,"carbsG100":2.3,"fatG100":0,"fiberG100":1.9,"sodiumMg100":0},{"id":"ricette_nutriz_liquirizia_calabra","name":"liquirizia calabra","energyKj100":234.192,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_liquore_ai_lamponi_40","name":"liquore ai lamponi 40°","energyKj100":836.4,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_litchi","name":"Litchi","energyKj100":253,"proteinG100":0.83,"carbsG100":12.4,"fatG100":0.26,"fiberG100":2.3,"sodiumMg100":2.54},{"id":"food_lonza_di_maiale","name":"Lonza di Maiale","energyKj100":495,"proteinG100":22,"carbsG100":0.9,"fatG100":2.6,"fiberG100":0.8,"sodiumMg100":44},{"id":"ricette_nutriz_lonza_suino","name":"lonza suino","energyKj100":464.202,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_lupini_cotti","name":"Lupini cotti","energyKj100":1468,"proteinG100":21.4,"carbsG100":48.4,"fatG100":3.43,"fiberG100":19.3,"sodiumMg100":6.46},{"id":"ricette_nutriz_macinato_di_agnello","name":"macinato di agnello","energyKj100":1179.324,"proteinG100":16.56,"carbsG100":0,"fatG100":10,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_macinato_di_maiale","name":"macinato di maiale","energyKj100":1099.866,"proteinG100":16.8,"carbsG100":0,"fatG100":21.2,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_macinato_di_manzo_5_percento","name":"macinato di manzo 5%","energyKj100":518.568,"proteinG100":20.8,"carbsG100":0,"fatG100":4.5,"fiberG100":0,"sodiumMg100":0.28},{"id":"food_macinato_manzo","name":"Macinato manzo","energyKj100":871,"proteinG100":19.7,"carbsG100":0,"fatG100":14.5,"fiberG100":0,"sodiumMg100":120},{"id":"ricette_nutriz_macinato_vitello_scelto","name":"macinato vitello scelto","energyKj100":560.388,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_maggiorana","name":"maggiorana","energyKj100":1133.322,"proteinG100":12.66,"carbsG100":50.56,"fatG100":7.04,"fiberG100":40.3,"sodiumMg100":0},{"id":"base_global_maiale_lonza_cruda","name":"Maiale lonza cruda","energyKj100":783,"proteinG100":21.9,"carbsG100":0,"fatG100":11.1,"fiberG100":0,"sodiumMg100":35},{"id":"base_global_maiale_spalla_cruda","name":"Maiale spalla cruda","energyKj100":608,"proteinG100":16.6,"carbsG100":0,"fatG100":8.8,"fiberG100":0,"sodiumMg100":93.4},{"id":"base_global_maionese","name":"Maionese","energyKj100":2850,"proteinG100":1,"carbsG100":1,"fatG100":75,"fiberG100":0,"sodiumMg100":635},{"id":"food_mais","name":"Mais","energyKj100":451,"proteinG100":3.7,"carbsG100":16.1,"fatG100":2.5,"fiberG100":2.9,"sodiumMg100":40},{"id":"base_global_mais_baby","name":"Mais baby","energyKj100":141,"proteinG100":1.75,"carbsG100":4.97,"fatG100":0.34,"fiberG100":1.77,"sodiumMg100":44.5},{"id":"base_global_mais_dolce_in_chicchi","name":"Mais dolce in chicchi","energyKj100":1589,"proteinG100":9.05,"carbsG100":77.3,"fatG100":1.89,"fiberG100":6.42,"sodiumMg100":4.99},{"id":"base_global_maizena_amido_di_mais","name":"Maizena amido di mais","energyKj100":1700,"proteinG100":11.6,"carbsG100":78.9,"fatG100":3.08,"fiberG100":5.95,"sodiumMg100":11.3},{"id":"ricette_nutriz_malto","name":"malto","energyKj100":1505.52,"proteinG100":12,"carbsG100":69,"fatG100":2,"fiberG100":13,"sodiumMg100":0},{"id":"food_mandarino","name":"Mandarino","energyKj100":303,"proteinG100":0.9,"carbsG100":17.6,"fatG100":0.3,"fiberG100":1.7,"sodiumMg100":0},{"id":"base_global_mandorle","name":"Mandorle","energyKj100":2420,"proteinG100":21,"carbsG100":22,"fatG100":50,"fiberG100":12.5,"sodiumMg100":1},{"id":"ricette_nutriz_mandorle_pelate","name":"mandorle pelate","energyKj100":2404.65,"proteinG100":22,"carbsG100":4.6,"fatG100":55.3,"fiberG100":12.7,"sodiumMg100":0},{"id":"base_global_mango","name":"Mango","energyKj100":299,"proteinG100":0.72,"carbsG100":14.6,"fatG100":0.34,"fiberG100":3.23,"sodiumMg100":2.5},{"id":"base_global_manzo_controfiletto","name":"Manzo controfiletto","energyKj100":702,"proteinG100":23.3,"carbsG100":0,"fatG100":8.28,"fiberG100":0,"sodiumMg100":49.7},{"id":"base_global_manzo_fegato","name":"Manzo fegato","energyKj100":808,"proteinG100":19.9,"carbsG100":0,"fatG100":12.7,"fiberG100":0,"sodiumMg100":40.2},{"id":"ricette_nutriz_manzo_fume","name":"manzo fumè","energyKj100":480.93,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_manzo_macinato_magro","name":"Manzo macinato magro","energyKj100":814,"proteinG100":21.1,"carbsG100":0,"fatG100":12.3,"fiberG100":0,"sodiumMg100":103},{"id":"ricette_nutriz_margarina","name":"margarina","energyKj100":2998.494,"proteinG100":0.16,"carbsG100":0.7,"fatG100":80.71,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_margarina_vegetale","name":"Margarina vegetale","energyKj100":2542,"proteinG100":0.4,"carbsG100":1.01,"fatG100":68,"fiberG100":0.28,"sodiumMg100":4.54},{"id":"base_global_masa_harina","name":"Masa harina","energyKj100":1788,"proteinG100":11.8,"carbsG100":86.3,"fatG100":2.22,"fiberG100":4.72,"sodiumMg100":4.03},{"id":"ricette_nutriz_mascarpone_soligo","name":"mascarpone soligo","energyKj100":1923.72,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"food_mela","name":"Mela","energyKj100":199,"proteinG100":0.5,"carbsG100":12,"fatG100":0.5,"fiberG100":1.8,"sodiumMg100":4},{"id":"ricette_nutriz_mela_verde","name":"mela verde","energyKj100":128.722,"proteinG100":0.405,"carbsG100":7.614,"fatG100":0.081,"fiberG100":1.539,"sodiumMg100":0},{"id":"food_melanzane","name":"Melanzane","energyKj100":105.0,"proteinG100":1,"carbsG100":6,"fatG100":0.2,"fiberG100":3,"sodiumMg100":0},{"id":"food_melanzane_alla_greca","name":"Melanzane alla Greca","energyKj100":529.0,"proteinG100":4.65,"carbsG100":4.46,"fatG100":10.73,"fiberG100":2.26,"sodiumMg100":257.16},{"id":"ricette_nutriz_mele_renette","name":"mele renette","energyKj100":118.769,"proteinG100":0.213,"carbsG100":7.1,"fatG100":0.071,"fiberG100":1.207,"sodiumMg100":0},{"id":"base_global_melograno","name":"Melograno","energyKj100":220,"proteinG100":0.63,"carbsG100":10.6,"fatG100":0.31,"fiberG100":2.22,"sodiumMg100":4.32},{"id":"ricette_nutriz_melone","name":"melone","energyKj100":64.863,"proteinG100":0.376,"carbsG100":3.478,"fatG100":0.094,"fiberG100":0.329,"sodiumMg100":0},{"id":"base_global_melone_cantalupo","name":"Melone cantalupo","energyKj100":266,"proteinG100":0.75,"carbsG100":13.1,"fatG100":0.31,"fiberG100":2.43,"sodiumMg100":2.92},{"id":"base_global_melone_giallo","name":"Melone giallo","energyKj100":262,"proteinG100":0.73,"carbsG100":12.7,"fatG100":0.31,"fiberG100":2.83,"sodiumMg100":3.61},{"id":"ricette_nutriz_menta","name":"menta","energyKj100":20.91,"proteinG100":3.8,"carbsG100":5.3,"fatG100":0.7,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_merlot_igt_veneto","name":"merlot igt veneto","energyKj100":284.376,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_merluzzo_fresco","name":"Merluzzo fresco","energyKj100":478,"proteinG100":19.8,"carbsG100":0,"fatG100":3.83,"fiberG100":0,"sodiumMg100":54},{"id":"ricette_nutriz_miele","name":"miele","energyKj100":1271.328,"proteinG100":0.6,"carbsG100":80.3,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_miglio_decorticato","name":"Miglio decorticato","energyKj100":1296,"proteinG100":9.55,"carbsG100":58.3,"fatG100":2.91,"fiberG100":4.3,"sodiumMg100":4.48},{"id":"base_global_mirtilli","name":"Mirtilli","energyKj100":246,"proteinG100":0.74,"carbsG100":11.6,"fatG100":0.34,"fiberG100":3,"sodiumMg100":2.56},{"id":"base_global_miso","name":"Miso","energyKj100":565,"proteinG100":4.04,"carbsG100":18.7,"fatG100":4.41,"fiberG100":1.88,"sodiumMg100":1226},{"id":"food_montasio_dop","name":"Montasio DOP","energyKj100":1662,"proteinG100":26,"carbsG100":1.9,"fatG100":32,"fiberG100":0,"sodiumMg100":648},{"id":"ricette_nutriz_montasio_fresco","name":"montasio fresco","energyKj100":1735.53,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_montasio_stagionato","name":"montasio stagionato","energyKj100":1735.53,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_more","name":"More","energyKj100":293,"proteinG100":0.78,"carbsG100":14.9,"fatG100":0.32,"fiberG100":1.79,"sodiumMg100":2.62},{"id":"ricette_nutriz_moretti_baffo_oro_30l","name":"moretti baffo oro 30l","energyKj100":112.914,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_mozzarella_a_fette","name":"Mozzarella a fette","energyKj100":0,"proteinG100":24.7,"carbsG100":2.6,"fatG100":20.4,"fiberG100":0,"sodiumMg100":1.33},{"id":"ricette_nutriz_mozzarella_di_bufala","name":"mozzarella di bufala","energyKj100":1204.416,"proteinG100":16.7,"carbsG100":0.4,"fatG100":24.4,"fiberG100":0,"sodiumMg100":0},{"id":"food_mozzarella_fette","name":"Mozzarella fette","energyKj100":1218,"proteinG100":24.7,"carbsG100":2.6,"fatG100":20.4,"fiberG100":0,"sodiumMg100":532},{"id":"ricette_nutriz_mozzarella_julien","name":"mozzarella julien","energyKj100":1154.232,"proteinG100":18.7,"carbsG100":0.7,"fatG100":19.5,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_mozzarella_vaccina","name":"Mozzarella vaccina","energyKj100":391,"proteinG100":7.38,"carbsG100":4.68,"fatG100":5.02,"fiberG100":0,"sodiumMg100":89.1},{"id":"ricette_nutriz_nero_di_seppia","name":"nero di seppia","energyKj100":167.28,"proteinG100":1,"carbsG100":9,"fatG100":1,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_nettarina","name":"Nettarina","energyKj100":277,"proteinG100":0.83,"carbsG100":13.1,"fatG100":0.39,"fiberG100":3.16,"sodiumMg100":3.25},{"id":"base_global_nocciole","name":"Nocciole","energyKj100":1964,"proteinG100":16.9,"carbsG100":18.8,"fatG100":34.9,"fiberG100":8.18,"sodiumMg100":4.54},{"id":"ricette_nutriz_noce_bovino_adulto","name":"noce bovino adulto","energyKj100":752.76,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_noce_moscata","name":"Noce moscata","energyKj100":1641,"proteinG100":11.4,"carbsG100":52.2,"fatG100":10.5,"fiberG100":21.4,"sodiumMg100":46.6},{"id":"ricette_nutriz_nocemoscata","name":"nocemoscata","energyKj100":2195.55,"proteinG100":5.84,"carbsG100":49.29,"fatG100":36.31,"fiberG100":20.8,"sodiumMg100":0},{"id":"base_global_noci","name":"Noci","energyKj100":2730,"proteinG100":15,"carbsG100":14,"fatG100":65,"fiberG100":6.7,"sodiumMg100":2},{"id":"base_global_noci_macadamia","name":"Noci macadamia","energyKj100":2546,"proteinG100":19.4,"carbsG100":17.1,"fatG100":50.4,"fiberG100":7.55,"sodiumMg100":2.83},{"id":"base_global_noci_pecan","name":"Noci pecan","energyKj100":2026,"proteinG100":20.9,"carbsG100":19.3,"fatG100":34.8,"fiberG100":6.82,"sodiumMg100":3.47},{"id":"base_global_noodles_di_frumento_secchi","name":"Noodles di frumento secchi","energyKj100":1435,"proteinG100":10.5,"carbsG100":66,"fatG100":2.54,"fiberG100":5.11,"sodiumMg100":6.06},{"id":"base_global_noodles_di_riso_secchi","name":"Noodles di riso secchi","energyKj100":1794,"proteinG100":11.5,"carbsG100":85.7,"fatG100":2.86,"fiberG100":4.44,"sodiumMg100":9.55},{"id":"base_global_okra","name":"Okra","energyKj100":124,"proteinG100":1.76,"carbsG100":3.84,"fatG100":0.32,"fiberG100":2.1,"sodiumMg100":28.9},{"id":"ricette_nutriz_olio_arom_ai_capperi","name":"olio arom. Ai capperi","energyKj100":3445.968,"proteinG100":0,"carbsG100":0,"fatG100":99,"fiberG100":1,"sodiumMg100":0},{"id":"base_global_olio_di_avocado","name":"Olio di avocado","energyKj100":3072,"proteinG100":0.46,"carbsG100":0.99,"fatG100":82.3,"fiberG100":0.22,"sodiumMg100":4.07},{"id":"base_global_olio_di_cocco","name":"Olio di cocco","energyKj100":3690,"proteinG100":0,"carbsG100":0,"fatG100":100,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_olio_di_colza","name":"Olio di colza","energyKj100":3690,"proteinG100":0,"carbsG100":0,"fatG100":100,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_olio_di_girasole","name":"Olio di girasole","energyKj100":3690,"proteinG100":0,"carbsG100":0,"fatG100":100,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_olio_di_palma","name":"olio di palma","energyKj100":0.422,"proteinG100":0,"carbsG100":0,"fatG100":1.199,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_olio_di_semi_arachide","name":"olio di semi arachide","energyKj100":0.847,"proteinG100":0,"carbsG100":0,"fatG100":1.499,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_olio_di_semi_girasole","name":"olio di semi girasole","energyKj100":3763.8,"proteinG100":0,"carbsG100":0,"fatG100":99.9,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_olio_di_sesamo","name":"Olio di sesamo","energyKj100":3690,"proteinG100":0,"carbsG100":0,"fatG100":100,"fiberG100":0,"sodiumMg100":0},{"id":"food_olio_evo","name":"Olio EVO","energyKj100":3389,"proteinG100":0,"carbsG100":0,"fatG100":91.6,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_olio_extravergine_di_oliva","name":"olio extravergine di oliva","energyKj100":3445.968,"proteinG100":0,"carbsG100":0,"fatG100":99.9,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_olio_tartufato","name":"olio tartufato","energyKj100":3445.968,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_olive_di_nocellara","name":"Olive di Nocellara","energyKj100":752.76,"proteinG100":1.2,"carbsG100":0.31,"fatG100":18,"fiberG100":3.1,"sodiumMg100":3},{"id":"ricette_nutriz_olive_kalamata","name":"olive Kalamata","energyKj100":815.699,"proteinG100":1.328,"carbsG100":0.664,"fatG100":20.833,"fiberG100":3.237,"sodiumMg100":0},{"id":"ricette_nutriz_olive_taggiasche","name":"olive taggiasche","energyKj100":986.952,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_olive_verdi","name":"olive verdi","energyKj100":593.844,"proteinG100":0.8,"carbsG100":1,"fatG100":15,"fiberG100":3,"sodiumMg100":0},{"id":"base_global_orata_fresca","name":"Orata fresca","energyKj100":437,"proteinG100":16.2,"carbsG100":0,"fatG100":4.38,"fiberG100":0,"sodiumMg100":61},{"id":"ricette_nutriz_origano","name":"origano","energyKj100":1279.692,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_oro_saiwa","name":"oro saiwa","energyKj100":1748.076,"proteinG100":8.3,"carbsG100":76,"fatG100":8.4,"fiberG100":3.4,"sodiumMg100":0.62},{"id":"base_global_orzo_perlato","name":"Orzo perlato","energyKj100":1563,"proteinG100":10.7,"carbsG100":72.1,"fatG100":3.15,"fiberG100":4.85,"sodiumMg100":10.2},{"id":"base_global_ostriche","name":"Ostriche","energyKj100":476,"proteinG100":18.8,"carbsG100":0,"fatG100":4.23,"fiberG100":0,"sodiumMg100":62},{"id":"base_global_pak_choi","name":"Pak choi","energyKj100":152,"proteinG100":1.99,"carbsG100":4.88,"fatG100":0.3,"fiberG100":3.04,"sodiumMg100":48.2},{"id":"ricette_nutriz_pan_di_spagna","name":"Pan di spagna","energyKj100":39104.807,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"food_pancetta","name":"Pancetta","energyKj100":1336,"proteinG100":18,"carbsG100":1,"fatG100":27.3,"fiberG100":0.6,"sodiumMg100":1160},{"id":"ricette_nutriz_pancetta_affumicata","name":"pancetta affumicata","energyKj100":2764.302,"proteinG100":21.7,"carbsG100":0,"fatG100":25.3,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_pancetta_fresca","name":"Pancetta fresca","energyKj100":699,"proteinG100":22.9,"carbsG100":0,"fatG100":8.37,"fiberG100":0,"sodiumMg100":96.4},{"id":"food_pane_bianco_mini_ciabatta","name":"Pane Bianco (mini Ciabatta)","energyKj100":1117,"proteinG100":8.3,"carbsG100":44.4,"fatG100":5.4,"fiberG100":2.7,"sodiumMg100":280},{"id":"food_pane_cassetta_integrale","name":"Pane cassetta Integrale","energyKj100":915,"proteinG100":10.7,"carbsG100":36.2,"fatG100":1.7,"fiberG100":7,"sodiumMg100":360},{"id":"ricette_nutriz_pane_da_bruschetta","name":"pane da bruschetta","energyKj100":1275.51,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_pane_gratuggiato","name":"pane gratuggiato","energyKj100":1472.064,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_pane_pita","name":"Pane pita","energyKj100":1738,"proteinG100":13,"carbsG100":80.8,"fatG100":2.74,"fiberG100":5.21,"sodiumMg100":9.44},{"id":"base_global_paneer","name":"Paneer","energyKj100":345,"proteinG100":6.42,"carbsG100":4.74,"fatG100":4.2,"fiberG100":0,"sodiumMg100":74},{"id":"base_global_pangrattato","name":"Pangrattato","energyKj100":1455,"proteinG100":10,"carbsG100":66.3,"fatG100":3.17,"fiberG100":5.05,"sodiumMg100":8.61},{"id":"base_global_panko_pangrattato","name":"Panko pangrattato","energyKj100":1649,"proteinG100":9.9,"carbsG100":79.5,"fatG100":2.48,"fiberG100":4.64,"sodiumMg100":8.4},{"id":"ricette_nutriz_panna_da_cucina","name":"panna da cucina","energyKj100":999.498,"proteinG100":2.3,"carbsG100":3.4,"fatG100":35,"fiberG100":0,"sodiumMg100":0},{"id":"food_panna_double_cream","name":"Panna (double cream)","energyKj100":1920,"proteinG100":1.5,"carbsG100":1.6,"fatG100":51,"fiberG100":0,"sodiumMg100":20},{"id":"ricette_nutriz_panna_fresca","name":"panna fresca","energyKj100":1254.6,"proteinG100":2.3,"carbsG100":3.4,"fatG100":35,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_panna_montata","name":"Panna montata","energyKj100":1442.79,"proteinG100":2.05,"carbsG100":2.79,"fatG100":37,"fiberG100":0,"sodiumMg100":0.038},{"id":"base_global_papaya","name":"Papaya","energyKj100":263,"proteinG100":0.66,"carbsG100":13,"fatG100":0.34,"fiberG100":2.3,"sodiumMg100":3.76},{"id":"base_global_paprika_affumicata","name":"Paprika affumicata","energyKj100":1452,"proteinG100":9.26,"carbsG100":39.8,"fatG100":12,"fiberG100":21.8,"sodiumMg100":59.5},{"id":"ricette_nutriz_paprika_dolce","name":"paprika dolce","energyKj100":1279.692,"proteinG100":14.8,"carbsG100":34.8,"fatG100":13,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_parmigiano","name":"parmigiano","energyKj100":1639.344,"proteinG100":33.5,"carbsG100":0,"fatG100":28.1,"fiberG100":0,"sodiumMg100":0},{"id":"food_parmigiano_30_mesi","name":"Parmigiano 30 mesi","energyKj100":1671,"proteinG100":32.4,"carbsG100":0.1,"fatG100":29.7,"fiberG100":0,"sodiumMg100":640},{"id":"base_global_parmigiano_reggiano","name":"Parmigiano reggiano","energyKj100":413,"proteinG100":6.43,"carbsG100":3.42,"fatG100":6.64,"fiberG100":0,"sodiumMg100":55.2},{"id":"food_passato_di_verdure","name":"Passato di verdure","energyKj100":559.0,"proteinG100":4.97,"carbsG100":21.22,"fatG100":2.2,"fiberG100":4.11,"sodiumMg100":85.44},{"id":"food_pasta","name":"Pasta","energyKj100":1490,"proteinG100":14,"carbsG100":69,"fatG100":1.5,"fiberG100":2.9,"sodiumMg100":400},{"id":"food_pasta_al_pesto_genovese","name":"Pasta al Pesto Genovese","energyKj100":1418.0,"proteinG100":12.78,"carbsG100":42,"fatG100":13.62,"fiberG100":1.92,"sodiumMg100":720},{"id":"food_pasta_al_pomodoro_fresco","name":"Pasta al Pomodoro fresco","energyKj100":647.0,"proteinG100":18.29,"carbsG100":13.41,"fatG100":3.38,"fiberG100":1.24,"sodiumMg100":161.88},{"id":"food_pasta_al_ragu","name":"Pasta al Ragu","energyKj100":1154,"proteinG100":13,"carbsG100":35.45,"fatG100":8.45,"fiberG100":1.9,"sodiumMg100":278},{"id":"food_pasta_alla_carbonara","name":"Pasta alla Carbonara","energyKj100":1536.0,"proteinG100":16.89,"carbsG100":23.5,"fatG100":22.49,"fiberG100":1.14,"sodiumMg100":581.96},{"id":"food_pasta_alle_melanzane","name":"Pasta alle Melanzane","energyKj100":597.0,"proteinG100":14.33,"carbsG100":11.51,"fatG100":4.73,"fiberG100":1.53,"sodiumMg100":125.08},{"id":"base_global_pasta_di_curry_rosso","name":"Pasta di curry rosso","energyKj100":655,"proteinG100":4.3,"carbsG100":21.4,"fatG100":5.51,"fiberG100":1.81,"sodiumMg100":1341},{"id":"base_global_pasta_di_curry_verde","name":"Pasta di curry verde","energyKj100":601,"proteinG100":3.73,"carbsG100":21.5,"fatG100":4.35,"fiberG100":1.34,"sodiumMg100":2223},{"id":"ricette_nutriz_pasta_di_nocciola","name":"Pasta di nocciola","energyKj100":2739.21,"proteinG100":13.8,"carbsG100":6.1,"fatG100":64.1,"fiberG100":8.1,"sodiumMg100":0.027},{"id":"ricette_nutriz_pasta_di_olive_nere","name":"pasta di olive nere","energyKj100":1292.238,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_pasta_di_tartufo","name":"pasta di tartufo","energyKj100":1743.894,"proteinG100":4.2,"carbsG100":13,"fatG100":37,"fiberG100":7.4,"sodiumMg100":0.57},{"id":"ricette_nutriz_pasta_di_zucchero","name":"Pasta di zucchero","energyKj100":62.416,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"food_pasta_e_fagioli","name":"Pasta e Fagioli","energyKj100":838.0,"proteinG100":8.38,"carbsG100":18.61,"fatG100":4.09,"fiberG100":2.44,"sodiumMg100":57.12},{"id":"food_pasta_in_brodo_ditalini","name":"Pasta in Brodo (ditalini)","energyKj100":1542,"proteinG100":12,"carbsG100":74,"fatG100":1.5,"fiberG100":3,"sodiumMg100":0},{"id":"ricette_nutriz_pasta_sfoglia","name":"pasta sfoglia","energyKj100":1881.9,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_pasta_x_lasagne","name":"Pasta x lasagne","energyKj100":1065.248,"proteinG100":10.256,"carbsG100":46.731,"fatG100":3.963,"fiberG100":1.346,"sodiumMg100":0},{"id":"base_global_pastinaca","name":"Pastinaca","energyKj100":350,"proteinG100":1.68,"carbsG100":17.3,"fatG100":0.25,"fiberG100":2.25,"sodiumMg100":34.3},{"id":"base_global_patata_dolce","name":"Patata dolce","energyKj100":360,"proteinG100":1.6,"carbsG100":20,"fatG100":0.1,"fiberG100":3,"sodiumMg100":55},{"id":"food_patate","name":"Patate","energyKj100":455,"proteinG100":2.5,"carbsG100":22.6,"fatG100":0.2,"fiberG100":2.6,"sodiumMg100":4},{"id":"ricette_nutriz_patate_bollite_con_buccia","name":"patate (bollite con buccia)","energyKj100":288.098,"proteinG100":1.743,"carbsG100":14.857,"fatG100":0.83,"fiberG100":1.328,"sodiumMg100":0},{"id":"ricette_nutriz_patate_fritte","name":"patate fritte","energyKj100":786.216,"proteinG100":3.9,"carbsG100":29.9,"fatG100":6.7,"fiberG100":2.2,"sodiumMg100":0},{"id":"ricette_nutriz_patate_novelle","name":"Patate novelle","energyKj100":270.994,"proteinG100":1.62,"carbsG100":13.5,"fatG100":0.18,"fiberG100":2.43,"sodiumMg100":0},{"id":"ricette_nutriz_pavesini","name":"pavesini","energyKj100":1651.89,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"food_pea_protein","name":"Pea Protein","energyKj100":1611,"proteinG100":78,"carbsG100":4,"fatG100":5.5,"fiberG100":1,"sodiumMg100":904},{"id":"ricette_nutriz_pecorino","name":"pecorino","energyKj100":1388.424,"proteinG100":25.8,"carbsG100":0.2,"fatG100":32,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_penne","name":"penne","energyKj100":572.934,"proteinG100":4.7,"carbsG100":30.3,"fatG100":0.5,"fiberG100":1.5,"sodiumMg100":0},{"id":"ricette_nutriz_penne_al_salmone","name":"Penne al salmone","energyKj100":1134.154,"proteinG100":11.556,"carbsG100":22.949,"fatG100":14.626,"fiberG100":1.041,"sodiumMg100":1.1},{"id":"food_penne_al_salmone_diet","name":"Penne al Salmone diet","energyKj100":1134.0,"proteinG100":11.56,"carbsG100":22.95,"fatG100":14.63,"fiberG100":1.04,"sodiumMg100":452.2},{"id":"ricette_nutriz_pepe","name":"pepe","energyKj100":4.182,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_pepe_bianco","name":"Pepe bianco","energyKj100":1547,"proteinG100":9.83,"carbsG100":46.4,"fatG100":10.3,"fiberG100":26.2,"sodiumMg100":64.4},{"id":"base_global_pepe_nero","name":"Pepe nero","energyKj100":1333,"proteinG100":8.56,"carbsG100":38.5,"fatG100":8.27,"fiberG100":28.4,"sodiumMg100":31.6},{"id":"food_pepe_verde","name":"Pepe Verde","energyKj100":977,"proteinG100":6.6,"carbsG100":39,"fatG100":2,"fiberG100":16,"sodiumMg100":19.9},{"id":"ricette_nutriz_pepe_verde_in_salamoia","name":"pepe verde in salamoia","energyKj100":1066.41,"proteinG100":10.9,"carbsG100":0,"fatG100":3.3,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_peperoncino","name":"peperoncino","energyKj100":108.732,"proteinG100":1.8,"carbsG100":3.8,"fatG100":0.5,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_peperoncino_in_polvere","name":"Peperoncino in polvere","energyKj100":1604,"proteinG100":8.5,"carbsG100":48,"fatG100":11.5,"fiberG100":27.3,"sodiumMg100":51.8},{"id":"base_global_peperone_rosso","name":"Peperone rosso","energyKj100":146,"proteinG100":2.1,"carbsG100":5.13,"fatG100":0.26,"fiberG100":1.65,"sodiumMg100":33.8},{"id":"base_global_peperone_verde","name":"Peperone verde","energyKj100":154,"proteinG100":1.86,"carbsG100":5.27,"fatG100":0.3,"fiberG100":2.69,"sodiumMg100":48.5},{"id":"food_peperoni","name":"Peperoni","energyKj100":131,"proteinG100":0.9,"carbsG100":6.7,"fatG100":0.3,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_peperoni_cotti","name":"peperoni (cotti)","energyKj100":75.443,"proteinG100":4.264,"carbsG100":19.926,"fatG100":1.23,"fiberG100":1.394,"sodiumMg100":0},{"id":"ricette_nutriz_pepsi_18l","name":"pepsi 18l","energyKj100":179.826,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"food_pera","name":"Pera","energyKj100":238.0,"proteinG100":0.4,"carbsG100":15,"fatG100":0.1,"fiberG100":3.1,"sodiumMg100":0},{"id":"ricette_nutriz_pere_abate","name":"pere abate","energyKj100":146.37,"proteinG100":0.3,"carbsG100":8.8,"fatG100":0.1,"fiberG100":3.8,"sodiumMg100":0},{"id":"base_global_pesca","name":"Pesca","energyKj100":259,"proteinG100":0.62,"carbsG100":12.9,"fatG100":0.38,"fiberG100":1.84,"sodiumMg100":3.22},{"id":"ricette_nutriz_pesce_spada_affumicato","name":"pesce spada affumicato","energyKj100":501.84,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_pesce_spada_fresco","name":"pesce spada fresco","energyKj100":911.676,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_pesto_di_prezzemolo","name":"Pesto di prezzemolo","energyKj100":289.459,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"food_pesto_genovese","name":"Pesto Genovese","energyKj100":1745.0,"proteinG100":14.6,"carbsG100":2,"fatG100":42.4,"fiberG100":0.6,"sodiumMg100":1600},{"id":"base_global_pesto_verde","name":"Pesto verde","energyKj100":539,"proteinG100":3.22,"carbsG100":20.1,"fatG100":3.55,"fiberG100":1.41,"sodiumMg100":2128},{"id":"base_global_petto_di_pollo_crudo","name":"Petto di pollo crudo","energyKj100":743,"proteinG100":23.3,"carbsG100":0,"fatG100":9.37,"fiberG100":0,"sodiumMg100":58.4},{"id":"ricette_nutriz_petto_di_pollo_in_padella_senza_grassi","name":"petto di pollo (in padella senza grassi)","energyKj100":460.02,"proteinG100":30.2,"carbsG100":0,"fatG100":0.9,"fiberG100":0,"sodiumMg100":0},{"id":"food_pinoli","name":"Pinoli","energyKj100":2859,"proteinG100":14,"carbsG100":4,"fatG100":68.6,"fiberG100":1.9,"sodiumMg100":4},{"id":"base_global_piselli_spezzati_secchi","name":"Piselli spezzati secchi","energyKj100":1457,"proteinG100":24.9,"carbsG100":46.7,"fatG100":4.33,"fiberG100":9.98,"sodiumMg100":13.3},{"id":"ricette_nutriz_pisellini_surgelati","name":"pisellini (surgelati)","energyKj100":200.736,"proteinG100":5.4,"carbsG100":6.4,"fatG100":0.3,"fiberG100":6.3,"sodiumMg100":0},{"id":"base_global_pistacchi","name":"Pistacchi","energyKj100":2648,"proteinG100":16.9,"carbsG100":15.7,"fatG100":54.5,"fiberG100":9.69,"sodiumMg100":2.96},{"id":"base_global_platano_maturo","name":"Platano maturo","energyKj100":420,"proteinG100":1.46,"carbsG100":21.9,"fatG100":0.25,"fiberG100":1.66,"sodiumMg100":18.1},{"id":"base_global_platano_verde","name":"Platano verde","energyKj100":510,"proteinG100":1.3,"carbsG100":31,"fatG100":0.4,"fiberG100":2.3,"sodiumMg100":4},{"id":"ricette_nutriz_polenta_gialla","name":"polenta gialla","energyKj100":1484.61,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_polenta_istantanea","name":"Polenta istantanea","energyKj100":1308,"proteinG100":10.1,"carbsG100":57.6,"fatG100":2.89,"fiberG100":6.25,"sodiumMg100":4.28},{"id":"base_global_pollo_fegato","name":"Pollo fegato","energyKj100":709,"proteinG100":20.2,"carbsG100":0,"fatG100":9.89,"fiberG100":0,"sodiumMg100":90.6},{"id":"ricette_nutriz_polpette","name":"Polpette","energyKj100":608,"proteinG100":13.6,"carbsG100":12.1,"fatG100":5.2,"fiberG100":1,"sodiumMg100":0},{"id":"food_polpette_diet","name":"Polpette (diet)","energyKj100":608,"proteinG100":13.6,"carbsG100":12.1,"fatG100":5.2,"fiberG100":1},{"id":"base_global_polpo_crudo","name":"Polpo crudo","energyKj100":435,"proteinG100":17,"carbsG100":0,"fatG100":3.94,"fiberG100":0,"sodiumMg100":69.9},{"id":"ricette_nutriz_pomodori_pelati","name":"pomodori pelati","energyKj100":83.64,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_pomodori_secchi","name":"pomodori secchi","energyKj100":1074.774,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_pomodoro_concentrato","name":"pomodoro concentrato","energyKj100":271.83,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_pomodoro_datterino","name":"Pomodoro datterino","energyKj100":139,"proteinG100":2.39,"carbsG100":4.34,"fatG100":0.33,"fiberG100":1.58,"sodiumMg100":50.8},{"id":"ricette_nutriz_pomodoro_fette","name":"pomodoro fette","energyKj100":77.869,"proteinG100":0.98,"carbsG100":3.43,"fatG100":0.196,"fiberG100":1.96,"sodiumMg100":0},{"id":"food_pomodoro_mini_san_marzano","name":"Pomodoro Mini San Marzano","energyKj100":84.0,"proteinG100":1,"carbsG100":3,"fatG100":0.3,"fiberG100":1,"sodiumMg100":0},{"id":"ricette_nutriz_pomodoro_ramato","name":"pomodoro ramato","energyKj100":79.458,"proteinG100":1.2,"carbsG100":2.8,"fatG100":0.2,"fiberG100":1,"sodiumMg100":0},{"id":"ricette_nutriz_pomodoro_salsa","name":"pomodoro salsa","energyKj100":87.822,"proteinG100":1.2,"carbsG100":3,"fatG100":0.5,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_pompelmo","name":"Pompelmo","energyKj100":260,"proteinG100":0.83,"carbsG100":12.7,"fatG100":0.22,"fiberG100":2.78,"sodiumMg100":3.47},{"id":"food_pop_corn_natural","name":"Pop Corn (natural)","energyKj100":1392,"proteinG100":12,"carbsG100":77.9,"fatG100":4.2,"fiberG100":15.1,"sodiumMg100":12},{"id":"ricette_nutriz_pop_corn_naturali","name":"Pop corn (naturali)","energyKj100":1392,"proteinG100":12,"carbsG100":77.9,"fatG100":4.2,"fiberG100":15.1,"sodiumMg100":0.03},{"id":"ricette_nutriz_porchetta","name":"porchetta","energyKj100":1254.6,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_porri","name":"porri","energyKj100":96.604,"proteinG100":1.617,"carbsG100":4.004,"fatG100":0.077,"fiberG100":2.233,"sodiumMg100":0},{"id":"base_global_porro","name":"Porro","energyKj100":149,"proteinG100":2.08,"carbsG100":5.01,"fatG100":0.36,"fiberG100":1.88,"sodiumMg100":34.4},{"id":"ricette_nutriz_prezzemolo","name":"prezzemolo","energyKj100":75.276,"proteinG100":3.7,"carbsG100":0,"fatG100":0.6,"fiberG100":5,"sodiumMg100":0},{"id":"ricette_nutriz_profizz_vino_bianco","name":"profizz vino bianco","energyKj100":263.466,"proteinG100":0.08,"carbsG100":1.94,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_prosciutto_cotto_alla_brace","name":"prosciutto cotto alla brace","energyKj100":878.22,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_prosciutto_cotto_sgrassato","name":"prosciutto cotto sgrassato","energyKj100":899.13,"proteinG100":17,"carbsG100":1.9,"fatG100":3.5,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_prosciutto_crudo_di_parma_sgrassato_dop_18_mesi","name":"prosciutto crudo di parma sgrassato dop 18 mesi","energyKj100":936.768,"proteinG100":29.1,"carbsG100":0.4,"fatG100":6.4,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_prosciutto_di_cinghiale","name":"prosciutto di cinghiale","energyKj100":460.02,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_prosecco_di_conegliano","name":"Prosecco di Conegliano","energyKj100":292.74,"proteinG100":0,"carbsG100":1.6,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_proteine_dei_piselli","name":"Proteine dei piselli","energyKj100":1611,"proteinG100":78,"carbsG100":4,"fatG100":5.5,"fiberG100":1,"sodiumMg100":2.26},{"id":"ricette_nutriz_proteine_del_manzo","name":"Proteine del manzo","energyKj100":1644.864,"proteinG100":97,"carbsG100":0,"fatG100":1.5,"fiberG100":0,"sodiumMg100":1.65},{"id":"base_global_prugna","name":"Prugna","energyKj100":278,"proteinG100":0.71,"carbsG100":14.2,"fatG100":0.25,"fiberG100":1.85,"sodiumMg100":1.77},{"id":"ricette_nutriz_pruma","name":"pruma","energyKj100":920.04,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_quinoa_secca","name":"Quinoa secca","energyKj100":1608,"proteinG100":9.78,"carbsG100":76.6,"fatG100":2.41,"fiberG100":6.33,"sodiumMg100":10.5},{"id":"base_global_rabarbaro","name":"Rabarbaro","energyKj100":292,"proteinG100":0.75,"carbsG100":14.5,"fatG100":0.36,"fiberG100":2.46,"sodiumMg100":3.18},{"id":"food_radicchietto","name":"Radicchietto","energyKj100":61,"proteinG100":0.8,"carbsG100":1.7,"fatG100":0.5,"fiberG100":0.9,"sodiumMg100":4},{"id":"base_global_radicchio","name":"Radicchio","energyKj100":125,"proteinG100":1.99,"carbsG100":3.63,"fatG100":0.24,"fiberG100":2.58,"sodiumMg100":52.2},{"id":"ricette_nutriz_radicchio_di_treviso_tardivo","name":"radicchio di treviso tardivo","energyKj100":62.73,"proteinG100":1.4,"carbsG100":1.6,"fatG100":0.1,"fiberG100":3,"sodiumMg100":0},{"id":"base_global_radice_di_loto","name":"Radice di loto","energyKj100":389,"proteinG100":1.48,"carbsG100":19.7,"fatG100":0.22,"fiberG100":2.59,"sodiumMg100":23.6},{"id":"food_ragu_bolognese","name":"Ragu Bolognese","energyKj100":818,"proteinG100":12,"carbsG100":1.9,"fatG100":15.4,"fiberG100":0.9,"sodiumMg100":156},{"id":"ricette_nutriz_ragu_di_carne","name":"Ragù di carne","energyKj100":582.259,"proteinG100":8.179,"carbsG100":0.845,"fatG100":10.086,"fiberG100":0.177,"sodiumMg100":0},{"id":"ricette_nutriz_ragu_di_cinghiale_da_fare","name":"Ragu di cinghiale (da fare)","energyKj100":719.304,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_rapa_bianca","name":"Rapa bianca","energyKj100":347,"proteinG100":1.52,"carbsG100":17.6,"fatG100":0.21,"fiberG100":1.75,"sodiumMg100":24.6},{"id":"base_global_ravanello","name":"Ravanello","energyKj100":165,"proteinG100":2.35,"carbsG100":5.38,"fatG100":0.35,"fiberG100":2.52,"sodiumMg100":23},{"id":"base_global_ribes","name":"Ribes","energyKj100":266,"proteinG100":0.74,"carbsG100":13.5,"fatG100":0.3,"fiberG100":1.65,"sodiumMg100":2.5},{"id":"ricette_nutriz_ricotta","name":"ricotta","energyKj100":610.572,"proteinG100":8.8,"carbsG100":3.5,"fatG100":10.9,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_ricotta_affumicata","name":"ricotta affumicata","energyKj100":610.572,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_ricotta_vaccina","name":"Ricotta vaccina","energyKj100":465,"proteinG100":9.26,"carbsG100":3.65,"fatG100":6.63,"fiberG100":0,"sodiumMg100":105},{"id":"base_global_riso_arborio_crudo","name":"Riso arborio crudo","energyKj100":1643,"proteinG100":9.26,"carbsG100":79.1,"fatG100":2.08,"fiberG100":8.03,"sodiumMg100":5.35},{"id":"food_riso_basmati_integrale","name":"Riso Basmati Integrale","energyKj100":1487,"proteinG100":8.6,"carbsG100":71.2,"fatG100":2.8,"fiberG100":3.4,"sodiumMg100":12},{"id":"ricette_nutriz_riso_carnaroli","name":"riso carnaroli","energyKj100":1480.428,"proteinG100":7.6,"carbsG100":77.2,"fatG100":1.4,"fiberG100":1.2,"sodiumMg100":0},{"id":"base_global_riso_glutinoso_crudo","name":"Riso glutinoso crudo","energyKj100":1499,"proteinG100":12.4,"carbsG100":67.1,"fatG100":2.94,"fiberG100":4.84,"sodiumMg100":9.71},{"id":"base_global_riso_integrale_crudo","name":"Riso integrale crudo","energyKj100":1577,"proteinG100":10.3,"carbsG100":75.6,"fatG100":2.19,"fiberG100":4.42,"sodiumMg100":4.85},{"id":"base_global_riso_jasmine_crudo","name":"Riso jasmine crudo","energyKj100":1624,"proteinG100":9.5,"carbsG100":78.4,"fatG100":2.29,"fiberG100":5.68,"sodiumMg100":5.39},{"id":"base_global_riso_selvatico_crudo","name":"Riso selvatico crudo","energyKj100":1412,"proteinG100":12.9,"carbsG100":62.7,"fatG100":1.83,"fiberG100":7.43,"sodiumMg100":4.18},{"id":"ricette_nutriz_riso_soffiato","name":"riso soffiato","energyKj100":1472.064,"proteinG100":6,"carbsG100":85,"fatG100":1,"fiberG100":1,"sodiumMg100":0},{"id":"ricette_nutriz_rosmarino","name":"rosmarino","energyKj100":20.91,"proteinG100":1.4,"carbsG100":13.5,"fatG100":4.4,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_rucola","name":"rucola","energyKj100":66.912,"proteinG100":2.6,"carbsG100":3.9,"fatG100":0.3,"fiberG100":0.9,"sodiumMg100":0},{"id":"ricette_nutriz_rum","name":"rum","energyKj100":920.04,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_rutabaga","name":"Rutabaga","energyKj100":334,"proteinG100":1.39,"carbsG100":17.2,"fatG100":0.17,"fiberG100":1.43,"sodiumMg100":13.9},{"id":"ricette_nutriz_salame_piccante","name":"salame piccante","energyKj100":1501.338,"proteinG100":26.7,"carbsG100":1.7,"fatG100":27.3,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_salamella","name":"salamella","energyKj100":1986.45,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"food_salmone_affumicato","name":"Salmone Affumicato","energyKj100":853,"proteinG100":23.8,"carbsG100":1.1,"fatG100":11.5,"fiberG100":0.5,"sodiumMg100":1272},{"id":"base_global_salmone_fresco","name":"Salmone fresco","energyKj100":599,"proteinG100":21.5,"carbsG100":0,"fatG100":6.32,"fiberG100":0,"sodiumMg100":46.5},{"id":"food_salsa_ai_peperoni","name":"Salsa ai Peperoni","energyKj100":713,"proteinG100":6.98,"carbsG100":5.43,"fatG100":13.62,"fiberG100":0.26,"sodiumMg100":87.8},{"id":"base_global_salsa_di_pesce","name":"Salsa di pesce","energyKj100":150,"proteinG100":5,"carbsG100":4,"fatG100":0,"fiberG100":0,"sodiumMg100":7000},{"id":"food_salsa_di_pomodoro","name":"Salsa di pomodoro","energyKj100":100,"proteinG100":1.3,"carbsG100":5.3,"fatG100":0.2,"fiberG100":1.5,"sodiumMg100":200},{"id":"base_global_salsa_di_soia","name":"Salsa di soia","energyKj100":230,"proteinG100":8,"carbsG100":5,"fatG100":0.6,"fiberG100":0.8,"sodiumMg100":5600},{"id":"ricette_nutriz_salsa_di_zucca","name":"salsa di zucca","energyKj100":60.974,"proteinG100":0.891,"carbsG100":2.835,"fatG100":0.081,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_salsa_hoisin","name":"Salsa hoisin","energyKj100":653,"proteinG100":3.44,"carbsG100":21,"fatG100":6.12,"fiberG100":1.38,"sodiumMg100":1276},{"id":"ricette_nutriz_salsa_tahina","name":"Salsa tahina","energyKj100":1065.595,"proteinG100":3.172,"carbsG100":0.662,"fatG100":7.428,"fiberG100":1.057,"sodiumMg100":0.004},{"id":"base_global_salsa_tahini_limone","name":"Salsa tahini limone","energyKj100":563,"proteinG100":3.87,"carbsG100":18.5,"fatG100":4.48,"fiberG100":2.11,"sodiumMg100":2387},{"id":"base_global_salsa_teriyaki","name":"Salsa teriyaki","energyKj100":515,"proteinG100":3.74,"carbsG100":14.5,"fatG100":5.24,"fiberG100":1.44,"sodiumMg100":1042},{"id":"base_global_salsa_worcestershire","name":"Salsa Worcestershire","energyKj100":544,"proteinG100":3.78,"carbsG100":18.1,"fatG100":4.36,"fiberG100":1.37,"sodiumMg100":1586},{"id":"ricette_nutriz_salsiccia","name":"salsiccia","energyKj100":1271.328,"proteinG100":22.2,"carbsG100":0,"fatG100":26.1,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_salvia","name":"salvia","energyKj100":485.112,"proteinG100":3.9,"carbsG100":15.6,"fatG100":4.6,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_sardine_fresche","name":"Sardine fresche","energyKj100":518,"proteinG100":21.7,"carbsG100":0,"fatG100":4.04,"fiberG100":0,"sodiumMg100":90.6},{"id":"ricette_nutriz_savoiardi","name":"Savoiardi","energyKj100":1584.978,"proteinG100":7.8,"carbsG100":77,"fatG100":3.8,"fiberG100":2.5,"sodiumMg100":0},{"id":"ricette_nutriz_scalogno","name":"scalogno","energyKj100":83.64,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_scamorza_affumicata","name":"scamorza affumicata","energyKj100":878.22,"proteinG100":25,"carbsG100":1,"fatG100":25.6,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_scampi","name":"scampi","energyKj100":296.922,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_scampi_surg_sgusciati_60_80","name":"scampi surg sgusciati 60/80","energyKj100":296.922,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_scarola","name":"Scarola","energyKj100":146,"proteinG100":1.94,"carbsG100":4.86,"fatG100":0.29,"fiberG100":2.46,"sodiumMg100":23.1},{"id":"ricette_nutriz_sedano","name":"sedano","energyKj100":50.184,"proteinG100":1.84,"carbsG100":1.92,"fatG100":0.16,"fiberG100":1.28,"sodiumMg100":0},{"id":"base_global_seitan","name":"Seitan","energyKj100":660,"proteinG100":25,"carbsG100":12,"fatG100":2,"fiberG100":1.5,"sodiumMg100":500},{"id":"ricette_nutriz_select","name":"Select","energyKj100":627.3,"proteinG100":0,"carbsG100":20,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_semi_di_chia","name":"Semi di chia","energyKj100":2030,"proteinG100":17,"carbsG100":42,"fatG100":31,"fiberG100":34,"sodiumMg100":16},{"id":"base_global_semi_di_girasole","name":"Semi di girasole","energyKj100":2460,"proteinG100":16.4,"carbsG100":18.8,"fatG100":48,"fiberG100":10.7,"sodiumMg100":3.17},{"id":"base_global_semi_di_lino","name":"Semi di lino","energyKj100":1972,"proteinG100":16.3,"carbsG100":16.5,"fatG100":36.7,"fiberG100":7.03,"sodiumMg100":6.27},{"id":"base_global_semi_di_papavero","name":"Semi di papavero","energyKj100":2580,"proteinG100":16.9,"carbsG100":19.6,"fatG100":50.9,"fiberG100":9.47,"sodiumMg100":4.41},{"id":"base_global_semi_di_sesamo","name":"Semi di sesamo","energyKj100":2754,"proteinG100":16,"carbsG100":16.5,"fatG100":58.1,"fiberG100":6.43,"sodiumMg100":2.88},{"id":"ricette_nutriz_semi_di_zucca","name":"Semi di zucca","energyKj100":2403,"proteinG100":24,"carbsG100":15,"fatG100":46,"fiberG100":5.3,"sodiumMg100":0.05},{"id":"food_semi_di_zucca_nat","name":"Semi di Zucca (nat)","energyKj100":2403,"proteinG100":24,"carbsG100":15,"fatG100":46,"fiberG100":5.3,"sodiumMg100":20},{"id":"base_global_semolino","name":"Semolino","energyKj100":1550,"proteinG100":12.3,"carbsG100":69.9,"fatG100":2.6,"fiberG100":7.09,"sodiumMg100":6.92},{"id":"base_global_senape_dijon","name":"Senape Dijon","energyKj100":630,"proteinG100":6,"carbsG100":6,"fatG100":9,"fiberG100":3,"sodiumMg100":1100},{"id":"base_global_senape_semi","name":"Senape semi","energyKj100":1617,"proteinG100":9.51,"carbsG100":48.1,"fatG100":12.6,"fiberG100":21.4,"sodiumMg100":34.8},{"id":"ricette_nutriz_seppia","name":"seppia","energyKj100":150.552,"proteinG100":7,"carbsG100":0.35,"fatG100":0.75,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_sesamo","name":"sesamo","energyKj100":83.64,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_sfilacci_di_cavallo","name":"sfilacci di cavallo","energyKj100":598.026,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_sgombro_fresco","name":"Sgombro fresco","energyKj100":613,"proteinG100":22.5,"carbsG100":0,"fatG100":6.24,"fiberG100":0,"sodiumMg100":105},{"id":"base_global_soba_secchi","name":"Soba secchi","energyKj100":1409,"proteinG100":10,"carbsG100":62.5,"fatG100":3.12,"fiberG100":7.67,"sodiumMg100":7.99},{"id":"base_global_soia_secca","name":"Soia secca","energyKj100":1533,"proteinG100":22.5,"carbsG100":51.9,"fatG100":4.02,"fiberG100":14.9,"sodiumMg100":12.2},{"id":"ricette_nutriz_sopressa","name":"sopressa","energyKj100":1693.71,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_sorgo","name":"Sorgo","energyKj100":1566,"proteinG100":10.4,"carbsG100":74.5,"fatG100":1.97,"fiberG100":6.18,"sodiumMg100":9.7},{"id":"ricette_nutriz_spaghetti","name":"spaghetti","energyKj100":572.934,"proteinG100":4.7,"carbsG100":30.3,"fatG100":0.5,"fiberG100":1.5,"sodiumMg100":0},{"id":"base_global_spaghetti_di_soia_secchi","name":"Spaghetti di soia secchi","energyKj100":1626,"proteinG100":9.68,"carbsG100":78.7,"fatG100":1.87,"fiberG100":6.75,"sodiumMg100":11},{"id":"ricette_nutriz_speck_sauris","name":"speck sauris","energyKj100":501.84,"proteinG100":30.7,"carbsG100":1.2,"fatG100":19.1,"fiberG100":0,"sodiumMg100":0},{"id":"food_spinaci_baby","name":"Spinaci baby","energyKj100":105.0,"proteinG100":2.9,"carbsG100":3.6,"fatG100":0.4,"fiberG100":2.2,"sodiumMg100":32},{"id":"ricette_nutriz_spinaci_bolliti_surgelati","name":"spinaci (bolliti) surgelati","energyKj100":100.368,"proteinG100":6.3,"carbsG100":7,"fatG100":1.3,"fiberG100":2.1,"sodiumMg100":0},{"id":"base_global_spinaci_freschi","name":"Spinaci freschi","energyKj100":137,"proteinG100":1.8,"carbsG100":4.74,"fatG100":0.38,"fiberG100":1.51,"sodiumMg100":25.8},{"id":"base_global_sriracha","name":"Sriracha","energyKj100":495,"proteinG100":4.77,"carbsG100":15.9,"fatG100":3.55,"fiberG100":1.58,"sodiumMg100":1337},{"id":"base_global_star_fruit_carambola","name":"Star fruit carambola","energyKj100":255,"proteinG100":0.8,"carbsG100":12.1,"fatG100":0.38,"fiberG100":2.76,"sodiumMg100":3.98},{"id":"ricette_nutriz_stracchino","name":"stracchino","energyKj100":1254.6,"proteinG100":18.5,"carbsG100":0,"fatG100":25.1,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_suppli","name":"suppli","energyKj100":836.4,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_surimi","name":"Surimi","energyKj100":516,"proteinG100":19.3,"carbsG100":0,"fatG100":5.08,"fiberG100":0,"sodiumMg100":47.6},{"id":"base_global_tacchino_petto_crudo","name":"Tacchino petto crudo","energyKj100":719,"proteinG100":21.3,"carbsG100":0,"fatG100":9.65,"fiberG100":0,"sodiumMg100":43.5},{"id":"ricette_nutriz_tagliatelle","name":"tagliatelle","energyKj100":1526.43,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_tahini","name":"tahini","energyKj100":2735.028,"proteinG100":24.9,"carbsG100":5.2,"fatG100":58.3,"fiberG100":8.3,"sodiumMg100":0.03},{"id":"ricette_nutriz_taleggio","name":"taleggio","energyKj100":1296.42,"proteinG100":19,"carbsG100":0.9,"fatG100":26.2,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_tamari","name":"Tamari","energyKj100":250,"proteinG100":10,"carbsG100":5,"fatG100":0.5,"fiberG100":0.5,"sodiumMg100":5500},{"id":"base_global_taro","name":"Taro","energyKj100":359,"proteinG100":1.86,"carbsG100":17.9,"fatG100":0.15,"fiberG100":2.17,"sodiumMg100":14.3},{"id":"base_global_teff","name":"Teff","energyKj100":1723,"proteinG100":10.6,"carbsG100":80.8,"fatG100":3.08,"fiberG100":6.95,"sodiumMg100":8.75},{"id":"base_global_tempeh","name":"Tempeh","energyKj100":800,"proteinG100":19,"carbsG100":9,"fatG100":11,"fiberG100":6,"sodiumMg100":9},{"id":"base_global_tilapia","name":"Tilapia","energyKj100":587,"proteinG100":22.8,"carbsG100":0,"fatG100":5.4,"fiberG100":0,"sodiumMg100":115},{"id":"ricette_nutriz_timo","name":"timo","energyKj100":418.2,"proteinG100":6,"carbsG100":24,"fatG100":2,"fiberG100":68,"sodiumMg100":0},{"id":"food_toast_al_salmone","name":"Toast al Salmone","energyKj100":1123.0,"proteinG100":13.06,"carbsG100":25.08,"fatG100":11.73,"fiberG100":4.96,"sodiumMg100":550.48},{"id":"food_toast_alle_melanzane","name":"Toast alle Melanzane","energyKj100":863.0,"proteinG100":9.64,"carbsG100":17.51,"fatG100":17.4,"fiberG100":4.07,"sodiumMg100":291.36},{"id":"base_global_tofu_compatto","name":"Tofu compatto","energyKj100":620,"proteinG100":15,"carbsG100":3,"fatG100":9,"fiberG100":1,"sodiumMg100":15},{"id":"base_global_tomatillo","name":"Tomatillo","energyKj100":163,"proteinG100":2.38,"carbsG100":5.36,"fatG100":0.34,"fiberG100":2.33,"sodiumMg100":37.1},{"id":"base_global_tonno_fresco","name":"Tonno fresco","energyKj100":579,"proteinG100":22.1,"carbsG100":0,"fatG100":5.5,"fiberG100":0,"sodiumMg100":106},{"id":"ricette_nutriz_tonno_sott_olio_sgocciolato","name":"tonno (sott'olio sgocciolato)","energyKj100":802.944,"proteinG100":25.2,"carbsG100":0,"fatG100":10.1,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_topinambur","name":"Topinambur","energyKj100":361,"proteinG100":1.46,"carbsG100":18.4,"fatG100":0.25,"fiberG100":1.82,"sodiumMg100":35},{"id":"base_global_tortilla_di_frumento","name":"Tortilla di frumento","energyKj100":1528,"proteinG100":11.2,"carbsG100":70.9,"fatG100":2.4,"fiberG100":5.41,"sodiumMg100":8.72},{"id":"base_global_tortilla_di_mais","name":"Tortilla di mais","energyKj100":1773,"proteinG100":8.94,"carbsG100":85.5,"fatG100":3.21,"fiberG100":6.1,"sodiumMg100":10.6},{"id":"base_global_trota_fresca","name":"Trota fresca","energyKj100":469,"proteinG100":15.7,"carbsG100":0,"fatG100":5.47,"fiberG100":0,"sodiumMg100":95.2},{"id":"ricette_nutriz_tuorli_d_uovo","name":"tuorli d'uovo","energyKj100":502.885,"proteinG100":5.846,"carbsG100":0,"fatG100":10.767,"fiberG100":0,"sodiumMg100":0},{"id":"food_tuorlo","name":"Tuorlo","energyKj100":1347,"proteinG100":15.9,"carbsG100":3.6,"fatG100":26.5,"fiberG100":0,"sodiumMg100":20},{"id":"food_tzatziki_0","name":"Tzatziki 0%","energyKj100":280.0,"proteinG100":8.24,"carbsG100":2.65,"fatG100":2.49,"fiberG100":0.13,"sodiumMg100":32.2},{"id":"food_tzatziki_5","name":"Tzatziki 5%","energyKj100":495.0,"proteinG100":7.22,"carbsG100":2.65,"fatG100":8.85,"fiberG100":0.13,"sodiumMg100":32.2},{"id":"base_global_udon_secchi","name":"Udon secchi","energyKj100":1387,"proteinG100":10.9,"carbsG100":60.6,"fatG100":3,"fiberG100":7.54,"sodiumMg100":11.6},{"id":"food_uova","name":"Uova","energyKj100":547,"proteinG100":12.6,"carbsG100":0.1,"fatG100":9,"fiberG100":0,"sodiumMg100":160},{"id":"base_global_uva","name":"Uva","energyKj100":272,"proteinG100":0.79,"carbsG100":13.7,"fatG100":0.23,"fiberG100":2.14,"sodiumMg100":3.77},{"id":"ricette_nutriz_uva_fragola","name":"uva fragola","energyKj100":147.959,"proteinG100":1.74,"carbsG100":10.44,"fatG100":0.58,"fiberG100":0.87,"sodiumMg100":0},{"id":"ricette_nutriz_uvetta","name":"uvetta","energyKj100":1325.694,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"food_verdure_surgelate","name":"Verdure Surgelate","energyKj100":241,"proteinG100":3.7,"carbsG100":7.1,"fatG100":0.5,"fiberG100":4.9,"sodiumMg100":12},{"id":"ricette_nutriz_vino_bianco","name":"vino bianco","energyKj100":263.466,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_vodka","name":"vodka","energyKj100":936.768,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_vongole","name":"Vongole","energyKj100":558,"proteinG100":20.3,"carbsG100":0,"fatG100":5.76,"fiberG100":0,"sodiumMg100":108},{"id":"ricette_nutriz_vongole_veraci","name":"Vongole veraci","energyKj100":73.185,"proteinG100":3.25,"carbsG100":0.875,"fatG100":0.25,"fiberG100":0,"sodiumMg100":0.125},{"id":"ricette_nutriz_wurstel_di_puro_suino_senza_pelle","name":"wurstel di puro suino senza pelle","energyKj100":1129.14,"proteinG100":14.6,"carbsG100":0.3,"fatG100":22.2,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_yam","name":"Yam","energyKj100":450,"proteinG100":1.74,"carbsG100":23.3,"fatG100":0.15,"fiberG100":2.38,"sodiumMg100":14.7},{"id":"ricette_nutriz_yogurt_bianco","name":"yogurt bianco","energyKj100":288.558,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"food_yogurt_greco_0","name":"Yogurt Greco 0%","energyKj100":230,"proteinG100":10.3,"carbsG100":3,"fatG100":0,"fiberG100":0,"sodiumMg100":40},{"id":"food_yogurt_greco_5","name":"Yogurt Greco 5%","energyKj100":389,"proteinG100":9,"carbsG100":3,"fatG100":5,"fiberG100":0,"sodiumMg100":40},{"id":"ricette_nutriz_yogurt_greco_full_fat","name":"Yogurt greco (full fat)","energyKj100":480.93,"proteinG100":6.4,"carbsG100":2,"fatG100":9.1,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_yogurt_naturale_magro","name":"Yogurt naturale magro","energyKj100":348,"proteinG100":6.64,"carbsG100":3.86,"fatG100":4.57,"fiberG100":0,"sodiumMg100":76},{"id":"ricette_nutriz_zafferano","name":"zafferano","energyKj100":1296.42,"proteinG100":11.43,"carbsG100":65.37,"fatG100":5.85,"fiberG100":3.9,"sodiumMg100":0},{"id":"base_global_zenzero_fresco","name":"Zenzero fresco","energyKj100":164,"proteinG100":2.39,"carbsG100":5.19,"fatG100":0.39,"fiberG100":2.63,"sodiumMg100":52},{"id":"base_global_zenzero_in_polvere","name":"Zenzero in polvere","energyKj100":1616,"proteinG100":11.3,"carbsG100":48,"fatG100":9.74,"fiberG100":30.9,"sodiumMg100":31.6},{"id":"ricette_nutriz_zucca","name":"zucca","energyKj100":45.166,"proteinG100":0.66,"carbsG100":2.1,"fatG100":0.06,"fiberG100":0,"sodiumMg100":0},{"id":"base_global_zucca_butternut","name":"Zucca butternut","energyKj100":129,"proteinG100":1.9,"carbsG100":4.01,"fatG100":0.31,"fiberG100":2.18,"sodiumMg100":37.5},{"id":"base_global_zucca_kabocha","name":"Zucca kabocha","energyKj100":129,"proteinG100":1.75,"carbsG100":4.01,"fatG100":0.23,"fiberG100":2.87,"sodiumMg100":50.5},{"id":"ricette_nutriz_zucchero","name":"zucchero","energyKj100":1639.344,"proteinG100":0,"carbsG100":104.5,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_zucchero_a_velo","name":"zucchero a velo","energyKj100":1639.344,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_zucchero_b_bustina","name":"zucchero b. bustina","energyKj100":1639.344,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_zucchero_canna_bustina","name":"zucchero canna bustina","energyKj100":1505.52,"proteinG100":0,"carbsG100":0,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_zucchero_cristallino","name":"Zucchero cristallino","energyKj100":1610.07,"proteinG100":0,"carbsG100":100,"fatG100":0,"fiberG100":0,"sodiumMg100":0},{"id":"ricette_nutriz_zucchine","name":"Zucchine","energyKj100":404.818,"proteinG100":1.144,"carbsG100":1.232,"fatG100":0.088,"fiberG100":1.056,"sodiumMg100":0}];
   var foodById = Object.create(null);
+  window.MAESTRO_NUTRIENT_FOODS = FOOD_SEED;
   FOOD_SEED.forEach(function(f){ if(f && f.id) foodById[String(f.id)] = f; });
   function esc(v){ return String(v == null ? '' : v).replace(/[&<>"']/g,function(ch){return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[ch];}); }
   function num(v){ var n = parseFloat(String(v == null ? '' : v).replace(',', '.').replace(/[^0-9.\-]/g,'')); return Number.isFinite(n) ? n : 0; }
@@ -12650,6 +12680,17 @@ body.light-mode #m098ORecipeArchivePage .m100b-recipe-procedure-text[contentedit
     var edits=loadTableEdits();
     if(id && edits['products:'+id]) base=Object.assign(base, edits['products:'+id]);
     return base;
+  }
+  function normalizeFoodName(v){
+    return String(v||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9%]+/g,' ').trim();
+  }
+  function findFoodIdByName(name){
+    var target = normalizeFoodName(name);
+    if(!target) return '';
+    for(var i=0;i<FOOD_SEED.length;i++){
+      if(normalizeFoodName(FOOD_SEED[i] && FOOD_SEED[i].name) === target) return String(FOOD_SEED[i].id || '');
+    }
+    return '';
   }
   function computeNutrition(ingredients){
     var out={energyKj:0,proteinG:0,carbsG:0,fatG:0,fiberG:0,sodiumMg:0};
@@ -12698,7 +12739,7 @@ body.light-mode #m098ORecipeArchivePage .m100b-recipe-procedure-text[contentedit
     if(card.querySelector('.m101d-recipe-actions')) return;
     var actions=document.createElement('div');
     actions.className='m101d-recipe-actions';
-    actions.innerHTML='<button type="button" class="m101d-edit-recipe">Modifica</button>';
+    actions.innerHTML='<button type="button" class="m101d-add-ingredient">Aggiungi ingrediente</button><button type="button" class="m101d-edit-recipe">Modifica</button>';
     card.appendChild(actions);
   }
   function setEditable(card, active){
@@ -12729,9 +12770,11 @@ body.light-mode #m098ORecipeArchivePage .m100b-recipe-procedure-text[contentedit
         var old = oldIngredients[i] || {};
         var nm = row.querySelector('span');
         var pct = row.querySelector('strong');
+        var foodName = nm ? nm.textContent.trim() : (old.foodName || old.foodId || '');
+        var foodId = old.foodId || findFoodIdByName(foodName) || '';
         return {
-          foodId: old.foodId || '',
-          foodName: nm ? nm.textContent.trim() : (old.foodName || old.foodId || ''),
+          foodId: foodId,
+          foodName: foodName,
           percent: round(pct ? num(pct.textContent) : old.percent, 1)
         };
       }).filter(function(it){ return it.foodName || it.foodId; });
@@ -12759,6 +12802,31 @@ body.light-mode #m098ORecipeArchivePage .m100b-recipe-procedure-text[contentedit
     if(ev.target && ev.target.closest && ev.target.closest('#m098ORecipeArchivePage [contenteditable="true"], #m098ORecipeArchivePage .m101d-recipe-actions')){
       ev.stopPropagation();
     }
+  }, true);
+  document.addEventListener('click', function(ev){
+    var addBtn = ev.target && ev.target.closest ? ev.target.closest('#m098ORecipeArchivePage .m101d-add-ingredient') : null;
+    if(!addBtn) return;
+    ev.preventDefault();
+    ev.stopPropagation();
+    var card = addBtn.closest('.m099c-recipe-card');
+    if(!card) return;
+    card.classList.add('is-expanded','is-editing');
+    card.setAttribute('aria-expanded','true');
+    var editBtn = card.querySelector('.m101d-edit-recipe');
+    if(editBtn) editBtn.textContent = 'Salva';
+    var list = card.querySelector('.m099c-recipe-ingredients');
+    if(!list){
+      var details = card.querySelector('.m101-recipe-details') || card;
+      list = document.createElement('div');
+      list.className = 'm099c-recipe-ingredients';
+      details.appendChild(list);
+    }
+    var row = document.createElement('div');
+    row.className = 'm099c-recipe-ing m104-added-ingredient';
+    row.innerHTML = '<span contenteditable="true" spellcheck="false" data-placeholder="Ingrediente"></span><strong contenteditable="true" spellcheck="false" data-placeholder="%"></strong>';
+    list.appendChild(row);
+    var first = row.querySelector('span');
+    if(first) setTimeout(function(){ try{ first.focus(); }catch(e){} }, 30);
   }, true);
   document.addEventListener('click', function(ev){
     var btn = ev.target && ev.target.closest ? ev.target.closest('#m098ORecipeArchivePage .m101d-edit-recipe') : null;
@@ -13259,7 +13327,7 @@ body.light-mode .m101l-usage-note, body.light-mode .m101l-mini-usage{color:#1d4e
       init = init || {};
       var url = '';
       try{ url = typeof input === 'string' ? input : (input && input.url) || ''; }catch(e){}
-      var isMaestroAi = /maestro-api-proxy\.fabiano-muzzin\.workers\.dev\/(api\/ai|api\/ping|ai\/recipe\/import|usage)/.test(url);
+      var isMaestroAi = /maestro-api-proxy\.fabiano-muzzin\.workers\.dev\/(api\/ai|api\/ping|ai\/recipe\/import|ai\/food\/scan|usage)/.test(url);
       if(isMaestroAi){
         init = Object.assign({}, init, { headers: authHeaders(init.headers || (input && input.headers) || {}) });
       }
@@ -13343,6 +13411,1231 @@ body.light-mode .m101l-usage-note, body.light-mode .m101l-mini-usage{color:#1d4e
 })();
 </script>
 <!-- Master101L: frontend consumi AI reali da Worker/KV, con card Cloud Account e mini contatori Coach/Import ricetta. -->
+
+
+<style id="m102RecipeCloudSaveStyle">
+/* Master102: stato cloud ricette non invasivo */
+.m102-recipe-cloud-status{
+  font-size:11px;
+  font-weight:850;
+  line-height:1.25;
+  color:rgba(191,219,254,.86);
+  min-height:14px;
+  margin-top:4px;
+  text-align:left;
+}
+.m102-recipe-cloud-status.err{color:#fecaca}
+.m102-recipe-cloud-status.ok{color:#bbf7d0}
+body.light-mode .m102-recipe-cloud-status{color:#1d4ed8}
+body.light-mode .m102-recipe-cloud-status.err{color:#b91c1c}
+body.light-mode .m102-recipe-cloud-status.ok{color:#166534}
+</style>
+<script id="m102DietRecipesCloudSaveScript">
+/* Master102: salva Archivio ricette nello snapshot cloud Maestro quando premi Salva ricetta o Salva modifica. */
+(function m102DietRecipesCloudSave(){
+  'use strict';
+
+  var BASE_URL = 'https://maestro-api-proxy.fabiano-muzzin.workers.dev';
+  var SESSION_KEY = 'maestro.cloudReal.session.v1';
+  var RECIPE_STORE_KEY = 'maestro.diet.recipes.archive.v1';
+  var MAESTRO_DATA_KEY = 'maestro.cloudData.schema.v1';
+  var LAST_SYNC_KEY = 'maestro.cloudReal.lastSync.v1';
+  var STATUS_KEY = 'maestro.cloudRecipes.status.v2';
+  var pendingTimer = 0;
+  var running = false;
+  var queued = false;
+
+  function jget(k, fallback){
+    try{
+      var raw = localStorage.getItem(k);
+      if(!raw) return fallback;
+      var parsed = JSON.parse(raw);
+      return parsed == null ? fallback : parsed;
+    }catch(e){ return fallback; }
+  }
+  function jset(k, value){
+    try{ localStorage.setItem(k, JSON.stringify(value)); }catch(e){}
+  }
+  function nowIso(){
+    try{ return new Date().toISOString(); }catch(e){ return String(Date.now()); }
+  }
+  function session(){
+    return jget(SESSION_KEY, {}) || {};
+  }
+  function localRecipes(){
+    var list = jget(RECIPE_STORE_KEY, []);
+    return Array.isArray(list) ? list : [];
+  }
+  function readMaestroData(){
+    var d = jget(MAESTRO_DATA_KEY, {});
+    return d && typeof d === 'object' && !Array.isArray(d) ? d : {};
+  }
+  function saveMaestroData(d){
+    if(!d || typeof d !== 'object') d = {};
+    d.updatedAt = d.updatedAt || nowIso();
+    jset(MAESTRO_DATA_KEY, d);
+    return d;
+  }
+  function deepMerge(a,b){
+    var out = Array.isArray(a) ? a.slice() : Object.assign({}, a || {});
+    Object.keys(b || {}).forEach(function(k){
+      var bv = b[k], av = out[k];
+      if(bv && typeof bv === 'object' && !Array.isArray(bv) && av && typeof av === 'object' && !Array.isArray(av)){
+        out[k] = deepMerge(av, bv);
+      }else{
+        out[k] = bv;
+      }
+    });
+    return out;
+  }
+  function recipeForCloud(r){
+    var copy = deepMerge({}, r || {});
+    copy.cloudType = 'diet_recipe_v1';
+    copy.savedFrom = copy.savedFrom || 'Archivio ricette';
+    copy.basis = copy.basis || 'per_100g_recipe';
+    copy.updatedAt = copy.updatedAt || nowIso();
+    if(Array.isArray(copy.ingredients)){
+      copy.ingredients = copy.ingredients.map(function(it){
+        return {
+          foodId: it.foodId || '',
+          foodName: it.foodName || it.name || '',
+          percent: Number(it.percent || 0) || 0
+        };
+      });
+    }else{
+      copy.ingredients = [];
+    }
+    delete copy.totalWeightG;
+    return copy;
+  }
+  function setStatus(message, kind){
+    try{ localStorage.setItem(STATUS_KEY, message || ''); }catch(e){}
+    var nodes = [];
+    var inputHeader = document.querySelector('#m098RRecipeInputPage .m099c-input-left-stack');
+    var archiveLeft = document.querySelector('#m098ORecipeArchivePage .m098o-recipe-left');
+    [inputHeader, archiveLeft].forEach(function(parent, idx){
+      if(!parent) return;
+      var id = idx === 0 ? 'm102RecipeCloudStatusInput' : 'm102RecipeCloudStatusArchive';
+      var el = document.getElementById(id);
+      if(!el){
+        el = document.createElement('div');
+        el.id = id;
+        el.className = 'm102-recipe-cloud-status';
+        parent.appendChild(el);
+      }
+      nodes.push(el);
+    });
+    nodes.forEach(function(el){
+      el.textContent = message || '';
+      el.classList.toggle('ok', kind === 'ok');
+      el.classList.toggle('err', kind === 'err');
+    });
+  }
+  async function api(path, options){
+    var res = await fetch(BASE_URL + path, options || {});
+    var txt = await res.text();
+    var data = {};
+    try{ data = txt ? JSON.parse(txt) : {}; }catch(e){ data = { ok:false, raw:txt }; }
+    if(!res.ok || data.ok === false){
+      throw new Error(data.error || data.message || ('HTTP '+res.status));
+    }
+    return data;
+  }
+  function extractRemoteMaestro(payload){
+    if(!payload || typeof payload !== 'object') return {};
+    var data = payload.data || payload;
+    if(data && data.maestroData && typeof data.maestroData === 'object') return data.maestroData;
+    if(data && data.backup && data.backup.maestroData && typeof data.backup.maestroData === 'object') return data.backup.maestroData;
+    if(data && (data.diet || data.training || data.profile || data.settings)) return data;
+    return {};
+  }
+  async function syncRecipesToCloud(reason){
+    if(running){ queued = true; return; }
+    var s = session();
+    if(!s || !s.token){
+      setStatus('Ricette salvate in locale. Accedi al Cloud Account per salvarle anche nel cloud.', '');
+      return;
+    }
+    var recipes = localRecipes().map(recipeForCloud);
+    var stamp = nowIso();
+    running = true;
+    setStatus('Salvataggio ricette nel cloud...', '');
+    try{
+      var remote = {};
+      try{
+        var pulled = await api('/sync', { method:'GET', headers:{ 'Authorization':'Bearer '+s.token } });
+        remote = extractRemoteMaestro(pulled);
+      }catch(e){
+        remote = {};
+      }
+      var local = readMaestroData();
+      var merged = deepMerge(remote, local);
+      merged.diet = merged.diet || {};
+      merged.diet.recipes = recipes;
+      merged.diet.recipesUpdatedAt = stamp;
+      merged.recipesSavedAt = stamp;
+      merged.updatedAt = stamp;
+      merged.sync = deepMerge(merged.sync || {}, {
+        updatedAt: stamp,
+        lastSync: stamp,
+        lastRecipeSave: stamp,
+        recipeSource: reason || 'manual_save'
+      });
+      merged.cloudAccount = deepMerge(merged.cloudAccount || {}, {
+        lastSyncAt: stamp,
+        status: 'cloud_active'
+      });
+      saveMaestroData(merged);
+      var payload = {
+        profile: merged.profile || {},
+        settings: merged.settings || {},
+        recipes: recipes,
+        maestroData: merged,
+        backup: { maestroData: merged },
+        source: 'Master102_diet_recipes_cloud_save_v1',
+        updatedAt: stamp
+      };
+      var out = await api('/sync', {
+        method:'POST',
+        headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer '+s.token },
+        body: JSON.stringify(payload)
+      });
+      var cloudStamp = out.updatedAt || stamp;
+      try{ localStorage.setItem(LAST_SYNC_KEY, cloudStamp); }catch(e){}
+      setStatus('Ricette salvate nel cloud ✅ ('+recipes.length+')', 'ok');
+      window.dispatchEvent(new CustomEvent('maestro:diet-recipes-cloud-saved', { detail:{ count:recipes.length, updatedAt:cloudStamp } }));
+    }catch(e){
+      setStatus('Ricette salvate in locale. Cloud non salvato: '+(e && e.message ? e.message : e), 'err');
+    }finally{
+      running = false;
+      if(queued){
+        queued = false;
+        scheduleSync('queued');
+      }
+    }
+  }
+  function scheduleSync(reason){
+    clearTimeout(pendingTimer);
+    pendingTimer = setTimeout(function(){ syncRecipesToCloud(reason); }, 450);
+  }
+  window.addEventListener('maestro:recipe-saved', function(){ scheduleSync('recipe_saved'); });
+  window.addEventListener('maestro:recipe-archive-edited', function(){ scheduleSync('recipe_edited'); });
+  function initStatus(){
+    var last = '';
+    try{ last = localStorage.getItem(STATUS_KEY) || ''; }catch(e){}
+    if(last) setStatus(last, last.indexOf('✅') >= 0 ? 'ok' : (last.indexOf('non salvato') >= 0 ? 'err' : ''));
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initStatus, {once:true}); else initStatus();
+  setInterval(initStatus, 1200);
+})();
+</script>
+<!-- Master102: salvataggio cloud reale dell'Archivio ricette nello schema diet.recipes usando Worker v008 /sync, senza modificare il Worker. -->
+
+
+
+<style id="m103NutrientCloudSaveStyle">
+/* Master103: stato cloud archivio nutrienti dentro Tabelle nutrizionali */
+.m103-nutrient-cloud-status{
+  font-size:10px;
+  font-weight:850;
+  line-height:1.15;
+  color:rgba(191,219,254,.86);
+  min-height:12px;
+  max-width:205px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  margin-top:3px;
+  text-align:left;
+}
+.m103-nutrient-cloud-status.err{color:#fecaca}
+.m103-nutrient-cloud-status.ok{color:#bbf7d0}
+body.light-mode .m103-nutrient-cloud-status{color:#1d4ed8}
+body.light-mode .m103-nutrient-cloud-status.err{color:#b91c1c}
+body.light-mode .m103-nutrient-cloud-status.ok{color:#166534}
+@media(max-width:430px){.m103-nutrient-cloud-status{max-width:170px;font-size:9px}}
+</style>
+<script id="m103DietNutrientArchiveCloudSaveScript">
+/* Master103: salva Tabelle nutrizionali / Archivio nutrienti nello schema cloud diet.nutrientArchive usando Worker v008 /sync. */
+(function m103DietNutrientArchiveCloudSave(){
+  'use strict';
+
+  var BASE_URL = 'https://maestro-api-proxy.fabiano-muzzin.workers.dev';
+  var SESSION_KEY = 'maestro.cloudReal.session.v1';
+  var MAESTRO_DATA_KEY = 'maestro.cloudData.schema.v1';
+  var LAST_SYNC_KEY = 'maestro.cloudReal.lastSync.v1';
+  var LOCAL_ARCHIVE_KEY = 'maestro.diet.nutrientArchive.v1';
+  var STATUS_KEY = 'maestro.cloudNutrients.status.v1';
+  var running = false;
+  var queued = false;
+
+  var FIELDS = [
+    'name','energyKj100','proteinG100','carbsG100','sugarG100','fatG100','saturatedFatG100','monoFatG100','polyFatG100','fiberG100','sodiumMg100','calciumMg100','potassiumMg100','magnesiumMg100','ironMg100','priceUK'
+  ];
+  var NUMERIC_FIELDS = {
+    energyKj100:1, proteinG100:1, carbsG100:1, sugarG100:1, fatG100:1, saturatedFatG100:1, monoFatG100:1, polyFatG100:1, fiberG100:1,
+    sodiumMg100:1, calciumMg100:1, potassiumMg100:1, magnesiumMg100:1, ironMg100:1
+  };
+
+  function jget(k, fallback){
+    try{
+      var raw = localStorage.getItem(k);
+      if(!raw) return fallback;
+      var parsed = JSON.parse(raw);
+      return parsed == null ? fallback : parsed;
+    }catch(e){ return fallback; }
+  }
+  function jset(k, value){ try{ localStorage.setItem(k, JSON.stringify(value)); }catch(e){} }
+  function nowIso(){ try{ return new Date().toISOString(); }catch(e){ return String(Date.now()); } }
+  function session(){ return jget(SESSION_KEY, {}) || {}; }
+  function readMaestroData(){
+    var d = jget(MAESTRO_DATA_KEY, {});
+    return d && typeof d === 'object' && !Array.isArray(d) ? d : {};
+  }
+  function saveMaestroData(d){
+    if(!d || typeof d !== 'object') d = {};
+    d.updatedAt = d.updatedAt || nowIso();
+    jset(MAESTRO_DATA_KEY, d);
+    return d;
+  }
+  function deepMerge(a,b){
+    var out = Array.isArray(a) ? a.slice() : Object.assign({}, a || {});
+    Object.keys(b || {}).forEach(function(k){
+      var bv = b[k], av = out[k];
+      if(bv && typeof bv === 'object' && !Array.isArray(bv) && av && typeof av === 'object' && !Array.isArray(av)){
+        out[k] = deepMerge(av, bv);
+      }else{
+        out[k] = bv;
+      }
+    });
+    return out;
+  }
+  function cleanText(v){ return String(v == null ? '' : v).replace(/\s+/g,' ').trim(); }
+  function toValue(field, value){
+    var text = cleanText(value);
+    if(text === '') return '';
+    if(NUMERIC_FIELDS[field]){
+      var n = Number(text.replace(',', '.').replace(/[^0-9.\-]/g,''));
+      return Number.isFinite(n) ? n : text;
+    }
+    return text;
+  }
+  function getStatusNode(){
+    var page = document.getElementById('m098DietTablesPage');
+    if(!page) return null;
+    var parent = page.querySelector('.m098-left-group');
+    if(!parent) return null;
+    var el = document.getElementById('m103NutrientCloudStatus');
+    if(!el){
+      el = document.createElement('div');
+      el.id = 'm103NutrientCloudStatus';
+      el.className = 'm103-nutrient-cloud-status';
+      parent.appendChild(el);
+    }
+    return el;
+  }
+  function setStatus(message, kind){
+    try{ localStorage.setItem(STATUS_KEY, message || ''); }catch(e){}
+    var el = getStatusNode();
+    if(!el) return;
+    el.textContent = message || '';
+    el.classList.toggle('ok', kind === 'ok');
+    el.classList.toggle('err', kind === 'err');
+  }
+  async function api(path, options){
+    var res = await fetch(BASE_URL + path, options || {});
+    var txt = await res.text();
+    var data = {};
+    try{ data = txt ? JSON.parse(txt) : {}; }catch(e){ data = { ok:false, raw:txt }; }
+    if(!res.ok || data.ok === false){
+      throw new Error(data.error || data.message || ('HTTP '+res.status));
+    }
+    return data;
+  }
+  function extractRemoteMaestro(payload){
+    if(!payload || typeof payload !== 'object') return {};
+    var data = payload.data || payload;
+    if(data && data.maestroData && typeof data.maestroData === 'object') return data.maestroData;
+    if(data && data.backup && data.backup.maestroData && typeof data.backup.maestroData === 'object') return data.backup.maestroData;
+    if(data && (data.diet || data.training || data.profile || data.settings)) return data;
+    return {};
+  }
+  function currentArchiveFromGrid(){
+    var page = document.getElementById('m098DietTablesPage');
+    if(!page) return [];
+    var rows = Array.prototype.slice.call(page.querySelectorAll('.m098-grid-body .m098-grid-row'));
+    var out = [];
+    rows.forEach(function(row){
+      var cells = Array.prototype.slice.call(row.querySelectorAll('.m098-body-cell'));
+      if(!cells.length) return;
+      var nameEl = row.querySelector('.m098-name-edit');
+      var name = cleanText(nameEl ? nameEl.textContent : (cells[0] ? cells[0].textContent : ''));
+      name = name.replace(/^\d+\s+/, '').trim();
+      if(!name) return;
+      var item = {
+        id: (nameEl && nameEl.dataset && nameEl.dataset.id) ? String(nameEl.dataset.id) : ('manual_'+name.toLowerCase().replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,'')),
+        unit: '100 g',
+        defaultPortionG: 100,
+        source: 'Tabelle nutrizionali',
+        cloudType: 'diet_nutrient_v1',
+        updatedAt: nowIso()
+      };
+      FIELDS.forEach(function(field, idx){
+        var value = '';
+        if(field === 'name'){
+          value = name;
+        }else{
+          var cell = cells[idx];
+          var edit = cell ? cell.querySelector('.m098-edit') : null;
+          value = edit ? edit.textContent : (cell ? cell.textContent : '');
+        }
+        item[field] = toValue(field, value);
+      });
+      var statusBtn = row.querySelector('.m098-row-index-status');
+      var verified = !!(statusBtn && statusBtn.classList.contains('ok'));
+      item.verified = verified ? 'Sì' : 'No';
+      item.status = verified ? 'verificato' : 'da verificare';
+      out.push(item);
+    });
+    return out;
+  }
+  function saveLocalArchive(list){
+    var payload = { updatedAt: nowIso(), count: Array.isArray(list) ? list.length : 0, items: Array.isArray(list) ? list : [] };
+    jset(LOCAL_ARCHIVE_KEY, payload);
+    return payload;
+  }
+  async function syncArchiveToCloud(reason){
+    if(running){ queued = true; return; }
+    var archive = currentArchiveFromGrid();
+    var localPayload = saveLocalArchive(archive);
+    var s = session();
+    if(!s || !s.token){
+      setStatus('Archivio nutrienti salvato in locale. Accedi al Cloud Account per salvarlo nel cloud.', '');
+      window.dispatchEvent(new CustomEvent('maestro:diet-nutrients-local-saved', { detail:{ count:archive.length } }));
+      return;
+    }
+    var stamp = nowIso();
+    running = true;
+    setStatus('Salvataggio archivio nutrienti nel cloud...', '');
+    try{
+      var remote = {};
+      try{
+        var pulled = await api('/sync', { method:'GET', headers:{ 'Authorization':'Bearer '+s.token } });
+        remote = extractRemoteMaestro(pulled);
+      }catch(e){ remote = {}; }
+      var local = readMaestroData();
+      var merged = deepMerge(remote, local);
+      merged.diet = merged.diet || {};
+      merged.diet.nutrientArchive = localPayload;
+      merged.diet.foodCatalog = archive;
+      merged.diet.nutrientArchiveUpdatedAt = stamp;
+      merged.updatedAt = stamp;
+      merged.sync = deepMerge(merged.sync || {}, {
+        updatedAt: stamp,
+        lastSync: stamp,
+        lastNutrientArchiveSave: stamp,
+        nutrientArchiveSource: reason || 'manual_save'
+      });
+      merged.cloudAccount = deepMerge(merged.cloudAccount || {}, { lastSyncAt:stamp, status:'cloud_active' });
+      saveMaestroData(merged);
+      var payload = {
+        profile: merged.profile || {},
+        settings: merged.settings || {},
+        diet: merged.diet || {},
+        recipes: (merged.diet && merged.diet.recipes) || [],
+        maestroData: merged,
+        backup: { maestroData: merged },
+        source: 'Master103_diet_nutrient_archive_cloud_save_v1',
+        updatedAt: stamp
+      };
+      var out = await api('/sync', {
+        method:'POST',
+        headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer '+s.token },
+        body: JSON.stringify(payload)
+      });
+      var cloudStamp = out.updatedAt || stamp;
+      try{ localStorage.setItem(LAST_SYNC_KEY, cloudStamp); }catch(e){}
+      setStatus('Archivio nutrienti salvato nel cloud ✅ ('+archive.length+')', 'ok');
+      window.dispatchEvent(new CustomEvent('maestro:diet-nutrients-cloud-saved', { detail:{ count:archive.length, updatedAt:cloudStamp } }));
+    }catch(e){
+      setStatus('Archivio nutrienti salvato in locale. Cloud non salvato: '+(e && e.message ? e.message : e), 'err');
+    }finally{
+      running = false;
+      if(queued){ queued = false; setTimeout(function(){ syncArchiveToCloud('queued'); }, 350); }
+    }
+  }
+  document.addEventListener('click', function(ev){
+    var btn = ev.target && ev.target.closest ? ev.target.closest('#m098Save') : null;
+    if(!btn) return;
+    setTimeout(function(){ syncArchiveToCloud('nutrient_archive_save'); }, 120);
+  }, true);
+  function initStatus(){
+    var last = '';
+    try{ last = localStorage.getItem(STATUS_KEY) || ''; }catch(e){}
+    if(last) setStatus(last, last.indexOf('✅') >= 0 ? 'ok' : (last.indexOf('non salvato') >= 0 ? 'err' : ''));
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initStatus, {once:true}); else initStatus();
+  setInterval(initStatus, 1800);
+})();
+</script>
+<!-- Master103: salvataggio cloud reale di Tabelle nutrizionali / Archivio nutrienti in diet.nutrientArchive e diet.foodCatalog usando Worker v008 /sync, senza modificare il Worker. -->
+
+
+
+<style id="m104ADropdownIngredientStyle">
+/* Master104A: in modifica ricetta, ingredienti selezionabili da tendina Archivio nutrienti */
+#m098ORecipeArchivePage .m104a-food-select{
+  width:100%;
+  min-height:34px;
+  border-radius:10px;
+  border:1px solid rgba(96,165,250,.42);
+  background:rgba(15,23,42,.86);
+  color:#f8fafc;
+  font-size:12px;
+  font-weight:850;
+  padding:0 8px;
+  outline:none;
+  max-width:100%;
+}
+#m098ORecipeArchivePage .m104a-food-select:focus{
+  border-color:rgba(147,197,253,.9);
+  box-shadow:0 0 0 2px rgba(96,165,250,.18);
+}
+#m098ORecipeArchivePage .m099c-recipe-card.is-editing .m099c-recipe-ing span.m104a-hidden-food-name{
+  display:none!important;
+}
+#m098ORecipeArchivePage .m099c-recipe-card.is-editing .m099c-recipe-ing{
+  align-items:center;
+}
+#m098ORecipeArchivePage .m099c-recipe-card.is-editing .m099c-recipe-ing strong[contenteditable="true"]{
+  min-width:52px;
+  text-align:right;
+}
+body.light-mode #m098ORecipeArchivePage .m104a-food-select{
+  background:#fff;
+  color:#111827;
+  border-color:#93c5fd;
+}
+@media(max-width:430px){
+  #m098ORecipeArchivePage .m104a-food-select{min-height:32px;font-size:12px;padding:0 6px;}
+}
+</style>
+<script id="m104AIngredientDropdownScript">
+(function m104AIngredientDropdown(){
+  'use strict';
+  function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(ch){return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[ch];});}
+  function norm(v){return String(v||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9%]+/g,' ').trim();}
+  function foods(){
+    var arr = Array.isArray(window.MAESTRO_NUTRIENT_FOODS) ? window.MAESTRO_NUTRIENT_FOODS.slice() : [];
+    var seen = Object.create(null);
+    arr = arr.filter(function(f){
+      var id = String((f && f.id) || '');
+      var name = String((f && f.name) || '').trim();
+      if(!name) return false;
+      var key = id || norm(name);
+      if(seen[key]) return false;
+      seen[key]=1;
+      return true;
+    }).sort(function(a,b){return String(a.name||'').localeCompare(String(b.name||''),'it',{sensitivity:'base'});});
+    return arr;
+  }
+  function buildOptions(currentName, currentId){
+    var list = foods();
+    var cn = norm(currentName);
+    var cid = String(currentId||'');
+    var html = '<option value="">Scegli ingrediente</option>';
+    list.forEach(function(f){
+      var id=String(f.id||'');
+      var name=String(f.name||'').trim();
+      var selected = (cid && id===cid) || (!cid && cn && norm(name)===cn) ? ' selected' : '';
+      html += '<option value="'+esc(id)+'" data-name="'+esc(name)+'"'+selected+'>'+esc(name)+'</option>';
+    });
+    return html;
+  }
+  function selectedName(sel){
+    if(!sel) return '';
+    var opt = sel.options && sel.options[sel.selectedIndex];
+    return opt ? String(opt.getAttribute('data-name') || opt.textContent || '').trim() : '';
+  }
+  function hydrateRow(row){
+    if(!row || row.querySelector('.m104a-food-select')) return;
+    var span = row.querySelector('span');
+    if(!span) return;
+    var currentName = span.textContent.trim();
+    var currentId = span.getAttribute('data-food-id') || '';
+    var sel = document.createElement('select');
+    sel.className = 'm104a-food-select';
+    sel.innerHTML = buildOptions(currentName, currentId);
+    var firstSelectedName = selectedName(sel) || currentName;
+    if(firstSelectedName) span.textContent = firstSelectedName;
+    span.classList.add('m104a-hidden-food-name');
+    span.removeAttribute('contenteditable');
+    span.removeAttribute('spellcheck');
+    sel.addEventListener('change', function(ev){
+      var name = selectedName(sel);
+      span.textContent = name;
+      span.setAttribute('data-food-id', sel.value || '');
+      ev.stopPropagation();
+    });
+    sel.addEventListener('click', function(ev){ ev.stopPropagation(); });
+    sel.addEventListener('keydown', function(ev){ ev.stopPropagation(); });
+    row.insertBefore(sel, span);
+  }
+  function hydrateEditingCard(card){
+    if(!card || !card.classList.contains('is-editing')) return;
+    card.querySelectorAll('.m099c-recipe-ing').forEach(hydrateRow);
+  }
+  function hydrateAll(){
+    document.querySelectorAll('#m098ORecipeArchivePage .m099c-recipe-card.is-editing').forEach(hydrateEditingCard);
+  }
+  document.addEventListener('click', function(ev){
+    var btn = ev.target && ev.target.closest ? ev.target.closest('#m098ORecipeArchivePage .m101d-edit-recipe, #m098ORecipeArchivePage .m101d-add-ingredient') : null;
+    if(!btn) return;
+    setTimeout(function(){
+      var card = btn.closest('.m099c-recipe-card');
+      hydrateEditingCard(card);
+      var last = card && card.querySelector('.m099c-recipe-ing:last-child .m104a-food-select');
+      if(last && btn.classList.contains('m101d-add-ingredient')){ try{ last.focus(); }catch(e){} }
+    }, 40);
+  }, true);
+  document.addEventListener('change', function(ev){
+    var sel = ev.target && ev.target.closest ? ev.target.closest('#m098ORecipeArchivePage .m104a-food-select') : null;
+    if(!sel) return;
+    var row = sel.closest('.m099c-recipe-ing');
+    var span = row && row.querySelector('span');
+    if(span){
+      span.textContent = selectedName(sel);
+      span.setAttribute('data-food-id', sel.value || '');
+    }
+  }, true);
+  window.addEventListener('maestro:diet-recipes-open', function(){ setTimeout(hydrateAll, 120); });
+  window.addEventListener('maestro:recipe-saved', function(){ setTimeout(hydrateAll, 120); });
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', function(){ setTimeout(hydrateAll, 120); }, {once:true}); else setTimeout(hydrateAll, 120);
+  setInterval(hydrateAll, 700);
+})();
+</script>
+<!-- Master104A: in Archivio ricette, durante Modifica/Aggiungi ingrediente, il nome ingrediente usa una tendina alimentata dalla tabella nutrizionale corrente. -->
+
+
+<style id="m105RecipeEditPercentToolsStyle">
+/* Master105: modifica ricette con rimozione ingredienti e controllo somma percentuali */
+#m098ORecipeArchivePage .m105-row-remove{
+  border:1px solid rgba(248,113,113,.42);
+  background:rgba(127,29,29,.42);
+  color:#fecaca;
+  border-radius:9px;
+  min-width:30px;
+  min-height:30px;
+  padding:0 8px;
+  font-size:12px;
+  font-weight:950;
+  line-height:1;
+  cursor:pointer;
+  flex:0 0 auto;
+}
+#m098ORecipeArchivePage .m105-row-remove:active{transform:translateY(1px)}
+#m098ORecipeArchivePage .m099c-recipe-card.is-editing .m099c-recipe-ing{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 64px 32px;
+  gap:7px;
+  align-items:center;
+}
+#m098ORecipeArchivePage .m099c-recipe-card.is-editing .m104a-food-select{
+  min-width:0;
+  grid-column:1;
+}
+#m098ORecipeArchivePage .m099c-recipe-card.is-editing .m104a-hidden-food-name{
+  display:none!important;
+}
+#m098ORecipeArchivePage .m099c-recipe-card.is-editing .m099c-recipe-ing strong[contenteditable="true"]{
+  grid-column:2;
+  min-height:30px;
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  min-width:0!important;
+  width:100%;
+}
+#m098ORecipeArchivePage .m099c-recipe-card.is-editing .m105-row-remove{grid-column:3}
+#m098ORecipeArchivePage .m105-percent-tools{
+  display:none;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  margin:6px 0 2px;
+  padding:7px 8px;
+  border:1px solid rgba(148,163,184,.14);
+  border-radius:12px;
+  background:rgba(15,23,42,.34);
+  color:#e2e8f0;
+}
+#m098ORecipeArchivePage .m099c-recipe-card.is-editing .m105-percent-tools{display:flex}
+#m098ORecipeArchivePage .m105-percent-total{
+  font-size:12px;
+  font-weight:950;
+  color:#bfdbfe;
+  white-space:nowrap;
+}
+#m098ORecipeArchivePage .m105-percent-total.warn{color:#fde68a}
+#m098ORecipeArchivePage .m105-normalize{
+  border:1px solid rgba(96,165,250,.42);
+  background:rgba(37,99,235,.22);
+  color:#dbeafe;
+  border-radius:10px;
+  min-height:30px;
+  padding:6px 9px;
+  font-size:11px;
+  font-weight:950;
+  cursor:pointer;
+}
+body.light-mode #m098ORecipeArchivePage .m105-percent-tools{background:#f8fafc;border-color:#e2e8f0;color:#334155}
+body.light-mode #m098ORecipeArchivePage .m105-percent-total{color:#1d4ed8}
+body.light-mode #m098ORecipeArchivePage .m105-percent-total.warn{color:#b45309}
+body.light-mode #m098ORecipeArchivePage .m105-normalize{background:#dbeafe;color:#1d4ed8;border-color:#93c5fd}
+body.light-mode #m098ORecipeArchivePage .m105-row-remove{background:#fee2e2;color:#991b1b;border-color:#fecaca}
+@media(max-width:430px){
+  #m098ORecipeArchivePage .m099c-recipe-card.is-editing .m099c-recipe-ing{grid-template-columns:minmax(0,1fr) 52px 30px;gap:5px}
+  #m098ORecipeArchivePage .m105-percent-tools{padding:6px;gap:6px}
+  #m098ORecipeArchivePage .m105-percent-total{font-size:11px}
+  #m098ORecipeArchivePage .m105-normalize{font-size:10px;padding:5px 7px}
+}
+</style>
+<script id="m105RecipeEditPercentToolsScript">
+(function m105RecipeEditPercentTools(){
+  'use strict';
+  var STORE_KEY = 'maestro.diet.recipes.archive.v1';
+  function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(ch){return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[ch];});}
+  function norm(v){return String(v||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9%]+/g,' ').trim();}
+  function num(v){var n=parseFloat(String(v||'').replace(',','.').replace(/[^0-9.\-]/g,''));return Number.isFinite(n)?n:0;}
+  function round(v,d){var p=Math.pow(10,d||0);return Math.round((Number(v)||0)*p)/p;}
+  function loadRecipes(){try{var v=JSON.parse(localStorage.getItem(STORE_KEY)||'[]');return Array.isArray(v)?v:[];}catch(e){return [];}}
+  function saveRecipes(list){try{localStorage.setItem(STORE_KEY,JSON.stringify(Array.isArray(list)?list:[]));}catch(e){}}
+  function foods(){return Array.isArray(window.MAESTRO_NUTRIENT_FOODS)?window.MAESTRO_NUTRIENT_FOODS:[];}
+  function foodById(id){id=String(id||'');return foods().find(function(f){return String(f&&f.id||'')===id;})||null;}
+  function foodByName(name){var n=norm(name);if(!n)return null;return foods().find(function(f){return norm(f&&f.name)===n;})||null;}
+  function selectedName(sel){var opt=sel&&sel.options?sel.options[sel.selectedIndex]:null;return opt?String(opt.getAttribute('data-name')||opt.textContent||'').trim():'';}
+  function computeNutrition(ings){var out={energyKj:0,proteinG:0,carbsG:0,fatG:0,fiberG:0,sodiumMg:0};(ings||[]).forEach(function(it){var f=foodById(it.foodId)||foodByName(it.foodName);var pct=num(it.percent)/100;if(!f||!pct)return;out.energyKj+=num(f.energyKj100)*pct;out.proteinG+=num(f.proteinG100)*pct;out.carbsG+=num(f.carbsG100)*pct;out.fatG+=num(f.fatG100)*pct;out.fiberG+=num(f.fiberG100)*pct;out.sodiumMg+=num(f.sodiumMg100)*pct;});return {energyKj:round(out.energyKj,0),proteinG:round(out.proteinG,1),carbsG:round(out.carbsG,1),fatG:round(out.fatG,1),fiberG:round(out.fiberG,1),sodiumMg:round(out.sodiumMg,0)};}
+  function recipeIdFor(card, idx){return String(card.getAttribute('data-recipe-id')||('recipe_'+idx));}
+  function ensureTools(card){
+    if(!card) return;
+    var ingBox=card.querySelector('.m099c-recipe-ingredients');
+    if(ingBox && !card.querySelector('.m105-percent-tools')){
+      var tools=document.createElement('div');
+      tools.className='m105-percent-tools';
+      tools.innerHTML='<div class="m105-percent-total">Totale 0%</div><button type="button" class="m105-normalize">Normalizza 100%</button>';
+      ingBox.parentNode.insertBefore(tools, ingBox.nextSibling);
+    }
+    card.querySelectorAll('.m099c-recipe-ing').forEach(function(row){
+      if(!row.querySelector('.m105-row-remove')){
+        var btn=document.createElement('button');
+        btn.type='button';
+        btn.className='m105-row-remove';
+        btn.textContent='×';
+        btn.setAttribute('aria-label','Rimuovi ingrediente');
+        row.appendChild(btn);
+      }
+    });
+    updateTotal(card);
+  }
+  function updateTotal(card){
+    if(!card)return;
+    var total=0;
+    card.querySelectorAll('.m099c-recipe-ing strong').forEach(function(s){total+=num(s.textContent);});
+    var el=card.querySelector('.m105-percent-total');
+    if(el){el.textContent='Totale '+round(total,1)+'%';el.classList.toggle('warn',Math.abs(total-100)>0.2);}
+  }
+  function normalizeCard(card){
+    var rows=Array.from(card.querySelectorAll('.m099c-recipe-ing'));
+    var vals=rows.map(function(row){return num((row.querySelector('strong')||{}).textContent);});
+    var total=vals.reduce(function(a,b){return a+b;},0);
+    if(total<=0 || !rows.length) return;
+    var acc=0;
+    rows.forEach(function(row,i){
+      var s=row.querySelector('strong'); if(!s) return;
+      var value;
+      if(i===rows.length-1){ value=round(100-acc,1); }
+      else{ value=round(vals[i]/total*100,1); acc+=value; }
+      s.textContent=String(value).replace(/\.0$/,'')+'%';
+    });
+    updateTotal(card);
+  }
+  function readIngredientsFromCard(card){
+    var ings=[];
+    card.querySelectorAll('.m099c-recipe-ing').forEach(function(row){
+      var sel=row.querySelector('.m104a-food-select');
+      var span=row.querySelector('span');
+      var strong=row.querySelector('strong');
+      var foodId=sel?String(sel.value||''):String(span&&span.getAttribute('data-food-id')||'');
+      var foodName=sel?selectedName(sel):String(span&&span.textContent||'').trim();
+      if(!foodName && foodId){var f=foodById(foodId);foodName=f?String(f.name||''):'';}
+      var pct=round(num(strong&&strong.textContent),1);
+      if((foodName||foodId) && pct>0){ings.push({foodId:foodId,foodName:foodName,percent:pct});}
+    });
+    return ings;
+  }
+  function saveCardProper(card){
+    var id=String(card.getAttribute('data-recipe-id')||'');
+    var list=loadRecipes();
+    var idx=list.findIndex(function(r,i){return String(r.id||('recipe_'+i))===id;});
+    if(idx<0) return null;
+    var rec=Object.assign({},list[idx]);
+    var title=card.querySelector('.m101d-name-text');
+    if(title && title.textContent.trim()) rec.name=title.textContent.trim();
+    var prep=card.querySelector('.m100b-recipe-procedure-text');
+    rec.procedure=prep?prep.textContent.trim():'';
+    rec.ingredients=readIngredientsFromCard(card);
+    rec.ingredientCount=rec.ingredients.length;
+    rec.nutritionPer100g=computeNutrition(rec.ingredients);
+    rec.updatedAt=new Date().toISOString();
+    list[idx]=rec;
+    saveRecipes(list);
+    window.dispatchEvent(new CustomEvent('maestro:recipe-saved',{detail:rec}));
+    return rec;
+  }
+  function enhance(){
+    document.querySelectorAll('#m098ORecipeArchivePage .m099c-recipe-card.is-editing').forEach(ensureTools);
+  }
+  document.addEventListener('click',function(ev){
+    var rem=ev.target&&ev.target.closest?ev.target.closest('#m098ORecipeArchivePage .m105-row-remove'):null;
+    if(!rem) return;
+    ev.preventDefault(); ev.stopPropagation();
+    var card=rem.closest('.m099c-recipe-card');
+    var row=rem.closest('.m099c-recipe-ing');
+    if(row) row.remove();
+    updateTotal(card);
+  },true);
+  document.addEventListener('click',function(ev){
+    var btn=ev.target&&ev.target.closest?ev.target.closest('#m098ORecipeArchivePage .m105-normalize'):null;
+    if(!btn)return;
+    ev.preventDefault(); ev.stopPropagation();
+    normalizeCard(btn.closest('.m099c-recipe-card'));
+  },true);
+  document.addEventListener('input',function(ev){
+    var s=ev.target&&ev.target.closest?ev.target.closest('#m098ORecipeArchivePage .m099c-recipe-card.is-editing .m099c-recipe-ing strong'):null;
+    if(s){updateTotal(s.closest('.m099c-recipe-card'));}
+  },true);
+  document.addEventListener('click',function(ev){
+    var btn=ev.target&&ev.target.closest?ev.target.closest('#m098ORecipeArchivePage .m101d-edit-recipe, #m098ORecipeArchivePage .m101d-add-ingredient'):null;
+    if(!btn)return;
+    setTimeout(function(){ensureTools(btn.closest('.m099c-recipe-card'));},80);
+  },true);
+  // Intercetta il Salva prima del vecchio handler: così salviamo correttamente il foodId scelto dalla tendina.
+  window.addEventListener('click',function(ev){
+    var btn=ev.target&&ev.target.closest?ev.target.closest('#m098ORecipeArchivePage .m101d-edit-recipe'):null;
+    if(!btn) return;
+    var card=btn.closest('.m099c-recipe-card');
+    if(!card || !card.classList.contains('is-editing')) return;
+    ev.preventDefault(); ev.stopPropagation(); ev.stopImmediatePropagation();
+    saveCardProper(card);
+    card.classList.remove('is-editing');
+    card.setAttribute('aria-expanded','false');
+  },true);
+  window.addEventListener('maestro:diet-recipes-open',function(){setTimeout(enhance,120);});
+  window.addEventListener('maestro:recipe-saved',function(){setTimeout(enhance,140);});
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){setTimeout(enhance,120);},{once:true});else setTimeout(enhance,120);
+  setInterval(enhance,800);
+})();
+</script>
+<!-- Master105: in modifica Archivio ricette aggiunge rimozione ingredienti, totale percentuali, normalizzazione a 100% e salvataggio corretto del foodId dalla tendina. -->
+
+
+<style id="m106LegacyCloudApiHideStyle">
+/* Master106: nasconde il vecchio pannello Data C > Cloud/API mock/dev. I consumi AI reali sono in Cloud Account. */
+#dataCenterPanel{display:none!important;}
+body.m106-legacy-cloudapi-retired #dataCenterPanel{display:none!important;}
+</style>
+<script id="m106LegacyCloudApiHideScript">
+(function m106HideLegacyCloudApi(){
+  'use strict';
+  function retire(){
+    document.body.classList.add('m106-legacy-cloudapi-retired');
+    var panel=document.getElementById('dataCenterPanel');
+    if(panel) panel.classList.add('hidden');
+    var slider=document.getElementById('pageSlider');
+    var wheel=document.getElementById('mainWheel');
+    // Se un vecchio stato locale porta Data C sul terzo stop, rimbalza alla tab Dieta.
+    try{
+      var activeWheel = wheel ? Array.from(wheel.children).find(function(n){ return n.classList && n.classList.contains('active'); }) : null;
+      var txt = activeWheel ? String(activeWheel.textContent || '').toLowerCase() : '';
+      var looksDataC = txt.indexOf('dieta') >= 0 || txt.indexOf('allen') >= 0 || txt.indexOf('data') >= 0 || txt.indexOf('api') >= 0;
+      if(slider && Number(slider.value || 1) > 2 && looksDataC){
+        slider.value='2';
+        slider.dispatchEvent(new Event('input', {bubbles:true}));
+        slider.dispatchEvent(new Event('change', {bubbles:true}));
+      }
+    }catch(e){}
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', retire, {once:true}); else retire();
+  setInterval(retire, 800);
+})();
+</script>
+<!-- Master106: rimosso dalla navigazione il vecchio Data C > Cloud/API mock/dev con PIN/contatori locali. Cloud Account e Piano/consumi AI restano la fonte corretta. -->
+
+
+<style id="m106AFoodScanStyle">
+/* Master106B: Data C > Dieta > Scansione alimenti AI semplificata: Fotocamera / Carica file */
+.m106a-foodscan-overlay{position:fixed;inset:0;z-index:9998;background:rgba(2,6,23,.56);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:14px}
+.m106a-foodscan-overlay.open{display:flex}
+.m106a-foodscan-sheet{width:min(460px,94vw);max-height:min(82vh,760px);overflow:auto;border-radius:24px;border:1px solid rgba(148,163,184,.30);background:linear-gradient(180deg,rgba(15,23,42,.96),rgba(15,23,42,.88));box-shadow:0 24px 70px rgba(0,0,0,.45),0 0 0 1px rgba(255,255,255,.04) inset;color:#f8fafc;padding:16px;display:grid;gap:12px}
+.m106a-foodscan-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.m106a-foodscan-title{font-size:24px;font-weight:950;line-height:1.05;text-align:left;text-shadow:0 0 18px rgba(125,211,252,.32)}
+.m106a-foodscan-sub{font-size:12px;font-weight:800;color:rgba(226,232,240,.72);line-height:1.25;text-align:left;margin-top:4px}
+.m106a-foodscan-back{border:1px solid rgba(148,163,184,.35);background:rgba(15,23,42,.60);color:#f8fafc;border-radius:14px;padding:9px 12px;font-size:13px;font-weight:950;cursor:pointer;min-height:38px}
+.m106a-foodscan-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.m106a-foodscan-btn{border:1px solid rgba(96,165,250,.32);background:rgba(96,165,250,.14);color:#f8fafc;border-radius:16px;padding:10px 8px;font-size:12px;font-weight:950;line-height:1.15;min-height:54px;cursor:pointer;box-shadow:0 0 0 1px rgba(255,255,255,.03) inset}
+.m106a-foodscan-btn.primary{background:#5aa9ff;color:#06111f;border-color:rgba(186,230,253,.55)}
+.m106a-foodscan-status{font-size:12px;font-weight:850;line-height:1.28;color:#bfdbfe;white-space:pre-wrap;text-align:left;min-height:18px}
+.m106a-foodscan-status.err{color:#fecaca}.m106a-foodscan-status.ok{color:#bbf7d0}
+.m106a-foodscan-result{border:1px solid rgba(148,163,184,.20);background:rgba(2,6,23,.28);border-radius:16px;padding:12px;display:grid;gap:8px;text-align:left}
+.m106a-foodscan-result h4{font-size:16px;font-weight:950;margin:0;line-height:1.15;color:#f8fafc}.m106a-foodscan-result small{color:rgba(226,232,240,.68);font-weight:800}
+.m106a-foodscan-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.m106a-foodscan-cell{border:1px solid rgba(96,165,250,.20);background:rgba(15,23,42,.42);border-radius:12px;padding:8px;display:grid;gap:3px}.m106a-foodscan-cell span{font-size:9px;font-weight:950;color:#bfdbfe;text-transform:uppercase;letter-spacing:.04em}.m106a-foodscan-cell strong{font-size:13px;font-weight:950;color:#f8fafc;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.m106a-foodscan-warn{font-size:11px;font-weight:800;line-height:1.25;color:#fde68a;white-space:pre-wrap}.m106a-foodscan-save{justify-self:start;border:1px solid rgba(134,239,172,.35);background:rgba(34,197,94,.16);color:#bbf7d0;border-radius:13px;padding:9px 11px;font-size:12px;font-weight:950;cursor:pointer}.m106a-foodscan-save[disabled]{opacity:.45;cursor:not-allowed}
+body.light-mode .m106a-foodscan-sheet{background:#fff;color:#111827;border-color:#dbeafe}.light-mode .m106a-foodscan-title,.light-mode .m106a-foodscan-result h4,.light-mode .m106a-foodscan-cell strong{color:#111827}.light-mode .m106a-foodscan-sub{color:#64748b}.light-mode .m106a-foodscan-cell{background:#f8fafc;border-color:#dbeafe}.light-mode .m106a-foodscan-cell span{color:#1d4ed8}
+@media(max-width:430px){.m106a-foodscan-actions{grid-template-columns:1fr}.m106a-foodscan-title{font-size:22px}.m106a-foodscan-sheet{max-height:86vh;padding:14px}.m106a-foodscan-grid{grid-template-columns:1fr 1fr}}
+</style>
+<script id="m106AFoodScanScript">
+(function m106AFoodScan(){
+  'use strict';
+  var BASE = 'https://maestro-api-proxy.fabiano-muzzin.workers.dev';
+  var ENDPOINT_KEY = 'maestro.ai.foodScanEndpoint.v1';
+  var EDIT_KEY = 'maestro.diet.tables.m099D.dedup.v1';
+  var lastResult = null;
+  function esc(v){ return String(v == null ? '' : v).replace(/[&<>"']/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];}); }
+  function num(v){ if(v==null||v==='') return null; var n=parseFloat(String(v).replace(',','.').replace(/[^0-9.\-]+/g,'')); return Number.isFinite(n)?n:null; }
+  function endpoint(){ return String(window.MAESTRO_FOOD_SCAN_ENDPOINT || localStorage.getItem(ENDPOINT_KEY) || (BASE + '/ai/food/scan')).trim(); }
+  function nutritionRows(){
+    if(window.maestroRecipeImportBackend && typeof window.maestroRecipeImportBackend.nutritionRows==='function'){
+      try{ return window.maestroRecipeImportBackend.nutritionRows(); }catch(e){}
+    }
+    var seed = Array.isArray(window.maestroDietNutrientSeed) ? window.maestroDietNutrientSeed : [];
+    return seed.filter(function(r){return r&&r.name;}).slice(0,800).map(function(r){return {id:String(r.id||''),name:String(r.name||''),energyKj100:num(r.energyKj100),proteinG100:num(r.proteinG100),carbsG100:num(r.carbsG100),fatG100:num(r.fatG100),fiberG100:num(r.fiberG100),sodiumMg100:num(r.sodiumMg100),priceUK:r.priceUK||'',status:r.status||'',verified:r.verified||''};});
+  }
+  function ensureUi(){
+    var ov=document.getElementById('m106AFoodScanOverlay');
+    if(ov) return ov;
+    ov=document.createElement('div'); ov.id='m106AFoodScanOverlay'; ov.className='m106a-foodscan-overlay';
+    ov.innerHTML=''+
+      '<div class="m106a-foodscan-sheet" role="dialog" aria-modal="true" aria-label="Scansione alimenti AI">'+
+        '<div class="m106a-foodscan-head"><div><div class="m106a-foodscan-title">Scansione alimenti</div><div class="m106a-foodscan-sub">Scatta una foto o carica un file. L\'AI riconosce da sola se è barcode, etichetta, prodotto o piatto. Controllare sempre prima di usare i dati.</div></div><button type="button" class="m106a-foodscan-back" id="m106AFoodScanBack">Indietro</button></div>'+
+        '<div class="m106a-foodscan-actions"><button type="button" class="m106a-foodscan-btn primary" id="m106AFoodScanCamera">Fotocamera</button><button type="button" class="m106a-foodscan-btn" id="m106AFoodScanFile">Carica file</button></div>'+
+        '<div class="m106a-foodscan-status" id="m106AFoodScanStatus">Pronto.</div><div id="m106AFoodScanResult"></div>'+ 
+        '<input id="m106AFoodScanCameraInput" type="file" accept="image/*" capture="environment" hidden />'+
+        '<input id="m106AFoodScanFileInput" type="file" accept="image/*,.pdf,.txt" hidden />'+
+      '</div>';
+    document.body.appendChild(ov);
+    ov.querySelector('#m106AFoodScanBack').addEventListener('click', close);
+    ov.addEventListener('click', function(ev){ if(ev.target===ov) close(); });
+    ov.querySelector('#m106AFoodScanCamera').addEventListener('click', function(){ ov.querySelector('#m106AFoodScanCameraInput').click(); });
+    ov.querySelector('#m106AFoodScanFile').addEventListener('click', function(){ ov.querySelector('#m106AFoodScanFileInput').click(); });
+    ov.querySelector('#m106AFoodScanCameraInput').addEventListener('change', function(ev){ handleFile(ev.target.files&&ev.target.files[0], 'auto'); ev.target.value=''; });
+    ov.querySelector('#m106AFoodScanFileInput').addEventListener('change', function(ev){ handleFile(ev.target.files&&ev.target.files[0], 'auto'); ev.target.value=''; });
+    return ov;
+  }
+  function open(){ ensureUi().classList.add('open'); setStatus('Pronto. Scegli Fotocamera o Carica file.', ''); }
+  function close(){ var ov=document.getElementById('m106AFoodScanOverlay'); if(ov) ov.classList.remove('open'); }
+  function setStatus(t, cls){ var el=document.getElementById('m106AFoodScanStatus'); if(el){ el.textContent=t||''; el.className='m106a-foodscan-status '+(cls||''); } }
+  function resultBox(){ return document.getElementById('m106AFoodScanResult'); }
+  function fmt(v,suf){ var n=num(v); if(n==null) return '—'; return (Math.round(n*10)/10)+ (suf||''); }
+  function renderResult(r){
+    lastResult=r||{};
+    var box=resultBox(); if(!box) return;
+    var n=(r&&r.nutritionPer100g)||{};
+    var p=(r&&r.estimatedPortion)||{};
+    var warnings=(r&&Array.isArray(r.warnings)?r.warnings:[]).concat(r&&Array.isArray(r.missingData)?r.missingData:[]);
+    var title = r.displayName || r.foodName || r.productName || 'Alimento stimato';
+    var canSave = n && (num(n.energyKj100)!=null || num(n.proteinG100)!=null || num(n.carbsG100)!=null || num(n.fatG100)!=null);
+    box.innerHTML='<div class="m106a-foodscan-result">'+
+      '<h4>'+esc(title)+' <small>'+esc(r.scanType||'scan')+'</small></h4>'+ 
+      '<div class="m106a-foodscan-grid">'+
+        '<div class="m106a-foodscan-cell"><span>Barcode</span><strong>'+esc(r.barcode||'—')+'</strong></div>'+ 
+        '<div class="m106a-foodscan-cell"><span>Porzione</span><strong>'+esc(p.grams?fmt(p.grams,' g'):'—')+'</strong></div>'+ 
+        '<div class="m106a-foodscan-cell"><span>kJ /100 g</span><strong>'+fmt(n.energyKj100,'')+'</strong></div>'+ 
+        '<div class="m106a-foodscan-cell"><span>Proteine</span><strong>'+fmt(n.proteinG100,' g')+'</strong></div>'+ 
+        '<div class="m106a-foodscan-cell"><span>Carboidrati</span><strong>'+fmt(n.carbsG100,' g')+'</strong></div>'+ 
+        '<div class="m106a-foodscan-cell"><span>Grassi</span><strong>'+fmt(n.fatG100,' g')+'</strong></div>'+ 
+        '<div class="m106a-foodscan-cell"><span>Fibre</span><strong>'+fmt(n.fiberG100,' g')+'</strong></div>'+ 
+        '<div class="m106a-foodscan-cell"><span>Sodio</span><strong>'+fmt(n.sodiumMg100,' mg')+'</strong></div>'+ 
+      '</div>'+ 
+      (r.portionNutrition ? '<div class="m106a-foodscan-warn">Stima porzione: '+esc(JSON.stringify(r.portionNutrition))+'</div>' : '')+
+      (warnings.length?'<div class="m106a-foodscan-warn">'+esc(warnings.slice(0,6).join('\n'))+'</div>':'')+
+      '<button type="button" class="m106a-foodscan-save" id="m106AFoodScanSave" '+(canSave?'':'disabled')+'>Aggiungi a Tabelle nutrizionali</button>'+ 
+    '</div>';
+    var save=box.querySelector('#m106AFoodScanSave'); if(save) save.addEventListener('click', saveFoodToArchive);
+  }
+  function buildPayload(file, mode){ return {app:'Maestro', build:'Master106B', action:'food_scan', mode:'auto', language:'it', energyUnit:'kJ', file:{name:file.name||'',type:file.type||'',size:file.size||0}, nutritionArchive:nutritionRows(), instructions:'Analizza immagine/file in modalità automatica. Decidi tu se è codice a barre, etichetta prodotto, prodotto confezionato o piatto. Se codice a barre, estrai barcode e prodotto/etichetta se visibili. Se piatto, stima porzione e macronutrienti con confidence bassa/media. Non inventare nutrienti verificati quando mancano dati: usa warning e confidence. Restituisci JSON strutturato.'}; }
+  async function handleFile(file, mode){
+    if(!file) return; ensureUi(); setStatus('Invio scansione AI…\n'+(mode==='barcode'?'Codice a barre':mode==='plate'?'Piatto':'File')+': '+(file.name||'foto'), '');
+    var fd=new FormData(); fd.append('file', file, file.name || 'food-scan'); fd.append('payload', JSON.stringify(buildPayload(file, mode)));
+    try{
+      var res=await fetch(endpoint(), {method:'POST', body:fd, credentials:'omit'});
+      var data=await res.json().catch(function(){return null;});
+      if(!res.ok) throw new Error((data&&(data.error||data.message))||('HTTP '+res.status));
+      if(data && data.usage) window.dispatchEvent(new CustomEvent('maestro:ai-usage-updated',{detail:data.usage}));
+      renderResult(data||{}); setStatus('Scansione completata. Controlla sempre la stima prima di salvarla.', 'ok');
+    }catch(err){ setStatus('Scansione AI non riuscita: '+String(err&&err.message||err), 'err'); }
+  }
+  function saveFoodToArchive(){
+    var r=lastResult||{}, n=r.nutritionPer100g||{}; var name=String(r.displayName||r.foodName||r.productName||'').trim();
+    if(!name){ setStatus('Nome alimento mancante: non posso aggiungere la voce.', 'err'); return; }
+    var id='m106_foodscan_'+Date.now();
+    var record={id:id,name:name,energyKj100:num(n.energyKj100),proteinG100:num(n.proteinG100),carbsG100:num(n.carbsG100),fatG100:num(n.fatG100),fiberG100:num(n.fiberG100),sodiumMg100:num(n.sodiumMg100),status:'da_verificare',verified:'No',source:'AI food scan',notes:'Stima AI da scansione. Verificare manualmente.'};
+    try{
+      var map=JSON.parse(localStorage.getItem(EDIT_KEY)||'{}')||{};
+      map['products:'+id]=record; localStorage.setItem(EDIT_KEY, JSON.stringify(map));
+      window.dispatchEvent(new CustomEvent('maestro:diet-nutrients-updated',{detail:record}));
+      setStatus('Alimento aggiunto alle Tabelle nutrizionali come da verificare: '+name, 'ok');
+    }catch(e){ setStatus('Errore salvataggio alimento: '+String(e&&e.message||e), 'err'); }
+  }
+  function bindCard(){
+    var name=document.getElementById('dcDietCName'); if(!name) return;
+    var card=name.closest('.dc-service-card'); if(!card || card.dataset.m106aFoodScanBound==='1') return;
+    card.dataset.m106aFoodScanBound='1'; card.style.cursor='pointer'; card.setAttribute('role','button'); card.setAttribute('tabindex','0');
+    card.addEventListener('click', open);
+    card.addEventListener('keydown', function(ev){ if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); open(); } });
+  }
+  function tick(){ bindCard(); ensureUi(); }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', tick, {once:true}); else tick();
+  setInterval(bindCard, 700);
+  window.maestroFoodScan = {open:open, endpoint:endpoint};
+})();
+</script>
+<!-- Master106B: Scansione alimenti AI semplificata con Fotocamera/Carica file; riconoscimento automatico barcode/prodotto/piatto via endpoint /ai/food/scan. -->
+
+
+<style id="m106CFoodScanModule4Style">
+/* Master106C: Scansione alimenti come pagina Modulo 4 interna, non overlay/modale. */
+.m106a-foodscan-overlay{display:none!important;pointer-events:none!important;opacity:0!important;visibility:hidden!important}
+#m106CFoodScanPage.hidden{display:none!important}
+#m106CFoodScanPage{width:100%;height:100%;min-height:0;display:flex;flex-direction:column;gap:10px;overflow:hidden}
+.m106c-foodscan-shell{width:100%;height:100%;min-height:0;display:flex;flex-direction:column;border:1px solid rgba(148,163,184,.20);border-radius:18px;background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));box-shadow:0 12px 28px rgba(0,0,0,.22),0 0 0 1px rgba(255,255,255,.025) inset;padding:10px;color:#f8fafc;overflow:hidden}
+.m106c-foodscan-header{flex:0 0 auto;min-height:72px;border:1px solid rgba(148,163,184,.20);background:rgba(15,23,42,.30);border-radius:16px;padding:10px;display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.m106c-foodscan-left{min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:5px;text-align:left}
+.m106c-foodscan-title{font-size:23px;line-height:1.05;font-weight:950;letter-spacing:-.02em;color:#f8fafc;white-space:nowrap;text-shadow:0 0 18px rgba(125,211,252,.32)}
+.m106c-foodscan-sub{font-size:11px;font-weight:800;color:rgba(226,232,240,.72);line-height:1.25;max-width:330px}
+.m106c-foodscan-back{border:1px solid rgba(148,163,184,.35);background:rgba(15,23,42,.60);color:#f8fafc;border-radius:14px;padding:9px 12px;font-size:13px;font-weight:950;cursor:pointer;min-height:38px;align-self:flex-start}
+.m106c-foodscan-body{flex:1 1 auto;min-height:0;overflow:auto;padding:10px 2px 4px;display:flex;flex-direction:column;gap:10px;scrollbar-width:none}
+.m106c-foodscan-body::-webkit-scrollbar{display:none}
+.m106c-foodscan-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.m106c-foodscan-btn{border:1px solid rgba(96,165,250,.32);background:rgba(96,165,250,.14);color:#f8fafc;border-radius:16px;padding:10px 8px;font-size:13px;font-weight:950;line-height:1.15;min-height:54px;cursor:pointer;box-shadow:0 0 0 1px rgba(255,255,255,.03) inset}
+.m106c-foodscan-btn.primary{background:#5aa9ff;color:#06111f;border-color:rgba(186,230,253,.55)}
+.m106c-foodscan-status{font-size:12px;font-weight:850;line-height:1.28;color:#bfdbfe;white-space:pre-wrap;text-align:left;min-height:18px}
+.m106c-foodscan-status.err{color:#fecaca}.m106c-foodscan-status.ok{color:#bbf7d0}
+.m106c-foodscan-result{border:1px solid rgba(148,163,184,.20);background:rgba(2,6,23,.28);border-radius:16px;padding:12px;display:grid;gap:8px;text-align:left}
+.m106c-foodscan-result h4{font-size:16px;font-weight:950;margin:0;line-height:1.15;color:#f8fafc}
+.m106c-foodscan-result small{color:rgba(226,232,240,.68);font-weight:800}
+.m106c-foodscan-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+.m106c-foodscan-cell{border:1px solid rgba(96,165,250,.20);background:rgba(15,23,42,.42);border-radius:12px;padding:8px;display:grid;gap:3px;min-width:0}
+.m106c-foodscan-cell span{font-size:9px;font-weight:950;color:#bfdbfe;text-transform:uppercase;letter-spacing:.04em}
+.m106c-foodscan-cell strong{font-size:13px;font-weight:950;color:#f8fafc;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.m106c-foodscan-warn{font-size:11px;font-weight:800;line-height:1.25;color:#fde68a;white-space:pre-wrap}
+.m106c-foodscan-save{justify-self:start;border:1px solid rgba(134,239,172,.35);background:rgba(34,197,94,.16);color:#bbf7d0;border-radius:13px;padding:9px 11px;font-size:12px;font-weight:950;cursor:pointer}
+.m106c-foodscan-save[disabled]{opacity:.45;cursor:not-allowed}
+body.m106c-foodscan-page-active .module-a-top{display:none!important}
+body.m106c-foodscan-page-active .app{grid-template-rows:1fr auto!important}
+body.m106c-foodscan-page-active #dataCenterDietPanel{height:100%!important;min-height:0!important;display:flex!important;flex-direction:column!important}
+body.m106c-foodscan-page-active #dataCenterDietPanel>.dc-grid{display:none!important}
+body.m106c-foodscan-page-active #m098DietTablesPage,
+body.m106c-foodscan-page-active #m098ORecipeArchivePage,
+body.m106c-foodscan-page-active #m098RRecipeInputPage{display:none!important}
+body.light-mode .m106c-foodscan-shell{background:#fff;color:#111827;border-color:#dbeafe}
+body.light-mode .m106c-foodscan-title,body.light-mode .m106c-foodscan-result h4,body.light-mode .m106c-foodscan-cell strong{color:#111827}
+body.light-mode .m106c-foodscan-sub{color:#64748b}
+body.light-mode .m106c-foodscan-cell{background:#f8fafc;border-color:#dbeafe}
+body.light-mode .m106c-foodscan-cell span{color:#1d4ed8}
+@media(max-width:430px){
+  .m106c-foodscan-header{min-height:68px;padding:9px}
+  .m106c-foodscan-title{font-size:20px}
+  .m106c-foodscan-sub{font-size:10px;max-width:260px}
+  .m106c-foodscan-back{min-height:34px;padding:7px 10px;font-size:12px}
+  .m106c-foodscan-actions{grid-template-columns:1fr 1fr;gap:7px}
+  .m106c-foodscan-btn{min-height:48px;font-size:12px}
+  .m106c-foodscan-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+<script id="m106CFoodScanModule4Script">
+(function m106CFoodScanModule4(){
+  'use strict';
+  var BASE='https://maestro-api-proxy.fabiano-muzzin.workers.dev';
+  var ENDPOINT_KEY='maestro.ai.foodScanEndpoint.v1';
+  var EDIT_KEY='maestro.diet.tables.m099D.dedup.v1';
+  var lastResult=null;
+
+  function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];});}
+  function num(v){if(v==null||v==='')return null;var n=parseFloat(String(v).replace(',','.').replace(/[^0-9.\-]+/g,''));return Number.isFinite(n)?n:null;}
+  function endpoint(){return String(window.MAESTRO_FOOD_SCAN_ENDPOINT||localStorage.getItem(ENDPOINT_KEY)||(BASE+'/ai/food/scan')).trim();}
+  function panel(){return document.getElementById('dataCenterDietPanel');}
+  function card(){var name=document.getElementById('dcDietCName');return name&&name.closest?name.closest('.dc-service-card'):null;}
+
+  function nutritionRows(){
+    if(window.maestroRecipeImportBackend&&typeof window.maestroRecipeImportBackend.nutritionRows==='function'){
+      try{return window.maestroRecipeImportBackend.nutritionRows();}catch(e){}
+    }
+    var seed=Array.isArray(window.maestroDietNutrientSeed)?window.maestroDietNutrientSeed:[];
+    return seed.filter(function(r){return r&&r.name;}).slice(0,800).map(function(r){
+      return {id:String(r.id||''),name:String(r.name||''),energyKj100:num(r.energyKj100),proteinG100:num(r.proteinG100),carbsG100:num(r.carbsG100),fatG100:num(r.fatG100),fiberG100:num(r.fiberG100),sodiumMg100:num(r.sodiumMg100),priceUK:r.priceUK||'',status:r.status||'',verified:r.verified||''};
+    });
+  }
+
+  function ensurePage(){
+    var p=panel(); if(!p)return null;
+    var page=document.getElementById('m106CFoodScanPage');
+    if(page)return page;
+    page=document.createElement('div');
+    page.id='m106CFoodScanPage';
+    page.className='hidden';
+    page.innerHTML=''+
+      '<section class="m106c-foodscan-shell" aria-label="Scansione alimenti AI">'+
+        '<div class="m106c-foodscan-header">'+
+          '<div class="m106c-foodscan-left">'+
+            '<div class="m106c-foodscan-title">Scansione alimenti</div>'+
+            '<div class="m106c-foodscan-sub">Scatta una foto o carica un file. L\'AI riconosce da sola se è barcode, etichetta, prodotto o piatto. Controlla sempre prima di usare i dati.</div>'+
+          '</div>'+
+          '<button type="button" class="m106c-foodscan-back" id="m106CFoodScanBack">Indietro</button>'+
+        '</div>'+
+        '<div class="m106c-foodscan-body">'+
+          '<div class="m106c-foodscan-actions">'+
+            '<button type="button" class="m106c-foodscan-btn primary" id="m106CFoodScanCamera">Fotocamera</button>'+
+            '<button type="button" class="m106c-foodscan-btn" id="m106CFoodScanFile">Carica file</button>'+
+          '</div>'+
+          '<div class="m106c-foodscan-status" id="m106CFoodScanStatus">Pronto. Scegli Fotocamera o Carica file.</div>'+
+          '<div id="m106CFoodScanResult"></div>'+
+        '</div>'+
+        '<input id="m106CFoodScanCameraInput" type="file" accept="image/*" capture="environment" hidden />'+
+        '<input id="m106CFoodScanFileInput" type="file" accept="image/*,.pdf,.txt,.csv" hidden />'+
+      '</section>';
+    p.appendChild(page);
+    page.querySelector('#m106CFoodScanBack').addEventListener('click', close);
+    page.querySelector('#m106CFoodScanCamera').addEventListener('click',function(){page.querySelector('#m106CFoodScanCameraInput').click();});
+    page.querySelector('#m106CFoodScanFile').addEventListener('click',function(){page.querySelector('#m106CFoodScanFileInput').click();});
+    page.querySelector('#m106CFoodScanCameraInput').addEventListener('change',function(ev){handleFile(ev.target.files&&ev.target.files[0],'auto');ev.target.value='';});
+    page.querySelector('#m106CFoodScanFileInput').addEventListener('change',function(ev){handleFile(ev.target.files&&ev.target.files[0],'auto');ev.target.value='';});
+    return page;
+  }
+
+  function closeOldOverlay(){
+    var ov=document.getElementById('m106AFoodScanOverlay');
+    if(ov){ov.classList.remove('open');ov.style.display='none';}
+  }
+
+  function open(){
+    closeOldOverlay();
+    window.dispatchEvent(new CustomEvent('maestro:diet-tables-close'));
+    window.dispatchEvent(new CustomEvent('maestro:diet-recipes-close'));
+    window.dispatchEvent(new CustomEvent('maestro:diet-recipe-input-close'));
+    var page=ensurePage(); if(!page)return;
+    document.body.classList.add('m106c-foodscan-page-active');
+    page.classList.remove('hidden');
+    setStatus('Pronto. Scegli Fotocamera o Carica file.','');
+  }
+
+  function close(){
+    var page=document.getElementById('m106CFoodScanPage');
+    if(page)page.classList.add('hidden');
+    document.body.classList.remove('m106c-foodscan-page-active');
+  }
+
+  function setStatus(t,cls){var el=document.getElementById('m106CFoodScanStatus');if(el){el.textContent=t||'';el.className='m106c-foodscan-status '+(cls||'');}}
+  function resultBox(){return document.getElementById('m106CFoodScanResult');}
+  function fmt(v,suf){var n=num(v);if(n==null)return '—';return (Math.round(n*10)/10)+(suf||'');}
+
+  function renderResult(r){
+    lastResult=r||{};
+    var box=resultBox(); if(!box)return;
+    var n=(r&&r.nutritionPer100g)||{};
+    var p=(r&&r.estimatedPortion)||{};
+    var warnings=(r&&Array.isArray(r.warnings)?r.warnings:[]).concat(r&&Array.isArray(r.missingData)?r.missingData:[]);
+    var title=r.displayName||r.foodName||r.productName||'Alimento stimato';
+    var canSave=n&&(num(n.energyKj100)!=null||num(n.proteinG100)!=null||num(n.carbsG100)!=null||num(n.fatG100)!=null);
+    box.innerHTML='<div class="m106c-foodscan-result">'+
+      '<h4>'+esc(title)+' <small>'+esc(r.scanType||'scan')+'</small></h4>'+
+      '<div class="m106c-foodscan-grid">'+
+        '<div class="m106c-foodscan-cell"><span>Barcode</span><strong>'+esc(r.barcode||'—')+'</strong></div>'+
+        '<div class="m106c-foodscan-cell"><span>Porzione</span><strong>'+esc(p.grams?fmt(p.grams,' g'):'—')+'</strong></div>'+
+        '<div class="m106c-foodscan-cell"><span>kJ /100 g</span><strong>'+fmt(n.energyKj100,'')+'</strong></div>'+
+        '<div class="m106c-foodscan-cell"><span>Proteine</span><strong>'+fmt(n.proteinG100,' g')+'</strong></div>'+
+        '<div class="m106c-foodscan-cell"><span>Carbo</span><strong>'+fmt(n.carbsG100,' g')+'</strong></div>'+
+        '<div class="m106c-foodscan-cell"><span>Grassi</span><strong>'+fmt(n.fatG100,' g')+'</strong></div>'+
+        '<div class="m106c-foodscan-cell"><span>Fibre</span><strong>'+fmt(n.fiberG100,' g')+'</strong></div>'+
+        '<div class="m106c-foodscan-cell"><span>Sodio</span><strong>'+fmt(n.sodiumMg100,' mg')+'</strong></div>'+
+      '</div>'+
+      (r.portionNutrition?'<div class="m106c-foodscan-warn">Stima porzione: '+esc(JSON.stringify(r.portionNutrition))+'</div>':'')+
+      (warnings.length?'<div class="m106c-foodscan-warn">'+esc(warnings.slice(0,6).join('\\n'))+'</div>':'')+
+      '<button type="button" class="m106c-foodscan-save" id="m106CFoodScanSave" '+(canSave?'':'disabled')+'>Aggiungi a Tabelle nutrizionali</button>'+
+    '</div>';
+    var save=box.querySelector('#m106CFoodScanSave'); if(save)save.addEventListener('click',saveFoodToArchive);
+  }
+
+  function buildPayload(file){
+    return {app:'Maestro',build:'Master106C',action:'food_scan',mode:'auto',language:'it',energyUnit:'kJ',
+      file:{name:file.name||'',type:file.type||'',size:file.size||0},
+      nutritionArchive:nutritionRows(),
+      instructions:'Analizza immagine/file in modalità automatica. Decidi tu se è codice a barre, etichetta prodotto, prodotto confezionato o piatto. Se è solo un barcode senza etichetta o prodotto visibile, estrai il numero ma non inventare nutrienti. Se è un piatto, stima porzione e macronutrienti con confidence bassa/media. Restituisci JSON strutturato.'
+    };
+  }
+
+  async function handleFile(file){
+    if(!file)return;
+    open();
+    setStatus('Invio scansione AI…\\nFile: '+(file.name||'foto'),'');
+    var fd=new FormData();
+    fd.append('file',file,file.name||'food-scan');
+    fd.append('payload',JSON.stringify(buildPayload(file)));
+    try{
+      var res=await fetch(endpoint(),{method:'POST',body:fd,credentials:'omit'});
+      var data=await res.json().catch(function(){return null;});
+      if(!res.ok)throw new Error((data&&(data.error||data.message))||('HTTP '+res.status));
+      if(data&&data.usage)window.dispatchEvent(new CustomEvent('maestro:ai-usage-updated',{detail:data.usage}));
+      renderResult(data||{});
+      setStatus('Scansione completata. Controlla sempre la stima prima di salvarla.','ok');
+    }catch(err){
+      setStatus('Scansione AI non riuscita: '+String(err&&err.message||err),'err');
+    }
+  }
+
+  function saveFoodToArchive(){
+    var r=lastResult||{}, n=r.nutritionPer100g||{};
+    var name=String(r.displayName||r.foodName||r.productName||'').trim();
+    if(!name){setStatus('Nome alimento mancante: non posso aggiungere la voce.','err');return;}
+    var id='m106_foodscan_'+Date.now();
+    var record={id:id,name:name,energyKj100:num(n.energyKj100),proteinG100:num(n.proteinG100),carbsG100:num(n.carbsG100),fatG100:num(n.fatG100),fiberG100:num(n.fiberG100),sodiumMg100:num(n.sodiumMg100),status:'da_verificare',verified:'No',source:'AI food scan',notes:'Stima AI da scansione. Verificare manualmente.'};
+    try{
+      var map=JSON.parse(localStorage.getItem(EDIT_KEY)||'{}')||{};
+      map['products:'+id]=record;
+      localStorage.setItem(EDIT_KEY,JSON.stringify(map));
+      window.dispatchEvent(new CustomEvent('maestro:diet-nutrients-updated',{detail:record}));
+      setStatus('Alimento aggiunto alle Tabelle nutrizionali come da verificare: '+name,'ok');
+    }catch(e){setStatus('Errore salvataggio alimento: '+String(e&&e.message||e),'err');}
+  }
+
+  function interceptCard(){
+    var c=card(); if(!c)return;
+    c.style.cursor='pointer'; c.setAttribute('role','button'); c.setAttribute('tabindex','0');
+  }
+
+  document.addEventListener('click',function(ev){
+    var c=card();
+    if(c&&c.contains(ev.target)){
+      ev.preventDefault();
+      ev.stopPropagation();
+      if(ev.stopImmediatePropagation)ev.stopImmediatePropagation();
+      open();
+    }
+  },true);
+
+  document.addEventListener('keydown',function(ev){
+    var c=card();
+    if(c&&c.contains(ev.target)&&(ev.key==='Enter'||ev.key===' ')){
+      ev.preventDefault();ev.stopPropagation();if(ev.stopImmediatePropagation)ev.stopImmediatePropagation();open();
+    }
+  },true);
+
+  function tick(){interceptCard();ensurePage();closeOldOverlay();}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',tick,{once:true});else tick();
+  setInterval(tick,700);
+  window.maestroFoodScanPage={open:open,close:close,endpoint:endpoint};
+})();
+</script>
+<!-- Master106C: Scansione alimenti trasformata in pagina interna Modulo 4 del Data Center Dieta, senza overlay nero/modal. -->
 
 </body>
 </html>
