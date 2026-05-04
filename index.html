@@ -14451,6 +14451,32 @@ body.light-mode .m106c-foodscan-cell span{color:#1d4ed8}
   .m106c-foodscan-btn{min-height:48px;font-size:12px}
   .m106c-foodscan-grid{grid-template-columns:1fr 1fr}
 }
+
+/* Master106D: fit mobile result inside Modulo 4, no horizontal expansion from AI JSON. */
+#m106CFoodScanPage,#m106CFoodScanPage *{box-sizing:border-box;max-width:100%}
+body.m106c-foodscan-page-active #dataCenterDietPanel{overflow:hidden!important;width:100%!important;max-width:100%!important}
+.m106c-foodscan-shell{width:100%!important;max-width:100%!important;overflow:hidden!important}
+.m106c-foodscan-header,.m106c-foodscan-left,.m106c-foodscan-body,.m106c-foodscan-actions,.m106c-foodscan-result,.m106c-foodscan-grid,.m106c-foodscan-cell{min-width:0!important;width:100%;max-width:100%}
+.m106c-foodscan-body{overflow-y:auto!important;overflow-x:hidden!important;padding-left:0!important;padding-right:0!important}
+.m106c-foodscan-actions{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important}
+.m106c-foodscan-btn{min-width:0!important;max-width:100%!important;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.m106c-foodscan-result{overflow:hidden!important}
+.m106c-foodscan-result h4,.m106c-foodscan-status,.m106c-foodscan-warn{overflow-wrap:anywhere;word-break:break-word;max-width:100%}
+.m106c-foodscan-result h4{white-space:normal!important}
+.m106c-foodscan-warn{white-space:normal!important;overflow:hidden!important}
+.m106c-foodscan-cell strong{max-width:100%;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:430px){
+  .m106c-foodscan-shell{padding:9px!important;border-radius:18px!important}
+  .m106c-foodscan-header{width:100%!important;gap:8px!important}
+  .m106c-foodscan-left{flex:1 1 auto!important}
+  .m106c-foodscan-title{font-size:20px!important;white-space:normal!important}
+  .m106c-foodscan-sub{font-size:10px!important;max-width:none!important;overflow-wrap:anywhere!important}
+  .m106c-foodscan-back{flex:0 0 auto!important;max-width:96px!important}
+  .m106c-foodscan-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:6px!important}
+  .m106c-foodscan-cell{padding:7px!important}
+  .m106c-foodscan-cell strong{font-size:12px!important}
+}
+
 </style>
 <script id="m106CFoodScanModule4Script">
 (function m106CFoodScanModule4(){
@@ -14537,6 +14563,23 @@ body.light-mode .m106c-foodscan-cell span{color:#1d4ed8}
   function setStatus(t,cls){var el=document.getElementById('m106CFoodScanStatus');if(el){el.textContent=t||'';el.className='m106c-foodscan-status '+(cls||'');}}
   function resultBox(){return document.getElementById('m106CFoodScanResult');}
   function fmt(v,suf){var n=num(v);if(n==null)return '—';return (Math.round(n*10)/10)+(suf||'');}
+  function portionText(pt){
+    if(!pt||typeof pt!=='object')return '';
+    var parts=[];
+    function add(label,keys,suf){
+      for(var i=0;i<keys.length;i++){
+        var v=pt[keys[i]];
+        if(num(v)!=null){parts.push(label+' '+fmt(v,suf||''));return;}
+      }
+    }
+    add('kJ',['energyKj','energyKjPortion','energyKjTotal','kj','kJ'],'');
+    add('Proteine',['proteinG','proteinGPortion','protein','proteinsG'],' g');
+    add('Carbo',['carbsG','carbsGPortion','carbohydratesG','carbs'],' g');
+    add('Grassi',['fatG','fatGPortion','fat'],' g');
+    add('Fibre',['fiberG','fiberGPortion','fiber'],' g');
+    add('Sodio',['sodiumMg','sodiumMgPortion','sodium'],' mg');
+    return parts.length ? 'Stima porzione: '+parts.join(' · ') : '';
+  }
 
   function renderResult(r){
     lastResult=r||{};
@@ -14558,7 +14601,7 @@ body.light-mode .m106c-foodscan-cell span{color:#1d4ed8}
         '<div class="m106c-foodscan-cell"><span>Fibre</span><strong>'+fmt(n.fiberG100,' g')+'</strong></div>'+
         '<div class="m106c-foodscan-cell"><span>Sodio</span><strong>'+fmt(n.sodiumMg100,' mg')+'</strong></div>'+
       '</div>'+
-      (r.portionNutrition?'<div class="m106c-foodscan-warn">Stima porzione: '+esc(JSON.stringify(r.portionNutrition))+'</div>':'')+
+      (portionText(r.portionNutrition)?'<div class="m106c-foodscan-warn">'+esc(portionText(r.portionNutrition))+'</div>':'')+
       (warnings.length?'<div class="m106c-foodscan-warn">'+esc(warnings.slice(0,6).join('\\n'))+'</div>':'')+
       '<button type="button" class="m106c-foodscan-save" id="m106CFoodScanSave" '+(canSave?'':'disabled')+'>Aggiungi a Tabelle nutrizionali</button>'+
     '</div>';
@@ -14566,7 +14609,7 @@ body.light-mode .m106c-foodscan-cell span{color:#1d4ed8}
   }
 
   function buildPayload(file){
-    return {app:'Maestro',build:'Master106C',action:'food_scan',mode:'auto',language:'it',energyUnit:'kJ',
+    return {app:'Maestro',build:'Master106D',action:'food_scan',mode:'auto',language:'it',energyUnit:'kJ',
       file:{name:file.name||'',type:file.type||'',size:file.size||0},
       nutritionArchive:nutritionRows(),
       instructions:'Analizza immagine/file in modalità automatica. Decidi tu se è codice a barre, etichetta prodotto, prodotto confezionato o piatto. Se è solo un barcode senza etichetta o prodotto visibile, estrai il numero ma non inventare nutrienti. Se è un piatto, stima porzione e macronutrienti con confidence bassa/media. Restituisci JSON strutturato.'
@@ -14637,6 +14680,7 @@ body.light-mode .m106c-foodscan-cell span{color:#1d4ed8}
 </script>
 <!-- Master106C: Scansione alimenti trasformata in pagina interna Modulo 4 del Data Center Dieta, senza overlay nero/modal. -->
 
+<!-- Master106D: fix mobile Scansione alimenti result: no horizontal overflow, no raw JSON string, result stays inside Modulo 4. -->
 </body>
 </html>
 <!-- Master076A: filtri peso Data Center Attrezzi e pesi: niente negativi nei campi strutturati; manubri interi; bilancieri/Smith/dischi fino a due decimali; prima gestione fasce step variabili. -->
