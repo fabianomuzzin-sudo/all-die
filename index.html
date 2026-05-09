@@ -2963,7 +2963,7 @@ body.light-mode .m092-empty{background:#f8fafc;border-color:#d1d5db;color:#64748
         'sub.coach.1':'Progressi','sub.coach.2':'Audio all.','sub.coach.3':'Audio nutr.','sub.coach.4':'Nuova dieta','sub.coach.5':'Revisioni','sub.coach.6':'API',
         'sub.diet.1':'Oggi','sub.diet.2':'Giorni','sub.diet.3':'Calendario','sub.diet.4':'Ricette','sub.diet.5':'Alimenti','sub.diet.6':'Target',
         'sub.training.1':'Giorni','sub.training.2':'Giorno 1','sub.training.3':'Giorno 2','sub.training.4':'Giorno 3','sub.training.5':'Esercizi','sub.training.6':'Intensità',
-        'sub.dataCenter.1':'Allen','sub.dataCenter.2':'Dieta','sub.dataCenter.3':'Dieta',
+        'sub.dataCenter.1':'D Allen','sub.dataCenter.2':'Calendario','sub.dataCenter.3':'D Dieta',
         'sub.languages.1':'Lingue','sub.languages.2':'Strumenti','sub.languages.3':'Sistema',
         'sub.cloud.1':'Accesso','sub.cloud.2':'Cloud','sub.cloud.3':'Schema',
         'sub.me.1':'Profilo','sub.me.2':'Dati','sub.me.3':'Body','sub.me.4':'App S','sub.me.5':'Ritmi',
@@ -2980,7 +2980,7 @@ body.light-mode .m092-empty{background:#f8fafc;border-color:#d1d5db;color:#64748
         'sub.coach.1':'Progress','sub.coach.2':'Audio train.','sub.coach.3':'Audio nutr.','sub.coach.4':'New diet','sub.coach.5':'Reviews','sub.coach.6':'API',
         'sub.diet.1':'Today','sub.diet.2':'Days','sub.diet.3':'Calendar','sub.diet.4':'Recipes','sub.diet.5':'Foods','sub.diet.6':'Targets',
         'sub.training.1':'Days','sub.training.2':'Day 1','sub.training.3':'Day 2','sub.training.4':'Day 3','sub.training.5':'Exercises','sub.training.6':'Intensity',
-        'sub.dataCenter.1':'Train','sub.dataCenter.2':'Diet','sub.dataCenter.3':'Diet',
+        'sub.dataCenter.1':'D Train','sub.dataCenter.2':'Calendar','sub.dataCenter.3':'D Diet',
         'sub.languages.1':'Languages','sub.languages.2':'Tools','sub.languages.3':'System',
         'sub.cloud.1':'Access','sub.cloud.2':'Cloud','sub.cloud.3':'Schema',
         'sub.me.1':'Profile','sub.me.2':'Data','sub.me.3':'Body','sub.me.4':'Health','sub.me.5':'Pattern',
@@ -2997,7 +2997,7 @@ body.light-mode .m092-empty{background:#f8fafc;border-color:#d1d5db;color:#64748
         'sub.coach.1':'Progreso','sub.coach.2':'Audio entreno','sub.coach.3':'Audio nutr.','sub.coach.4':'Nueva dieta','sub.coach.5':'Revisiones','sub.coach.6':'API',
         'sub.diet.1':'Hoy','sub.diet.2':'Días','sub.diet.3':'Calendario','sub.diet.4':'Recetas','sub.diet.5':'Alimentos','sub.diet.6':'Objetivos',
         'sub.training.1':'Días','sub.training.2':'Día 1','sub.training.3':'Día 2','sub.training.4':'Día 3','sub.training.5':'Ejercicios','sub.training.6':'Intensidad',
-        'sub.dataCenter.1':'Entreno','sub.dataCenter.2':'Dieta','sub.dataCenter.3':'Dieta',
+        'sub.dataCenter.1':'D Entreno','sub.dataCenter.2':'Calendario','sub.dataCenter.3':'D Dieta',
         'sub.languages.1':'Idiomas','sub.languages.2':'Herramientas','sub.languages.3':'Sistema',
         'sub.cloud.1':'Acceso','sub.cloud.2':'Cloud','sub.cloud.3':'Esquema',
         'sub.me.1':'Perfil','sub.me.2':'Datos','sub.me.3':'Body','sub.me.4':'App S','sub.me.5':'Ritmos',
@@ -3007,7 +3007,7 @@ body.light-mode .m092-empty{background:#f8fafc;border-color:#d1d5db;color:#64748
 
     const languageState = { slotA:{code:'it'}, slotB:{code:'en'}, activeSlot:'slotA' };
     const navOrder = ['home','coach','diet','training','training2','training3','dataCenter','languages','cloud','me','info'];
-    const subNavMap = { home:[1,2,3,4,5,6,7,8], coach:[1,2,3,4,5,6], diet:[1,2,3,4,5,6], training:[1,2,3,4,5,6], training2:[1,2,3,4,5,6], training3:[1,2,3,4,5,6], dataCenter:[1,2], languages:[1,2,3], cloud:[1,2,3], me:[1,2,3,4,5], info:[1,2,3] };
+    const subNavMap = { home:[1,2,3,4,5,6,7,8], coach:[1,2,3,4,5,6], diet:[1,2,3,4,5,6], training:[1,2,3,4,5,6], training2:[1,2,3,4,5,6], training3:[1,2,3,4,5,6], dataCenter:[1,2,3], languages:[1,2,3], cloud:[1,2,3], me:[1,2,3,4,5], info:[1,2,3] };
 
 
     /* ===== Master033 rotellina contestuale =====
@@ -3017,13 +3017,7 @@ body.light-mode .m092-empty{background:#f8fafc;border-color:#d1d5db;color:#64748
        - Home invariata: usa il menu principale standard
     */
     const wheelPageMenus = {
-      default: navOrder.map(nav => ({ labelKey:`nav.${nav}`, nav, sub:1 })),
-      dataCenter: [
-        { label:'Home', nav:'home', sub:1 },
-        { label:'D Allen', nav:'dataCenter', sub:1 },
-        { label:'D Dieta', nav:'dataCenter', sub:2 },
-        { label:'Info', nav:'info', sub:1 }
-      ]
+      default: navOrder.map(nav => ({ labelKey:`nav.${nav}`, nav, sub:1 }))
     };
 
     function wheelItemsForPage(page){ return wheelPageMenus[page] || wheelPageMenus.default; }
@@ -3522,7 +3516,8 @@ body.light-mode .m092-empty{background:#f8fafc;border-color:#d1d5db;color:#64748
     function dataCenterMode(){
       if(currentNavKey() !== 'dataCenter') return 'training';
       const idx = Number(slider.value || 1);
-      if(idx >= 2) return 'diet';
+      if(idx === 2) return 'calendar';
+      if(idx >= 3) return 'diet';
       return 'training';
     }
     function renderDataCenterPanel(){
@@ -4040,7 +4035,7 @@ async function callAiProxy(service, payload = {}){
         genericTitle.textContent = navLabel(navKey);
         if(navKey === 'dataCenter'){
           const mode = dataCenterMode();
-          genericSub.textContent = mode === 'diet' ? tdc('subDiet') : tdc('subTraining');
+          genericSub.textContent = mode === 'calendar' ? 'Calendario' : (mode === 'diet' ? tdc('subDiet') : tdc('subTraining'));
         } else {
           genericSub.textContent = t('page.placeholder', { page: navLabel(navKey) }) + ' ' + t('page.placeholderSub');
         }
@@ -14681,6 +14676,1010 @@ body.m106c-foodscan-page-active #dataCenterDietPanel{overflow:hidden!important;w
 <!-- Master106C: Scansione alimenti trasformata in pagina interna Modulo 4 del Data Center Dieta, senza overlay nero/modal. -->
 
 <!-- Master106D: fix mobile Scansione alimenti result: no horizontal overflow, no raw JSON string, result stays inside Modulo 4. -->
+
+
+<style id="m108CoachModule4Style">
+/* Master108: Coach in Modulo 4, top profile module hidden on Coach page */
+body.m108-coach-module4-active .module-a-top{display:none!important}
+body.m108-coach-module4-active .app{grid-template-rows:1fr auto!important}
+body.m108-coach-module4-active .module-a-main{padding:calc(var(--safe-top) + 8px) 10px 10px!important;margin-bottom:-24px!important;transform:none!important;overflow:visible!important}
+body.m108-coach-module4-active .main-card{height:calc(100% + 24px)!important;min-height:calc(100% + 24px)!important;transform:none!important;overflow:hidden!important}
+body.m108-coach-module4-active #coachPage{height:100%!important;min-height:0!important;overflow:hidden!important}
+body.m108-coach-module4-active #coachPage .page-body{height:100%!important;min-height:0!important;display:flex!important;flex-direction:column!important;gap:10px!important;padding:10px!important;overflow:hidden!important}
+body.m108-coach-module4-active #coachPage .view-head{flex:0 0 auto!important;display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;grid-template-rows:auto auto!important;align-items:center!important;gap:7px 10px!important;min-height:92px!important;padding:12px 14px!important}
+body.m108-coach-module4-active #coachPage .view-head.has-overlay-reset .view-title,
+body.m108-coach-module4-active #coachPage .view-head.has-overlay-reset .view-sub{padding-right:0!important}
+body.m108-coach-module4-active #coachPage #coachPageTitle{grid-column:1!important;grid-row:1!important;font-size:26px!important;line-height:1.05!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;padding:0!important}
+body.m108-coach-module4-active #coachPage #coachPageSub{display:none!important}
+body.m108-coach-module4-active #coachPage #coachEditBtn{position:static!important;transform:none!important;grid-column:1!important;grid-row:2!important;justify-self:start!important;align-self:start!important;min-height:34px!important;padding:8px 13px!important;border-radius:13px!important;background:rgba(96,165,250,.14)!important;border-color:rgba(96,165,250,.34)!important;color:#dcebff!important;z-index:1!important}
+body.m108-coach-module4-active #coachPage .m108-coach-mic-btn{grid-column:2!important;grid-row:1 / span 2!important;justify-self:end!important;align-self:center!important;width:60px!important;height:72px!important;min-height:72px!important;max-height:72px!important;display:flex!important;align-items:center!important;justify-content:center!important;cursor:pointer!important}
+body.m108-coach-module4-active #coachPage .m108-coach-mic-btn img{width:100%!important;height:100%!important;display:block!important;border-radius:14px!important}
+body.m108-coach-module4-active #coachPage .coach-mock-wrap{flex:1 1 auto!important;min-height:0!important;display:flex!important;flex-direction:column!important;overflow:auto!important;scrollbar-width:none!important}
+body.m108-coach-module4-active #coachPage .coach-mock-wrap::-webkit-scrollbar{display:none!important}
+body.m108-coach-module4-active #coachPage .coach-mock-card{flex:1 1 auto!important;min-height:0!important;display:flex!important;flex-direction:column!important;overflow:hidden!important}
+body.m108-coach-module4-active #coachPage .coach-mock-response{min-height:0!important;overflow:auto!important;scrollbar-width:none!important}
+body.m108-coach-module4-active #coachPage .coach-mock-response::-webkit-scrollbar{display:none!important}
+@media(max-width:430px){
+  body.m108-coach-module4-active #coachPage .view-head{min-height:88px!important;padding:11px 12px!important}
+  body.m108-coach-module4-active #coachPage #coachPageTitle{font-size:25px!important}
+  body.m108-coach-module4-active #coachPage .m108-coach-mic-btn{width:58px!important;height:66px!important;min-height:66px!important;max-height:66px!important}
+  body.m108-coach-module4-active #coachPage #coachEditBtn{min-height:32px!important;font-size:12px!important;padding:7px 12px!important}
+}
+body.light-mode.m108-coach-module4-active #coachPage #coachEditBtn{background:#dbeafe!important;color:#1d4ed8!important;border-color:#93c5fd!important}
+body.light-mode.m108-coach-module4-active #coachPage .m108-coach-mic-btn{border-color:#cbd5e1!important}
+</style>
+<script id="m108CoachModule4Script">
+(function m108CoachModule4(){
+  'use strict';
+  function isCoachActive(){ var p=document.getElementById('coachPage'); return !!(p && p.classList.contains('active')); }
+  function ensureMicButton(){
+    var head=document.querySelector('#coachPage .view-head');
+    if(!head) return null;
+    var btn=document.getElementById('m108CoachMicBtn');
+    if(!btn){
+      btn=document.createElement('button');
+      btn.type='button';
+      btn.id='m108CoachMicBtn';
+      btn.className='top-btn avatar-btn mic-mode m108-coach-mic-btn';
+      btn.setAttribute('aria-label','Microfono');
+      btn.title='Microfono';
+      btn.innerHTML='<img id="m108CoachMicImg" alt="Microfono" />';
+      head.appendChild(btn);
+      btn.addEventListener('click', function(ev){
+        ev.preventDefault(); ev.stopPropagation();
+        var me=document.getElementById('meButton');
+        if(me) me.click();
+        setTimeout(syncMic,80);
+      });
+    }
+    return btn;
+  }
+  function syncMic(){
+    var btn=ensureMicButton(); if(!btn) return;
+    var me=document.getElementById('meButton');
+    var topImg=document.getElementById('topProfileAvatar');
+    var img=document.getElementById('m108CoachMicImg');
+    var active=!!(me && me.classList.contains('active-mic'));
+    btn.classList.toggle('active-mic',active);
+    var label=active?'Microfono attivo':'Microfono';
+    btn.title=label; btn.setAttribute('aria-label',label);
+    if(active){
+      btn.setAttribute('data-mic-top', (me && me.getAttribute('data-mic-top')) || 'MIC');
+      btn.setAttribute('data-mic-bottom', (me && me.getAttribute('data-mic-bottom')) || 'ATTIVO');
+    }else{
+      btn.removeAttribute('data-mic-top');
+      btn.removeAttribute('data-mic-bottom');
+    }
+    if(img && topImg && topImg.src){ img.src=topImg.src; }
+  }
+  function patchCoachHeader(){
+    var title=document.getElementById('coachPageTitle');
+    var sub=document.getElementById('coachPageSub');
+    var edit=document.getElementById('coachEditBtn');
+    if(title) title.textContent='Coach';
+    if(sub) sub.textContent='';
+    if(edit && !edit.dataset.m108Label){ edit.dataset.m108Label='1'; }
+    ensureMicButton();
+    syncMic();
+  }
+  function tick(){
+    var active=isCoachActive();
+    document.body.classList.toggle('m108-coach-module4-active',active);
+    if(active) patchCoachHeader();
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',tick,{once:true}); else tick();
+  window.addEventListener('maestro:page-render',tick);
+  document.addEventListener('click',function(){setTimeout(tick,80);},true);
+  setInterval(tick,400);
+})();
+</script>
+<!-- Master108A: microfono Coach in Modulo 4 reso identico al microfono della pagina Info/top avatar; niente stile custom diverso. -->
+
+
+<style id="m109ADataCenterCalendarSafeStyle">
+/* Master109A: Data Center con Calendario in Modulo 4, Me non toccato, rotellina principale normale */
+body.maestro-dc-calendar-module4-active .module-a-top{display:none!important;}
+body.maestro-dc-calendar-module4-active .app{grid-template-rows:1fr auto!important;}
+body.maestro-dc-calendar-module4-active .module-a-main{padding:calc(var(--safe-top) + 8px) 10px 10px!important;}
+body.maestro-dc-calendar-module4-active .main-card{height:calc(100% + 24px)!important;min-height:calc(100% + 24px)!important;}
+body.maestro-dc-calendar-module4-active #genericPage{height:100%;min-height:0;}
+body.maestro-dc-calendar-module4-active #genericPage .generic-wrap{height:100%;min-height:0;position:relative;overflow:hidden;border-radius:22px;}
+body.maestro-dc-calendar-module4-active #genericPage .generic-box{display:none!important;}
+body.maestro-dc-calendar-module4-active #dataCenterTrainingPanel,
+body.maestro-dc-calendar-module4-active #dataCenterDietPanel,
+body.maestro-dc-calendar-module4-active #dataCenterPanel{display:none!important;}
+#m109ACalendarPage{display:none;}
+body.maestro-dc-calendar-module4-active #m109ACalendarPage{
+  display:block!important;
+  position:absolute;
+  inset:0;
+  border-radius:22px;
+  overflow:hidden;
+  background:
+    linear-gradient(180deg, rgba(2,6,23,.26), rgba(2,6,23,.46)),
+    var(--m109a-calendar-bg, radial-gradient(circle at 35% 20%, rgba(96,165,250,.28), rgba(2,6,23,.92) 62%));
+  background-size:cover;
+  background-position:left top;
+  background-repeat:no-repeat;
+}
+body.light-mode.maestro-dc-calendar-module4-active #m109ACalendarPage{
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.40)),
+    var(--m109a-calendar-bg, radial-gradient(circle at 35% 20%, rgba(96,165,250,.22), rgba(248,250,252,.95) 62%));
+  background-size:cover;
+  background-position:left top;
+  background-repeat:no-repeat;
+}
+</style>
+<script id="m109ADataCenterCalendarSafeScript">
+(function m109ADataCenterCalendarOnly(){
+  'use strict';
+  function navKey(){
+    try{ return typeof currentNavKey === 'function' ? currentNavKey() : ''; }catch(e){ return ''; }
+  }
+  function dcMode(){
+    try{ return typeof dataCenterMode === 'function' ? dataCenterMode() : ''; }catch(e){ return ''; }
+  }
+  function ensureCalendarPage(){
+    var wrap = document.querySelector('#genericPage .generic-wrap');
+    if(!wrap) return null;
+    var page = document.getElementById('m109ACalendarPage');
+    if(!page){
+      page = document.createElement('div');
+      page.id = 'm109ACalendarPage';
+      page.setAttribute('aria-label','Calendario');
+      page.setAttribute('role','img');
+      wrap.appendChild(page);
+    }
+    return page;
+  }
+  function coachBgUrl(){
+    try{
+      if(typeof currentCoachIcon === 'function'){
+        var v = String(currentCoachIcon() || '').trim();
+        if(v) return v;
+      }
+    }catch(e){}
+    var img = document.getElementById('topCoachAvatar') || document.getElementById('coachPreviewImg');
+    return img && img.src ? String(img.src) : '';
+  }
+  function updateCalendarBackground(){
+    var page = ensureCalendarPage();
+    if(!page) return;
+    var src = coachBgUrl();
+    if(src){
+      page.style.setProperty('--m109a-calendar-bg', 'url("' + src.replace(/"/g, '\\"') + '")');
+    }
+  }
+  function sync(){
+    var active = navKey() === 'dataCenter' && dcMode() === 'calendar';
+    document.body.classList.toggle('maestro-dc-calendar-module4-active', active);
+    if(active) updateCalendarBackground();
+  }
+  window.m109ADataCenterCalendarSync = sync;
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', sync, {once:true}); else sync();
+  ['click','input','change','maestro:coach-updated'].forEach(function(ev){
+    window.addEventListener(ev, function(){ setTimeout(sync, 0); }, true);
+  });
+  setInterval(sync, 600);
+})();
+</script>
+<!-- Master109A: Data Center aggiunge solo Calendario in Modulo 4 con sfondo immagine Coach; Me resta nella rotellina principale; rotellina Data Center torna al menu principale normale. -->
+
+
+
+<style id="m110CoachLiveBackgroundStyle">
+/* Master110: sfondo Coach collegato live all'immagine Coach; Calendario resta vuoto */
+body.m108-coach-module4-active #coachPage{position:relative!important;background:transparent!important;}
+body.m108-coach-module4-active #coachPage .page-body{position:relative!important;z-index:0!important;}
+body.m108-coach-module4-active #coachPage .page-body::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-2;
+  border-radius:22px;
+  background-image:var(--m110-coach-bg, none);
+  background-size:cover;
+  background-position:left top;
+  background-repeat:no-repeat;
+  opacity:.34;
+  filter:saturate(.92) contrast(.96);
+  pointer-events:none;
+}
+body.m108-coach-module4-active #coachPage .page-body::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  border-radius:22px;
+  background:linear-gradient(180deg, rgba(2,6,23,.55) 0%, rgba(2,6,23,.58) 42%, rgba(2,6,23,.70) 100%);
+  pointer-events:none;
+}
+body.m108-coach-module4-active #coachPage .view-head,
+body.m108-coach-module4-active #coachPage .coach-mock-card{
+  background:rgba(15,23,42,.58)!important;
+  border-color:rgba(148,163,184,.22)!important;
+  backdrop-filter:blur(4px);
+}
+body.light-mode.m108-coach-module4-active #coachPage .page-body::after{
+  background:linear-gradient(180deg, rgba(15,23,42,.42) 0%, rgba(15,23,42,.48) 45%, rgba(15,23,42,.60) 100%);
+}
+body.light-mode.m108-coach-module4-active #coachPage .view-head,
+body.light-mode.m108-coach-module4-active #coachPage .coach-mock-card{
+  background:rgba(255,255,255,.68)!important;
+  border-color:rgba(203,213,225,.55)!important;
+}
+/* Calendario: nessun testo/box aggiunto, solo pagina vuota con sfondo della base Master109 */
+#m109ACalendarPage .m110-calendar-text{display:none!important;}
+</style>
+<script id="m110CoachLiveBackgroundScript">
+(function m110CoachLiveBackground(){
+  'use strict';
+  var lastSrc='';
+  function isCoachActive(){
+    var p=document.getElementById('coachPage');
+    return !!(p && p.classList.contains('active'));
+  }
+  function coachBgUrl(){
+    try{
+      if(typeof currentCoachIcon === 'function'){
+        var v=String(currentCoachIcon() || '').trim();
+        if(v) return v;
+      }
+    }catch(e){}
+    var img=document.getElementById('coachPreviewImg') || document.getElementById('topCoachAvatar');
+    return img && img.src ? String(img.src) : '';
+  }
+  function apply(){
+    var page=document.getElementById('coachPage');
+    if(!page) return;
+    var src=coachBgUrl();
+    if(src && src !== lastSrc){
+      lastSrc=src;
+      page.style.setProperty('--m110-coach-bg','url("'+src.replace(/"/g,'\\"')+'")');
+    }
+    if(isCoachActive() && src){
+      page.style.setProperty('--m110-coach-bg','url("'+src.replace(/"/g,'\\"')+'")');
+    }
+  }
+  function bindCoachPhotoInput(){
+    var input=document.getElementById('coachPhotoInput');
+    if(input && !input.dataset.m110BgBound){
+      input.dataset.m110BgBound='1';
+      input.addEventListener('change',function(){
+        setTimeout(apply,120);
+        setTimeout(apply,600);
+        setTimeout(apply,1300);
+      },true);
+    }
+    var applyBtn=document.getElementById('coachApplyBtn');
+    if(applyBtn && !applyBtn.dataset.m110BgBound){
+      applyBtn.dataset.m110BgBound='1';
+      applyBtn.addEventListener('click',function(){
+        setTimeout(apply,80);
+        setTimeout(apply,500);
+      },true);
+    }
+  }
+  function tick(){ bindCoachPhotoInput(); apply(); }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',tick,{once:true}); else tick();
+  ['click','input','change','storage','maestro:page-render','maestro:coach-updated'].forEach(function(ev){
+    window.addEventListener(ev,function(){ setTimeout(tick,0); setTimeout(apply,250); },true);
+  });
+  document.addEventListener('visibilitychange',tick);
+  setInterval(tick,700);
+})();
+</script>
+<!-- Master110: pagina Coach con sfondo live dall'immagine Coach; Calendario lasciato vuoto. -->
+
+
+<style id="m110ACoachBgCalendarBlankFixStyle">
+/* Master110A: Coach background visibile e Calendario completamente vuoto/senza immagine */
+body.m108-coach-module4-active #coachPage{
+  position:relative!important;
+  isolation:isolate!important;
+  background-image:
+    linear-gradient(180deg, rgba(2,6,23,.50) 0%, rgba(2,6,23,.58) 45%, rgba(2,6,23,.74) 100%),
+    var(--m110-coach-bg, none)!important;
+  background-size:cover!important;
+  background-position:left top!important;
+  background-repeat:no-repeat!important;
+  border-radius:22px!important;
+}
+body.m108-coach-module4-active #coachPage .page-body{
+  position:relative!important;
+  z-index:1!important;
+  background:transparent!important;
+}
+body.m108-coach-module4-active #coachPage .page-body::before,
+body.m108-coach-module4-active #coachPage .page-body::after{
+  display:none!important;
+  content:none!important;
+}
+body.m108-coach-module4-active #coachPage .view-head,
+body.m108-coach-module4-active #coachPage .coach-mock-card{
+  background:rgba(15,23,42,.46)!important;
+  border-color:rgba(148,163,184,.24)!important;
+  backdrop-filter:blur(3px)!important;
+}
+body.light-mode.m108-coach-module4-active #coachPage{
+  background-image:
+    linear-gradient(180deg, rgba(15,23,42,.34) 0%, rgba(15,23,42,.42) 48%, rgba(15,23,42,.58) 100%),
+    var(--m110-coach-bg, none)!important;
+}
+body.light-mode.m108-coach-module4-active #coachPage .view-head,
+body.light-mode.m108-coach-module4-active #coachPage .coach-mock-card{
+  background:rgba(255,255,255,.62)!important;
+  border-color:rgba(203,213,225,.55)!important;
+}
+/* Calendario: pagina vuota, senza testo e senza immagine/sfondo coach */
+body.maestro-dc-calendar-module4-active #m109ACalendarPage,
+body.light-mode.maestro-dc-calendar-module4-active #m109ACalendarPage{
+  background:transparent!important;
+  background-image:none!important;
+}
+#m109ACalendarPage *{display:none!important;}
+</style>
+<script id="m110ACoachBgLiveFixScript">
+(function m110ACoachBgLiveFix(){
+  'use strict';
+  var KEY='fit_app_012A_coach_v1';
+  function safeUrl(v){
+    v=String(v||'').trim();
+    if(!v) return '';
+    if(/^data:image\//i.test(v) || /^blob:/i.test(v) || /^https?:\/\//i.test(v)) return v;
+    return '';
+  }
+  function fromStorage(){
+    try{
+      var raw=localStorage.getItem(KEY);
+      if(!raw) return '';
+      var obj=JSON.parse(raw);
+      return safeUrl(obj && obj.customPhoto);
+    }catch(e){return '';}
+  }
+  function fromDom(){
+    var ids=['coachPreviewImg','topCoachAvatar'];
+    for(var i=0;i<ids.length;i++){
+      var el=document.getElementById(ids[i]);
+      var src=el && el.getAttribute && (el.getAttribute('src') || el.src);
+      src=safeUrl(src);
+      if(src) return src;
+    }
+    return '';
+  }
+  function fromFunction(){
+    try{
+      if(typeof currentCoachIcon === 'function'){
+        return safeUrl(currentCoachIcon());
+      }
+    }catch(e){}
+    return '';
+  }
+  function getSrc(){
+    // Master110B: preferisce lo stato Coach vivo/DOM alla localStorage.
+    // Il file caricato può aggiornare l'icona in memoria anche quando localStorage conserva ancora una vecchia immagine.
+    return fromFunction() || fromDom() || fromStorage();
+  }
+  function apply(){
+    var page=document.getElementById('coachPage');
+    if(!page) return;
+    var src=getSrc();
+    if(src){
+      page.style.setProperty('--m110-coach-bg','url("'+src.replace(/"/g,'\\"')+'")');
+      document.documentElement.style.setProperty('--m110-coach-bg','url("'+src.replace(/"/g,'\\"')+'")');
+    }else{
+      page.style.removeProperty('--m110-coach-bg');
+    }
+    /* Spegne sempre lo sfondo del calendario, anche se il vecchio script prova a riapplicarlo */
+    var cal=document.getElementById('m109ACalendarPage');
+    if(cal){
+      cal.style.setProperty('--m109a-calendar-bg','none');
+      cal.style.backgroundImage='none';
+      cal.style.background='transparent';
+    }
+  }
+  function bind(){
+    var input=document.getElementById('coachPhotoInput');
+    if(input && !input.dataset.m110aBgBound){
+      input.dataset.m110aBgBound='1';
+      input.addEventListener('change',function(){
+        [60,160,420,900,1500].forEach(function(ms){setTimeout(apply,ms);});
+      },true);
+    }
+    var btn=document.getElementById('coachApplyBtn');
+    if(btn && !btn.dataset.m110aBgBound){
+      btn.dataset.m110aBgBound='1';
+      btn.addEventListener('click',function(){
+        [30,120,360,800,1400].forEach(function(ms){setTimeout(apply,ms);});
+      },true);
+    }
+  }
+  function tick(){bind();apply();}
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',tick,{once:true}); else tick();
+  ['click','input','change','storage','maestro:page-render','maestro:coach-updated'].forEach(function(ev){
+    window.addEventListener(ev,function(){setTimeout(tick,0);setTimeout(apply,250);setTimeout(apply,900);},true);
+  });
+  document.addEventListener('visibilitychange',tick);
+  setInterval(tick,650);
+})();
+</script>
+<!-- Master110A: fix sfondo Coach visibile live; Calendario vuoto senza immagine. -->
+
+
+<style id="m110BCoachBgCustomUploadFixStyle">
+/* Master110B: ulteriore guardia per sfondo Coach da file caricato esterno */
+body.m108-coach-module4-active #coachPage{
+  background-size:cover!important;
+  background-position:left top!important;
+  background-repeat:no-repeat!important;
+}
+</style>
+<script id="m110BCoachBgCustomUploadFixScript">
+(function m110BCoachBgCustomUploadFix(){
+  'use strict';
+  function safeUrl(v){
+    v=String(v||'').trim();
+    if(!v) return '';
+    if(/^data:image\//i.test(v) || /^blob:/i.test(v) || /^https?:\/\//i.test(v)) return v;
+    return '';
+  }
+  function liveCoachSrc(){
+    try{
+      if(typeof currentCoachIcon === 'function'){
+        var v=safeUrl(currentCoachIcon());
+        if(v) return v;
+      }
+    }catch(e){}
+    var ids=['coachPreviewImg','topCoachAvatar'];
+    for(var i=0;i<ids.length;i++){
+      var el=document.getElementById(ids[i]);
+      var src=el && (el.getAttribute('src') || el.src);
+      src=safeUrl(src);
+      if(src) return src;
+    }
+    try{
+      var raw=localStorage.getItem('fit_app_012A_coach_v1');
+      var obj=raw ? JSON.parse(raw) : null;
+      return safeUrl(obj && obj.customPhoto);
+    }catch(e){ return ''; }
+  }
+  function setCoachBg(src){
+    var page=document.getElementById('coachPage');
+    if(!page || !src) return;
+    var css='url("'+src.replace(/"/g,'\\"')+'")';
+    page.style.setProperty('--m110-coach-bg', css);
+    document.documentElement.style.setProperty('--m110-coach-bg', css);
+  }
+  function apply(){ setCoachBg(liveCoachSrc()); }
+  function afterDelay(){ [0,80,220,520,1000,1800].forEach(function(ms){ setTimeout(apply,ms); }); }
+  function bind(){
+    var input=document.getElementById('coachPhotoInput');
+    if(input && !input.dataset.m110bBgBound){
+      input.dataset.m110bBgBound='1';
+      input.addEventListener('change', afterDelay, true);
+    }
+    var btn=document.getElementById('coachApplyBtn');
+    if(btn && !btn.dataset.m110bBgBound){
+      btn.dataset.m110bBgBound='1';
+      btn.addEventListener('click', afterDelay, true);
+    }
+  }
+  function tick(){ bind(); apply(); }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', tick, {once:true}); else tick();
+  ['click','input','change','maestro:page-render','maestro:coach-updated','storage'].forEach(function(ev){
+    window.addEventListener(ev, function(){ setTimeout(tick,0); setTimeout(apply,350); }, true);
+  });
+  document.addEventListener('visibilitychange', tick);
+  setInterval(tick,300);
+})();
+</script>
+<!-- Master110B: fix sfondo Coach da immagine custom caricata; preferisce immagine live a localStorage vecchia. -->
+
+
+<style id="m110CCoachBgImgElementStyle">
+/* Master110C: sfondo Coach come <img> reale, così anche i file caricati esterni aggiornano lo sfondo */
+body.m108-coach-module4-active #coachPage{
+  position:relative!important;
+  isolation:isolate!important;
+  overflow:hidden!important;
+  background:#020617!important;
+  background-image:none!important;
+}
+#m110CCoachBgImg{
+  position:absolute!important;
+  inset:0!important;
+  width:100%!important;
+  height:100%!important;
+  object-fit:cover!important;
+  object-position:left top!important;
+  opacity:.42!important;
+  z-index:0!important;
+  pointer-events:none!important;
+  user-select:none!important;
+}
+#m110CCoachBgShade{
+  position:absolute!important;
+  inset:0!important;
+  z-index:1!important;
+  pointer-events:none!important;
+  background:linear-gradient(180deg, rgba(2,6,23,.52) 0%, rgba(2,6,23,.60) 42%, rgba(2,6,23,.76) 100%)!important;
+}
+body.light-mode #m110CCoachBgShade{
+  background:linear-gradient(180deg, rgba(15,23,42,.34) 0%, rgba(15,23,42,.42) 45%, rgba(15,23,42,.60) 100%)!important;
+}
+body.m108-coach-module4-active #coachPage > *:not(#m110CCoachBgImg):not(#m110CCoachBgShade){
+  position:relative!important;
+  z-index:2!important;
+}
+body.m108-coach-module4-active #coachPage .view-head,
+body.m108-coach-module4-active #coachPage .coach-mock-card{
+  background:rgba(15,23,42,.44)!important;
+  border-color:rgba(148,163,184,.24)!important;
+  backdrop-filter:blur(3px)!important;
+}
+body.light-mode.m108-coach-module4-active #coachPage .view-head,
+body.light-mode.m108-coach-module4-active #coachPage .coach-mock-card{
+  background:rgba(255,255,255,.62)!important;
+  border-color:rgba(203,213,225,.55)!important;
+}
+</style>
+<script id="m110CCoachBgImgElementScript">
+(function m110CCoachBgImgElement(){
+  'use strict';
+  var pendingUploadSrc = '';
+  var lastApplied = '';
+  function safeUrl(v){
+    v = String(v || '').trim();
+    if(!v) return '';
+    if(/^data:image\//i.test(v) || /^blob:/i.test(v) || /^https?:\/\//i.test(v)) return v;
+    return '';
+  }
+  function ensureNodes(){
+    var page = document.getElementById('coachPage');
+    if(!page) return null;
+    var img = document.getElementById('m110CCoachBgImg');
+    if(!img){
+      img = document.createElement('img');
+      img.id = 'm110CCoachBgImg';
+      img.alt = '';
+      img.setAttribute('aria-hidden','true');
+      page.insertBefore(img, page.firstChild);
+    }
+    var shade = document.getElementById('m110CCoachBgShade');
+    if(!shade){
+      shade = document.createElement('div');
+      shade.id = 'm110CCoachBgShade';
+      shade.setAttribute('aria-hidden','true');
+      page.insertBefore(shade, img.nextSibling);
+    }
+    return img;
+  }
+  function fromDom(){
+    var ids = ['coachPreviewImg','topCoachAvatar'];
+    for(var i=0;i<ids.length;i++){
+      var el = document.getElementById(ids[i]);
+      var src = el && (el.currentSrc || el.src || (el.getAttribute && el.getAttribute('src')));
+      src = safeUrl(src);
+      if(src) return src;
+    }
+    return '';
+  }
+  function fromFunction(){
+    try{
+      if(typeof currentCoachIcon === 'function'){
+        var src = safeUrl(currentCoachIcon());
+        if(src) return src;
+      }
+    }catch(e){}
+    return '';
+  }
+  function fromState(){
+    try{
+      if(typeof coachState !== 'undefined' && coachState && coachState.customPhoto){
+        var src = safeUrl(coachState.customPhoto);
+        if(src) return src;
+      }
+    }catch(e){}
+    try{
+      if(typeof coachDraft !== 'undefined' && coachDraft && coachDraft.customPhoto){
+        var src2 = safeUrl(coachDraft.customPhoto);
+        if(src2) return src2;
+      }
+    }catch(e){}
+    return '';
+  }
+  function fromStorage(){
+    try{
+      var raw = localStorage.getItem('fit_app_012A_coach_v1');
+      if(!raw) return '';
+      var obj = JSON.parse(raw);
+      return safeUrl(obj && obj.customPhoto);
+    }catch(e){ return ''; }
+  }
+  function pickSrc(){
+    /* Priorità: file appena caricato/applicato, immagine viva nel DOM, stato Coach, funzione originale, storage. */
+    return safeUrl(pendingUploadSrc) || fromDom() || fromState() || fromFunction() || fromStorage();
+  }
+  function apply(){
+    var img = ensureNodes();
+    if(!img) return;
+    var src = pickSrc();
+    if(!src) return;
+    if(src !== lastApplied || img.src !== src){
+      lastApplied = src;
+      img.src = src;
+    }
+  }
+  function schedule(){
+    [0,60,160,320,700,1200,2000].forEach(function(ms){ setTimeout(apply, ms); });
+  }
+  function bindUploadReader(){
+    var input = document.getElementById('coachPhotoInput');
+    if(input && !input.dataset.m110cBgBound){
+      input.dataset.m110cBgBound = '1';
+      input.addEventListener('change', function(ev){
+        var file = ev.target && ev.target.files && ev.target.files[0];
+        if(file && /^image\//i.test(file.type || '')){
+          try{
+            var reader = new FileReader();
+            reader.onload = function(){
+              pendingUploadSrc = safeUrl(reader.result);
+              schedule();
+            };
+            reader.readAsDataURL(file);
+          }catch(e){}
+        }
+        schedule();
+      }, true);
+    }
+    var applyBtn = document.getElementById('coachApplyBtn');
+    if(applyBtn && !applyBtn.dataset.m110cBgBound){
+      applyBtn.dataset.m110cBgBound = '1';
+      applyBtn.addEventListener('click', function(){
+        try{
+          if(typeof coachDraft !== 'undefined' && coachDraft && coachDraft.customPhoto){
+            pendingUploadSrc = safeUrl(coachDraft.customPhoto) || pendingUploadSrc;
+          }
+        }catch(e){}
+        schedule();
+      }, true);
+    }
+  }
+  function observeCoachImages(){
+    ['coachPreviewImg','topCoachAvatar'].forEach(function(id){
+      var el = document.getElementById(id);
+      if(!el || el.dataset.m110cBgObserved) return;
+      el.dataset.m110cBgObserved = '1';
+      try{
+        var obs = new MutationObserver(function(){ schedule(); });
+        obs.observe(el, {attributes:true, attributeFilter:['src']});
+      }catch(e){}
+    });
+  }
+  function clearCalendar(){
+    var cal = document.getElementById('m109ACalendarPage');
+    if(cal){
+      cal.style.setProperty('--m109a-calendar-bg','none');
+      cal.style.backgroundImage = 'none';
+      cal.style.background = 'transparent';
+    }
+  }
+  function tick(){
+    bindUploadReader();
+    observeCoachImages();
+    clearCalendar();
+    apply();
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', tick, {once:true}); else tick();
+  ['click','input','change','storage','maestro:page-render','maestro:coach-updated'].forEach(function(ev){
+    window.addEventListener(ev, function(){ setTimeout(tick,0); setTimeout(apply,250); setTimeout(apply,900); }, true);
+  });
+  document.addEventListener('visibilitychange', tick);
+  setInterval(tick, 350);
+})();
+</script>
+<!-- Master110C: fix definitivo sfondo Coach da file esterno caricato usando un elemento img reale invece di background CSS. -->
+
+
+
+<!-- Master111B: Coach/Code - pannello contenuti trasparente, mantenendo testi e bordi leggibili. -->
+<style id="m111BCoachPanelFullTransparencyStyle">
+/* Master111B: riparte da Master110C. Fondo/pannello della pagina Coach-Code trasparente; restano visibili testi, bordi, campi e bottoni. */
+body.m108-coach-module4-active #coachPage #m110CCoachBgImg{
+  opacity:.64!important;
+}
+body.m108-coach-module4-active #coachPage #m110CCoachBgShade{
+  background:linear-gradient(180deg,
+    rgba(2,6,23,.10) 0%,
+    rgba(2,6,23,.16) 42%,
+    rgba(2,6,23,.26) 100%)!important;
+}
+body.m108-coach-module4-active #coachPage .view-head,
+body.m108-coach-module4-active #coachPage .coach-mock-card{
+  background:transparent!important;
+  background-color:transparent!important;
+  border-color:rgba(226,232,240,.34)!important;
+  box-shadow:none!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+}
+body.m108-coach-module4-active #coachPage .coach-mock-title,
+body.m108-coach-module4-active #coachPage #coachPageTitle,
+body.m108-coach-module4-active #coachPage .coach-mock-status,
+body.m108-coach-module4-active #coachPage .coach-mock-note,
+body.m108-coach-module4-active #coachPage .coach-mock-response,
+body.m108-coach-module4-active #coachPage .coach-mock-input{
+  text-shadow:0 1px 3px rgba(0,0,0,.72)!important;
+}
+body.m108-coach-module4-active #coachPage .coach-mock-btn,
+body.m108-coach-module4-active #coachPage .coach-mock-send,
+body.m108-coach-module4-active #coachPage #coachEditBtn{
+  background:transparent!important;
+  background-color:transparent!important;
+  border-color:rgba(226,232,240,.52)!important;
+  color:#eef6ff!important;
+  box-shadow:0 0 0 1px rgba(2,6,23,.28)!important;
+  text-shadow:0 1px 3px rgba(0,0,0,.72)!important;
+}
+body.m108-coach-module4-active #coachPage .coach-mock-input,
+body.m108-coach-module4-active #coachPage .coach-mock-response{
+  background:transparent!important;
+  background-color:transparent!important;
+  border-color:rgba(226,232,240,.46)!important;
+  color:#eef6ff!important;
+  box-shadow:0 0 0 1px rgba(2,6,23,.24)!important;
+}
+body.m108-coach-module4-active #coachPage .coach-mock-input::placeholder{
+  color:rgba(238,246,255,.62)!important;
+  text-shadow:0 1px 3px rgba(0,0,0,.72)!important;
+}
+body.m108-coach-module4-active #coachPage .coach-mock-response.is-empty{
+  color:rgba(238,246,255,.72)!important;
+}
+body.m108-coach-module4-active #coachPage #coachEditBtn{
+  border-color:rgba(147,197,253,.64)!important;
+  color:#dcebff!important;
+}
+body.light-mode.m108-coach-module4-active #coachPage #m110CCoachBgImg{
+  opacity:.68!important;
+}
+body.light-mode.m108-coach-module4-active #coachPage #m110CCoachBgShade{
+  background:linear-gradient(180deg,
+    rgba(15,23,42,.08) 0%,
+    rgba(15,23,42,.13) 45%,
+    rgba(15,23,42,.22) 100%)!important;
+}
+body.light-mode.m108-coach-module4-active #coachPage .view-head,
+body.light-mode.m108-coach-module4-active #coachPage .coach-mock-card{
+  background:transparent!important;
+  background-color:transparent!important;
+  border-color:rgba(15,23,42,.28)!important;
+  box-shadow:none!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+}
+body.light-mode.m108-coach-module4-active #coachPage .coach-mock-title,
+body.light-mode.m108-coach-module4-active #coachPage #coachPageTitle,
+body.light-mode.m108-coach-module4-active #coachPage .coach-mock-status,
+body.light-mode.m108-coach-module4-active #coachPage .coach-mock-note,
+body.light-mode.m108-coach-module4-active #coachPage .coach-mock-response,
+body.light-mode.m108-coach-module4-active #coachPage .coach-mock-input{
+  color:#0f172a!important;
+  text-shadow:0 1px 3px rgba(255,255,255,.72)!important;
+}
+body.light-mode.m108-coach-module4-active #coachPage .coach-mock-btn,
+body.light-mode.m108-coach-module4-active #coachPage .coach-mock-send,
+body.light-mode.m108-coach-module4-active #coachPage #coachEditBtn,
+body.light-mode.m108-coach-module4-active #coachPage .coach-mock-input,
+body.light-mode.m108-coach-module4-active #coachPage .coach-mock-response{
+  background:transparent!important;
+  background-color:transparent!important;
+  border-color:rgba(15,23,42,.36)!important;
+  color:#0f172a!important;
+  box-shadow:0 0 0 1px rgba(255,255,255,.28)!important;
+}
+body.light-mode.m108-coach-module4-active #coachPage #coachEditBtn{
+  border-color:rgba(37,99,235,.52)!important;
+  color:#1d4ed8!important;
+}
+body.light-mode.m108-coach-module4-active #coachPage .coach-mock-input::placeholder,
+body.light-mode.m108-coach-module4-active #coachPage .coach-mock-response.is-empty{
+  color:rgba(15,23,42,.66)!important;
+}
+</style>
+
+
+<!-- Master112: prova microfono reale Coach/Code tramite Web Speech API. Parte da Master111B approvata. -->
+<script id="m112CoachRealMicDictationTestScript">
+(function m112CoachRealMicDictationTest(){
+  'use strict';
+
+  var recognition = null;
+  var listening = false;
+  var restarting = false;
+  var lastError = '';
+
+  function isCoachActive(){
+    var page = document.getElementById('coachPage');
+    return !!(page && page.classList.contains('active'));
+  }
+
+  function recognitionCtor(){
+    return window.SpeechRecognition || window.webkitSpeechRecognition || null;
+  }
+
+  function langCode(){
+    var code = 'it';
+    try{
+      if(typeof activePack === 'function'){
+        var pack = activePack();
+        code = (pack && pack.meta && pack.meta.code) || code;
+      }
+    }catch(e){}
+    if(code === 'en') return 'en-US';
+    if(code === 'es') return 'es-ES';
+    return 'it-IT';
+  }
+
+  function coachInput(){
+    return document.getElementById('coachMockInput');
+  }
+
+  function isVisualMicActive(){
+    var me = document.getElementById('meButton');
+    var m108 = document.getElementById('m108CoachMicBtn');
+    return !!((me && me.classList.contains('active-mic')) || (m108 && m108.classList.contains('active-mic')));
+  }
+
+  function setVisualMicOff(){
+    var me = document.getElementById('meButton');
+    if(me && me.classList.contains('active-mic')){
+      try{ me.click(); }catch(e){}
+    }
+  }
+
+  function normalizeSpeechText(text){
+    text = String(text || '').replace(/\s+/g, ' ').trim();
+    if(!text) return '';
+    return text;
+  }
+
+  function insertIntoCoachInput(text){
+    text = normalizeSpeechText(text);
+    if(!text) return;
+    var input = coachInput();
+    if(!input) return;
+
+    var value = String(input.value || '');
+    var start = typeof input.selectionStart === 'number' ? input.selectionStart : value.length;
+    var end = typeof input.selectionEnd === 'number' ? input.selectionEnd : value.length;
+    var before = value.slice(0, start);
+    var after = value.slice(end);
+    var needsSpaceBefore = before && !/\s$/.test(before) && !/^[,.;:!?]/.test(text);
+    var needsSpaceAfter = after && !/^\s/.test(after) && !/[\s(]$/.test(text);
+    var chunk = (needsSpaceBefore ? ' ' : '') + text + (needsSpaceAfter ? ' ' : '');
+    var next = before + chunk + after;
+    var cursor = (before + chunk).length;
+
+    input.value = next;
+    try{ input.setSelectionRange(cursor, cursor); }catch(e){}
+    input.dispatchEvent(new Event('input', { bubbles:true }));
+  }
+
+  function buildRecognition(){
+    var Ctor = recognitionCtor();
+    if(!Ctor) return null;
+    var rec = new Ctor();
+    rec.lang = langCode();
+    rec.continuous = true;
+    rec.interimResults = false;
+    rec.maxAlternatives = 1;
+
+    rec.onresult = function(event){
+      var finalText = '';
+      for(var i = event.resultIndex; i < event.results.length; i++){
+        var result = event.results[i];
+        if(result && result.isFinal && result[0]){
+          finalText += ' ' + (result[0].transcript || '');
+        }
+      }
+      insertIntoCoachInput(finalText);
+    };
+
+    rec.onerror = function(event){
+      lastError = event && event.error ? String(event.error) : 'unknown';
+      if(lastError === 'not-allowed' || lastError === 'service-not-allowed' || lastError === 'audio-capture'){
+        listening = false;
+        restarting = false;
+        setVisualMicOff();
+      }
+    };
+
+    rec.onend = function(){
+      var shouldRestart = listening && isCoachActive() && isVisualMicActive() && recognitionCtor();
+      if(shouldRestart){
+        restarting = true;
+        setTimeout(function(){
+          restarting = false;
+          if(listening && isCoachActive() && isVisualMicActive()) startRecognition();
+        }, 260);
+      }else{
+        listening = false;
+      }
+    };
+
+    return rec;
+  }
+
+  function startRecognition(){
+    if(!isCoachActive()) return;
+    var Ctor = recognitionCtor();
+    if(!Ctor){
+      lastError = 'unsupported';
+      setVisualMicOff();
+      return;
+    }
+    if(listening && recognition) return;
+    try{
+      if(!recognition) recognition = buildRecognition();
+      if(!recognition) return;
+      recognition.lang = langCode();
+      listening = true;
+      recognition.start();
+    }catch(e){
+      // Alcuni browser lanciano InvalidStateError se start viene chiamato due volte ravvicinate.
+      if(!/already|started|InvalidState/i.test(String(e && (e.name || e.message || e)))){
+        lastError = String(e && (e.name || e.message) || e);
+        listening = false;
+      }
+    }
+  }
+
+  function stopRecognition(){
+    listening = false;
+    restarting = false;
+    if(recognition){
+      try{ recognition.stop(); }catch(e){ try{ recognition.abort(); }catch(err){} }
+    }
+  }
+
+  function syncAfterMicClick(){
+    setTimeout(function(){
+      if(!isCoachActive()){
+        stopRecognition();
+        return;
+      }
+      if(isVisualMicActive()) startRecognition();
+      else stopRecognition();
+    }, 230);
+  }
+
+  document.addEventListener('click', function(ev){
+    var target = ev.target;
+    if(!target || !target.closest) return;
+    var mic = target.closest('#m108CoachMicBtn, #meButton');
+    if(!mic || !isCoachActive()) return;
+    syncAfterMicClick();
+  }, true);
+
+  window.addEventListener('maestro:page-render', function(){
+    if(!isCoachActive()) stopRecognition();
+  });
+  document.addEventListener('visibilitychange', function(){
+    if(document.hidden) stopRecognition();
+  });
+  window.addEventListener('pagehide', stopRecognition);
+
+  window.maestroCoachMicTest = {
+    isSupported:function(){ return !!recognitionCtor(); },
+    isListening:function(){ return !!listening; },
+    lastError:function(){ return lastError; },
+    stop:stopRecognition
+  };
+})();
+</script>
+
 </body>
 </html>
 <!-- Master076A: filtri peso Data Center Attrezzi e pesi: niente negativi nei campi strutturati; manubri interi; bilancieri/Smith/dischi fino a due decimali; prima gestione fasce step variabili. -->
